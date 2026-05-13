@@ -20,10 +20,20 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link active" href="#">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Data Master</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Template Penilaian</a></li>
-                    <li class="nav-item"><a class="nav-link text-danger" href="#">Logout</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link <?= url_is('admin/dashboard') ? 'active' : '' ?>" href="<?= site_url('admin/dashboard') ?>">Dashboard</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link <?= url_is('admin/matakuliah') ? 'active' : '' ?>" href="<?= site_url('admin/matakuliah') ?>">Data Mata Kuliah</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Template Penilaian</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-danger" href="#">Logout</a>
+                    </li>
                 </ul>
             </div>
         </div>
