@@ -30,7 +30,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Template Penilaian</a>
+                        <a class="nav-link <?= url_is('admin/template') ? 'active' : '' ?>" href="<?= site_url('admin/template') ?>">Template Penilaian</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-danger" href="#">Logout</a>
