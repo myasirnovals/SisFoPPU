@@ -7,6 +7,7 @@
     <link rel="icon" type="image/png" href="<?= base_url('assets/images/unjani.png') ?>">
     <title><?= $title ?? 'Admin Panel' ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 </head>
 
 <body class="bg-light">
