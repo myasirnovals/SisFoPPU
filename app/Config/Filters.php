@@ -37,6 +37,10 @@ class Filters extends BaseFilters
 
         'auth' => \App\Filters\AuthFilter::class,
         'role' => \App\Filters\RoleFilter::class,
+
+        'admin.access' => \App\Filters\AdminAccessFilter::class,
+        'coordinator.access' => \App\Filters\CoordinatorAccessFilter::class,
+
     ];
 
     /**
