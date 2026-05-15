@@ -1,0 +1,49 @@
+CRITICAL - 2026-05-15 21:41:48 --> CodeIgniter\Filters\Exceptions\FilterException: "csrf,auth" filter must have a matching alias defined.
+[Method: CLI, Route: routes]
+in SYSTEMPATH\Filters\Filters.php on line 590.
+ 1 SYSTEMPATH\Filters\Filters.php(590): CodeIgniter\Filters\Exceptions\FilterException::forNoAlias('csrf,auth')
+ 2 SYSTEMPATH\Filters\Filters.php(641): CodeIgniter\Filters\Filters->enableFilter('csrf,auth:guest', 'before')
+ 3 SYSTEMPATH\Commands\Utilities\Routes\FilterFinder.php(58): CodeIgniter\Filters\Filters->enableFilters([...], 'before')
+ 4 SYSTEMPATH\Commands\Utilities\Routes\FilterCollector.php(78): CodeIgniter\Commands\Utilities\Routes\FilterFinder->find('login')
+ 5 SYSTEMPATH\Commands\Utilities\Routes.php(110): CodeIgniter\Commands\Utilities\Routes\FilterCollector->get('GET', 'login')
+ 6 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Utilities\Routes->run([])
+ 7 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('routes', [])
+ 8 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+ 9 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+10 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-05-15 21:42:49 --> Error connecting to the database: mysqli_sql_exception: No connection could be made because the target machine actively refused it in H:\Documents\materi-pembelajaran\SisFoPPU\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 H:\Documents\materi-pembelajaran\SisFoPPU\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('localhost', '', Object(SensitiveParameterValue), '', 3306, '', 0)
+#1 H:\Documents\materi-pembelajaran\SisFoPPU\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 H:\Documents\materi-pembelajaran\SisFoPPU\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#3 H:\Documents\materi-pembelajaran\SisFoPPU\system\Database\BaseConnection.php(1706): CodeIgniter\Database\BaseConnection->query('SHOW TABLES FRO...')
+#4 H:\Documents\materi-pembelajaran\SisFoPPU\system\Database\BaseConnection.php(1726): CodeIgniter\Database\BaseConnection->listTables()
+#5 H:\Documents\materi-pembelajaran\SisFoPPU\system\Database\MigrationRunner.php(821): CodeIgniter\Database\BaseConnection->tableExists('migrations')
+#6 H:\Documents\materi-pembelajaran\SisFoPPU\system\Database\MigrationRunner.php(173): CodeIgniter\Database\MigrationRunner->ensureTable()
+#7 H:\Documents\materi-pembelajaran\SisFoPPU\system\Commands\Database\Migrate.php(89): CodeIgniter\Database\MigrationRunner->latest(NULL)
+#8 H:\Documents\materi-pembelajaran\SisFoPPU\system\CLI\SignalTrait.php(245): CodeIgniter\Commands\Database\Migrate::CodeIgniter\Commands\Database\{closure}()
+#9 H:\Documents\materi-pembelajaran\SisFoPPU\system\Commands\Database\Migrate.php(88): CodeIgniter\Commands\Database\Migrate->withSignalsBlocked(Object(Closure))
+#10 H:\Documents\materi-pembelajaran\SisFoPPU\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Migrate->run(Array)
+#11 H:\Documents\materi-pembelajaran\SisFoPPU\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('migrate', Array)
+#12 H:\Documents\materi-pembelajaran\SisFoPPU\system\Boot.php(442): CodeIgniter\CLI\Console->run()
+#13 H:\Documents\materi-pembelajaran\SisFoPPU\system\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#14 H:\Documents\materi-pembelajaran\SisFoPPU\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#15 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: No connection could be made because the target machine actively refused it in H:\Documents\materi-pembelajaran\SisFoPPU\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 H:\Documents\materi-pembelajaran\SisFoPPU\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 H:\Documents\materi-pembelajaran\SisFoPPU\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#2 H:\Documents\materi-pembelajaran\SisFoPPU\system\Database\BaseConnection.php(1706): CodeIgniter\Database\BaseConnection->query('SHOW TABLES FRO...')
+#3 H:\Documents\materi-pembelajaran\SisFoPPU\system\Database\BaseConnection.php(1726): CodeIgniter\Database\BaseConnection->listTables()
+#4 H:\Documents\materi-pembelajaran\SisFoPPU\system\Database\MigrationRunner.php(821): CodeIgniter\Database\BaseConnection->tableExists('migrations')
+#5 H:\Documents\materi-pembelajaran\SisFoPPU\system\Database\MigrationRunner.php(173): CodeIgniter\Database\MigrationRunner->ensureTable()
+#6 H:\Documents\materi-pembelajaran\SisFoPPU\system\Commands\Database\Migrate.php(89): CodeIgniter\Database\MigrationRunner->latest(NULL)
+#7 H:\Documents\materi-pembelajaran\SisFoPPU\system\CLI\SignalTrait.php(245): CodeIgniter\Commands\Database\Migrate::CodeIgniter\Commands\Database\{closure}()
+#8 H:\Documents\materi-pembelajaran\SisFoPPU\system\Commands\Database\Migrate.php(88): CodeIgniter\Commands\Database\Migrate->withSignalsBlocked(Object(Closure))
+#9 H:\Documents\materi-pembelajaran\SisFoPPU\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Migrate->run(Array)
+#10 H:\Documents\materi-pembelajaran\SisFoPPU\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('migrate', Array)
+#11 H:\Documents\materi-pembelajaran\SisFoPPU\system\Boot.php(442): CodeIgniter\CLI\Console->run()
+#12 H:\Documents\materi-pembelajaran\SisFoPPU\system\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#13 H:\Documents\materi-pembelajaran\SisFoPPU\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#14 {main}
