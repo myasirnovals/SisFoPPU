@@ -5,7 +5,8 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->get('/', 'Home::index');
+$routes->match(['get', 'post'], '/', 'Login::index');
+$routes->match(['get', 'post'], 'login', 'Login::index');
 
 $routes->group('admin', ['filter' => 'admin.access'], static function ($routes) {
 	$routes->get('dashboard', 'Admin\Dashboard::index');
