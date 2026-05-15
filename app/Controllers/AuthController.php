@@ -2,157 +2,136 @@
 
 namespace App\Controllers;
 
+use App\Controllers\BaseController;
 use App\Models\UserModel;
+use App\Models\ActivityLogModel;
 
 class AuthController extends BaseController
 {
-    private const ROLE_DASHBOARDS = [
-        'admin' => 'admin/dashboard',
-        'koordinator' => 'koordinator/dashboard',
-        'dosen' => 'dosen/dashboard',
-        'asisten' => 'asisten/dashboard',
-        'mahasiswa' => 'mahasiswa/dashboard',
-    ];
-
-    private const ROLE_LABELS = [
-        'admin' => 'Admin',
-        'koordinator' => 'Koordinator Praktikum',
-        'dosen' => 'Dosen',
-        'asisten' => 'Asisten Praktikum',
-        'mahasiswa' => 'Mahasiswa',
-    ];
-
-    private UserModel $userModel;
+    protected UserModel $userModel;
+    protected ActivityLogModel $activityLogModel;
 
     public function __construct()
     {
-        $this->userModel = new UserModel();
+        $this->userModel        = new UserModel();
+        $this->activityLogModel = new ActivityLogModel();
     }
 
     public function login()
     {
-        helper(['form', 'url']);
-
-        $session = session();
-
-        if ($session->get('is_logged_in') === true) {
-            $role = $this->normalizeRole((string) $session->get('role_active'));
-
-            if ($role !== null) {
-                return redirect()->to(site_url($this->dashboardPath($role)));
-            }
-
-            $this->flushAuthSession();
-
-            return redirect()->to(site_url('login'))->with('error', 'Sesi login tidak valid. Silakan masuk kembali.');
+        if (session()->get('is_logged_in')) {
+            return redirect()->to('/dashboard');
         }
 
-        $data = [
-            'title' => 'Login - Sistem Informasi Penilaian Praktikum',
-            'validation' => null,
-            'identity' => '',
+        return view('auth/login');
+    }
+
+    public function attemptLogin()
+    {
+        $rules = [
+            'login' => [
+                'label' => 'Email atau Username',
+                'rules' => 'required|min_length[3]',
+            ],
+            'password' => [
+                'label' => 'Password',
+                'rules' => 'required|min_length[6]',
+            ],
         ];
 
-        if ($this->request->getMethod() === 'post') {
-            $rules = [
-                'identity' => [
-                    'label' => 'Username atau email',
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => 'Username atau email wajib diisi.',
-                    ],
-                ],
-                'password' => [
-                    'label' => 'Password',
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => 'Password wajib diisi.',
-                    ],
-                ],
-            ];
-
-            if (! $this->validate($rules)) {
-                $data['validation'] = $this->validator;
-                $data['identity'] = trim((string) $this->request->getPost('identity'));
-
-                return view('auth/login', $data);
-            }
-
-            $identity = trim((string) $this->request->getPost('identity'));
-            $password = (string) $this->request->getPost('password');
-            $user = $this->userModel->findForAuthentication($identity);
-
-            if ($user === null || (int) $user['is_active'] !== 1 || ! password_verify($password, (string) $user['password'])) {
-                return redirect()->back()->withInput()->with('error', 'Username/email atau password tidak valid.');
-            }
-
-            $role = $this->normalizeRole((string) ($user['role'] ?? ''));
-
-            if ($role === null) {
-                $this->flushAuthSession();
-
-                return redirect()->back()->withInput()->with('error', 'Akun tidak memiliki role yang valid.');
-            }
-
-            session()->regenerate(true);
-
-            $roleLabel = self::ROLE_LABELS[$role] ?? ucfirst($role);
-
-            session()->set([
-                'is_logged_in' => true,
-                'user_id' => (int) $user['id'],
-                'username' => (string) $user['username'],
-                'full_name' => (string) $user['full_name'],
-                'role_active' => $role,
-                'role' => $roleLabel,
-                'roles' => [$roleLabel],
-                'role_label' => $roleLabel,
-            ]);
-
-            $this->userModel->touchLastLogin((int) $user['id']);
-
-            return redirect()->to(site_url($this->dashboardPath($role)));
+        if (! $this->validate($rules)) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('errors', $this->validator->getErrors());
         }
 
-        return view('auth/login', $data);
+        $login    = trim($this->request->getPost('login'));
+        $password = $this->request->getPost('password');
+
+        $user = $this->userModel->findByLogin($login);
+
+        if (! $user) {
+            $this->activityLogModel->logActivity(
+                null,
+                'LOGIN_FAILED',
+                'Login gagal. Akun tidak ditemukan: ' . $login
+            );
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Email/username atau password salah.');
+        }
+
+        if ($user['status'] !== 'active') {
+            $this->activityLogModel->logActivity(
+                (int) $user['id'],
+                'LOGIN_BLOCKED',
+                'Login ditolak karena status akun: ' . $user['status']
+            );
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Akun Anda tidak aktif atau diblokir.');
+        }
+
+        if (! password_verify($password, $user['password_hash'])) {
+            $this->activityLogModel->logActivity(
+                (int) $user['id'],
+                'LOGIN_FAILED',
+                'Login gagal karena password salah.'
+            );
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Email/username atau password salah.');
+        }
+
+        $roles = $this->userModel->getUserRoleSlugs((int) $user['id']);
+
+        session()->regenerate();
+
+        session()->set([
+            'user_id'      => (int) $user['id'],
+            'name'         => $user['name'],
+            'username'     => $user['username'],
+            'email'        => $user['email'],
+            'roles'        => $roles,
+            'is_logged_in' => true,
+        ]);
+
+        $this->userModel->update($user['id'], [
+            'last_login_at' => date('Y-m-d H:i:s'),
+        ]);
+
+        $this->activityLogModel->logActivity(
+            (int) $user['id'],
+            'LOGIN_SUCCESS',
+            'User berhasil login.'
+        );
+
+        return redirect()->to('/dashboard');
     }
 
     public function logout()
     {
-        helper('url');
+        $userId = session()->get('user_id');
 
-        $this->flushAuthSession();
+        if ($userId) {
+            $this->activityLogModel->logActivity(
+                (int) $userId,
+                'LOGOUT',
+                'User logout dari sistem.'
+            );
+        }
 
-        return redirect()->to(site_url('login'))->with('success', 'Anda berhasil logout.');
-    }
+        session()->destroy();
 
-    private function dashboardPath(string $role): ?string
-    {
-        $role = $this->normalizeRole($role);
-
-        return $role !== null ? self::ROLE_DASHBOARDS[$role] : null;
-    }
-
-    private function normalizeRole(string $role): ?string
-    {
-        $role = strtolower(trim($role));
-
-        return array_key_exists($role, self::ROLE_DASHBOARDS) ? $role : null;
-    }
-
-    private function flushAuthSession(): void
-    {
-        $session = session();
-        $session->remove([
-            'is_logged_in',
-            'user_id',
-            'username',
-            'full_name',
-            'role_active',
-            'role',
-            'roles',
-            'role_label',
-        ]);
-        $session->regenerate(true);
+        return redirect()
+            ->to('/login')
+            ->with('success', 'Anda berhasil logout.');
     }
 }

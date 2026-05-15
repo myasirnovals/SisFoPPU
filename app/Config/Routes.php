@@ -10,7 +10,6 @@ $routes->get('/', 'AuthController::login');
 $routes->match(['get', 'post'], 'login', 'AuthController::login', ['filter' => ['csrf', 'auth:guest']]);
 $routes->get('logout', 'AuthController::logout', ['filter' => 'auth:protected']);
 
-
 $routes->group('admin', ['filter' => ['auth:protected', 'role:admin']], static function ($routes) {
 	$routes->get('dashboard', 'Admin\Dashboard::index');
 	$routes->get('matakuliah', 'Admin\MataKuliah::index');
