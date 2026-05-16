@@ -11,6 +11,14 @@ class AuthController extends BaseController
     protected UserModel $userModel;
     protected ActivityLogModel $activityLogModel;
 
+    private const ROLE_DASHBOARD_PRIORITY = [
+        'admin' => 'admin/dashboard',
+        'koordinator' => 'coordinator/dashboard',
+        'dosen' => 'dosen/dashboard',
+        'asisten' => 'asisten/dashboard',
+        'mahasiswa' => 'mahasiswa/dashboard',
+    ];
+
     public function __construct()
     {
         $this->userModel        = new UserModel();
@@ -20,7 +28,9 @@ class AuthController extends BaseController
     public function login()
     {
         if (session()->get('is_logged_in')) {
-            return redirect()->to('/dashboard');
+            $dashboard = $this->dashboardPath((string) (session()->get('role_active') ?: session()->get('role')));
+
+            return redirect()->to(site_url($dashboard ?? 'dashboard'));
         }
 
         return view('auth/login');
@@ -49,7 +59,7 @@ class AuthController extends BaseController
         $login    = trim($this->request->getPost('login'));
         $password = $this->request->getPost('password');
 
-        $user = $this->userModel->findByLogin($login);
+        $user = $this->userModel->findForAuthentication($login);
 
         if (! $user) {
             $this->activityLogModel->logActivity(
@@ -64,11 +74,11 @@ class AuthController extends BaseController
                 ->with('error', 'Email/username atau password salah.');
         }
 
-        if ($user['status'] !== 'active') {
+        if (($user['status'] ?? null) !== 'active') {
             $this->activityLogModel->logActivity(
                 (int) $user['id'],
                 'LOGIN_BLOCKED',
-                'Login ditolak karena status akun: ' . $user['status']
+                'Login ditolak karena status akun: ' . (string) ($user['status'] ?? '-')
             );
 
             return redirect()
@@ -77,7 +87,7 @@ class AuthController extends BaseController
                 ->with('error', 'Akun Anda tidak aktif atau diblokir.');
         }
 
-        if (! password_verify($password, $user['password_hash'])) {
+        if (! password_verify($password, (string) ($user['password_hash'] ?? ''))) {
             $this->activityLogModel->logActivity(
                 (int) $user['id'],
                 'LOGIN_FAILED',
@@ -91,21 +101,25 @@ class AuthController extends BaseController
         }
 
         $roles = $this->userModel->getUserRoleSlugs((int) $user['id']);
+        $activeRole = $this->chooseActiveRole($roles);
+        $roleLabel = $this->roleLabel($activeRole);
 
         session()->regenerate();
 
         session()->set([
             'user_id'      => (int) $user['id'],
-            'name'         => $user['name'],
-            'username'     => $user['username'],
-            'email'        => $user['email'],
+            'name'         => (string) ($user['name'] ?? $user['full_name'] ?? $user['username'] ?? ''),
+            'full_name'    => (string) ($user['full_name'] ?? $user['name'] ?? $user['username'] ?? ''),
+            'username'     => (string) ($user['username'] ?? ''),
+            'email'        => (string) ($user['email'] ?? ''),
             'roles'        => $roles,
+            'role'         => $activeRole,
+            'role_active'  => $activeRole,
+            'role_label'   => $roleLabel,
             'is_logged_in' => true,
         ]);
 
-        $this->userModel->update($user['id'], [
-            'last_login_at' => date('Y-m-d H:i:s'),
-        ]);
+        $this->userModel->touchLastLogin((int) $user['id']);
 
         $this->activityLogModel->logActivity(
             (int) $user['id'],
@@ -113,7 +127,9 @@ class AuthController extends BaseController
             'User berhasil login.'
         );
 
-        return redirect()->to('/dashboard');
+        $dashboard = $this->dashboardPath($activeRole);
+
+        return redirect()->to(site_url($dashboard ?? 'dashboard'));
     }
 
     public function logout()
@@ -133,5 +149,37 @@ class AuthController extends BaseController
         return redirect()
             ->to('/login')
             ->with('success', 'Anda berhasil logout.');
+    }
+
+    private function dashboardPath(string $role): ?string
+    {
+        $role = strtolower(trim($role));
+
+        return self::ROLE_DASHBOARD_PRIORITY[$role] ?? null;
+    }
+
+    private function chooseActiveRole(array $roles): string
+    {
+        $roles = array_values(array_filter(array_map(static fn ($role): string => strtolower(trim((string) $role)), $roles)));
+
+        foreach (array_keys(self::ROLE_DASHBOARD_PRIORITY) as $preferredRole) {
+            if (in_array($preferredRole, $roles, true)) {
+                return $preferredRole;
+            }
+        }
+
+        return $roles[0] ?? '';
+    }
+
+    private function roleLabel(string $role): string
+    {
+        return match (strtolower(trim($role))) {
+            'admin' => 'Admin',
+            'koordinator' => 'Koordinator Praktikum',
+            'dosen' => 'Dosen',
+            'asisten' => 'Asisten Praktikum',
+            'mahasiswa' => 'Mahasiswa',
+            default => 'Pengguna',
+        };
     }
 }

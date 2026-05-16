@@ -1,0 +1,40 @@
+CRITICAL - 2026-05-16 21:29:21 --> Error: Class "CodeIgniter\Exceptions\PageForbiddenException" not found
+[Method: GET, Route: dosen/dashboard]
+in APPPATH\Controllers\Dosen\DashboardController.php on line 41.
+ 1 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Dosen\DashboardController->index()
+ 2 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Dosen\DashboardController))
+ 3 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 4 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 7 SYSTEMPATH\rewrite.php(44): require_once('H:\\Documents\\materi-pembelajaran\\SisFoPPU\\public\\index.php')
+CRITICAL - 2026-05-16 21:29:40 --> Error: Class "CodeIgniter\Exceptions\PageForbiddenException" not found
+[Method: GET, Route: dosen/dashboard]
+in APPPATH\Controllers\Dosen\DashboardController.php on line 41.
+ 1 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Dosen\DashboardController->index()
+ 2 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Dosen\DashboardController))
+ 3 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 4 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 7 SYSTEMPATH\rewrite.php(44): require_once('H:\\Documents\\materi-pembelajaran\\SisFoPPU\\public\\index.php')
+CRITICAL - 2026-05-16 21:31:49 --> Error: Class "CodeIgniter\Exceptions\PageForbiddenException" not found
+[Method: GET, Route: dosen/dashboard]
+in APPPATH\Controllers\Dosen\DashboardController.php on line 41.
+ 1 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Dosen\DashboardController->index()
+ 2 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Dosen\DashboardController))
+ 3 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 4 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 7 SYSTEMPATH\rewrite.php(44): require_once('H:\\Documents\\materi-pembelajaran\\SisFoPPU\\public\\index.php')
+CRITICAL - 2026-05-16 21:31:55 --> Error: Class "CodeIgniter\Exceptions\PageForbiddenException" not found
+[Method: GET, Route: dosen/dashboard/]
+in APPPATH\Controllers\Dosen\DashboardController.php on line 41.
+ 1 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Dosen\DashboardController->index()
+ 2 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Dosen\DashboardController))
+ 3 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 4 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 7 SYSTEMPATH\rewrite.php(44): require_once('H:\\Documents\\materi-pembelajaran\\SisFoPPU\\public\\index.php')

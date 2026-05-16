@@ -27,7 +27,7 @@ class AuthFilter implements FilterInterface
                 return null;
             }
 
-            $dashboard = $this->dashboardPath((string) $session->get('role_active'));
+            $dashboard = $this->dashboardPath((string) ($session->get('role_active') ?: $session->get('role')));
 
             if ($dashboard === null) {
                 $this->clearAuthSession();
@@ -42,7 +42,7 @@ class AuthFilter implements FilterInterface
             return redirect()->to(site_url('login'))->with('error', 'Silakan login terlebih dahulu.');
         }
 
-        $dashboard = $this->dashboardPath((string) $session->get('role_active'));
+        $dashboard = $this->dashboardPath((string) ($session->get('role_active') ?: $session->get('role')));
 
         if ($dashboard === null) {
             $this->clearAuthSession();

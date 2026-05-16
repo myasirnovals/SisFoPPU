@@ -17,7 +17,7 @@ $routes->group('admin', ['filter' => ['auth:protected', 'role:admin']], static f
 	$routes->get('pengguna', 'Admin\Pengguna::index');
 });
 
-$routes->group('koordinator', ['filter' => ['auth:protected', 'role:koordinator']], static function ($routes) {
+$routes->group('coordinator', ['filter' => ['auth:protected', 'role:koordinator']], static function ($routes) {
 	$routes->get('dashboard', 'Coordinator\DashboardController::index');
 	$routes->get('classes', 'Coordinator\DashboardController::classes');
 	$routes->get('attention', 'Coordinator\DashboardController::attention');
@@ -26,8 +26,8 @@ $routes->group('koordinator', ['filter' => ['auth:protected', 'role:koordinator'
 	$routes->get('activity', 'Coordinator\DashboardController::activity');
 });
 
-$routes->group('dosen', ['filter' => ['auth:protected', 'role:dosen']], static function ($routes) {
-	$routes->get('dashboard', 'Dosen\Dashboard::index');
+$routes->group('dosen', ['filter' => ['auth:protected', 'role:dosen,admin,koordinator']], static function ($routes) {
+	$routes->get('dashboard', 'Dosen\DashboardController::index');
 });
 
 $routes->group('asisten', ['filter' => ['auth:protected', 'role:asisten']], static function ($routes) {
@@ -37,3 +37,4 @@ $routes->group('asisten', ['filter' => ['auth:protected', 'role:asisten']], stat
 $routes->group('mahasiswa', ['filter' => ['auth:protected', 'role:mahasiswa']], static function ($routes) {
 	$routes->get('dashboard', 'Mahasiswa\Dashboard::index');
 });
+
