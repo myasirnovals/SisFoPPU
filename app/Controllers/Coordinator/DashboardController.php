@@ -188,12 +188,16 @@ class DashboardController extends BaseController
         $roles = $this->normalizeValues($session->get('roles') ?? $session->get('role'));
         $permissions = $this->normalizeValues($session->get('permissions'));
 
+        $roles = array_values(array_unique(array_map(static fn (string $role): string => strtolower(trim($role)), $roles)));
+        $permissions = array_values(array_unique(array_map(static fn (string $permission): string => strtolower(trim($permission)), $permissions)));
+
         if ($roles === [] && $permissions === []) {
             return true;
         }
 
-        return in_array('Admin', $roles, true)
-            || in_array('Koordinator Praktikum', $roles, true)
+        return in_array('admin', $roles, true)
+            || in_array('koordinator', $roles, true)
+            || in_array('koordinator praktikum', $roles, true)
             || in_array('dashboard.coordinator.view', $permissions, true);
     }
 

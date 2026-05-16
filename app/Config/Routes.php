@@ -7,7 +7,8 @@ use CodeIgniter\Router\RouteCollection;
  */
 
 $routes->get('/', 'AuthController::login');
-$routes->match(['get', 'post'], 'login', 'AuthController::login', ['filter' => ['csrf', 'auth:guest']]);
+$routes->get('login', 'AuthController::login', ['filter' => ['auth:guest']]);
+$routes->post('login', 'AuthController::attemptLogin', ['filter' => ['csrf', 'auth:guest']]);
 $routes->get('logout', 'AuthController::logout', ['filter' => 'auth:protected']);
 
 $routes->group('admin', ['filter' => ['auth:protected', 'role:admin']], static function ($routes) {

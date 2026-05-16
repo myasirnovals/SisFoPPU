@@ -39,7 +39,7 @@ class AuthController extends BaseController
     public function attemptLogin()
     {
         $rules = [
-            'login' => [
+            'identity' => [
                 'label' => 'Email atau Username',
                 'rules' => 'required|min_length[3]',
             ],
@@ -56,16 +56,21 @@ class AuthController extends BaseController
                 ->with('errors', $this->validator->getErrors());
         }
 
-        $login    = trim($this->request->getPost('login'));
+        $identity = trim((string) (
+            $this->request->getPost('identity')
+            ?? $this->request->getPost('login')
+            ?? $this->request->getPost('email')
+            ?? ''
+        ));
         $password = $this->request->getPost('password');
 
-        $user = $this->userModel->findForAuthentication($login);
+        $user = $this->userModel->findForAuthentication($identity);
 
         if (! $user) {
             $this->activityLogModel->logActivity(
                 null,
                 'LOGIN_FAILED',
-                'Login gagal. Akun tidak ditemukan: ' . $login
+                'Login gagal. Akun tidak ditemukan: ' . $identity
             );
 
             return redirect()
@@ -86,6 +91,13 @@ class AuthController extends BaseController
                 ->withInput()
                 ->with('error', 'Akun Anda tidak aktif atau diblokir.');
         }
+
+        $identity = trim((string) (
+            $this->request->getPost('identity')
+            ?? $this->request->getPost('login')
+            ?? $this->request->getPost('email')
+            ?? ''
+        ));
 
         if (! password_verify($password, (string) ($user['password_hash'] ?? ''))) {
             $this->activityLogModel->logActivity(
@@ -108,6 +120,7 @@ class AuthController extends BaseController
 
         session()->set([
             'user_id'      => (int) $user['id'],
+            'identity'     => $identity,
             'name'         => (string) ($user['name'] ?? $user['full_name'] ?? $user['username'] ?? ''),
             'full_name'    => (string) ($user['full_name'] ?? $user['name'] ?? $user['username'] ?? ''),
             'username'     => (string) ($user['username'] ?? ''),

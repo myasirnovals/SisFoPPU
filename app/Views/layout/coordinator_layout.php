@@ -27,7 +27,7 @@
                     <li class="nav-item"><a class="nav-link <?= url_is('coordinator/remedial') ? 'active' : '' ?>" href="<?= site_url('coordinator/remedial') ?>">Remedial</a></li>
                     <li class="nav-item"><a class="nav-link <?= url_is('coordinator/validation') ? 'active' : '' ?>" href="<?= site_url('coordinator/validation') ?>">Validasi Nilai</a></li>
                     <li class="nav-item"><a class="nav-link <?= url_is('coordinator/activity') ? 'active' : '' ?>" href="<?= site_url('coordinator/activity') ?>">Aktivitas</a></li>
-                    <li class="nav-item"><a class="nav-link text-light-emphasis" href="#">Logout</a></li>
+                    <li class="nav-item"><a class="nav-link text-light-emphasis" href="<?= site_url('logout') ?>">Logout</a></li>
                 </ul>
             </div>
         </div>
