@@ -8,6 +8,7 @@
     <title><?= $title ?? 'Admin Panel' ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <?= $this->renderSection('styles') ?>
 </head>
 
 <body class="bg-light">
@@ -47,18 +48,19 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-danger" href="#">Logout</a>
+                        <a class="nav-link text-danger" href="<?= site_url('logout') ?>">Logout</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container-fluid py-4 px-3 px-lg-4">
         <?= $this->renderSection('content') ?>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <?= $this->renderSection('scripts') ?>
 </body>
 
 </html>
