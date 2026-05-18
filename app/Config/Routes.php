@@ -37,5 +37,6 @@ $routes->group('assistant', ['filter' => ['auth:protected', 'role:asisten']], st
 
 $routes->group('mahasiswa', ['filter' => ['auth:protected', 'role:mahasiswa']], static function ($routes) {
 	$routes->get('dashboard', 'Mahasiswa\Dashboard::index');
+	$routes->get('praktikum/(:num)/detail', 'Mahasiswa\Dashboard::detail/$1');
 });
 
