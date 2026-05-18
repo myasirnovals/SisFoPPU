@@ -31,8 +31,8 @@ $routes->group('dosen', ['filter' => ['auth:protected', 'role:dosen,admin,koordi
 	$routes->get('dashboard', 'Dosen\DashboardController::index');
 });
 
-$routes->group('asisten', ['filter' => ['auth:protected', 'role:asisten']], static function ($routes) {
-	$routes->get('dashboard', 'Asisten\Dashboard::index');
+$routes->group('assistant', ['filter' => ['auth:protected', 'role:asisten']], static function ($routes) {
+	$routes->get('dashboard', 'Assistant\DashboardController::index');
 });
 
 $routes->group('mahasiswa', ['filter' => ['auth:protected', 'role:mahasiswa']], static function ($routes) {

@@ -10,9 +10,9 @@ class AuthFilter implements FilterInterface
 {
     private const ROLE_DASHBOARDS = [
         'admin' => 'admin/dashboard',
-        'koordinator' => 'koordinator/dashboard',
+        'koordinator' => 'coordinator/dashboard',
         'dosen' => 'dosen/dashboard',
-        'asisten' => 'asisten/dashboard',
+        'asisten' => 'assistant/dashboard',
         'mahasiswa' => 'mahasiswa/dashboard',
     ];
 

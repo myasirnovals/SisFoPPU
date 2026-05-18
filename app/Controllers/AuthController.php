@@ -15,7 +15,7 @@ class AuthController extends BaseController
         'admin' => 'admin/dashboard',
         'koordinator' => 'coordinator/dashboard',
         'dosen' => 'dosen/dashboard',
-        'asisten' => 'asisten/dashboard',
+        'asisten' => 'assistant/dashboard',
         'mahasiswa' => 'mahasiswa/dashboard',
     ];
 
