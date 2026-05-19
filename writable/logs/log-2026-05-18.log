@@ -1,0 +1,91 @@
+ERROR - 2026-05-18 21:35:41 --> Error connecting to the database: mysqli_sql_exception: Access denied for user ''@'localhost' (using password: NO) in C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('localhost', '', Object(SensitiveParameterValue), '', 3306, '', 0)
+#1 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Database\BaseConnection.php(1706): CodeIgniter\Database\BaseConnection->query('SHOW TABLES FRO...')
+#4 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Database\BaseConnection.php(1726): CodeIgniter\Database\BaseConnection->listTables()
+#5 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\app\Controllers\Admin\Dashboard.php(142): CodeIgniter\Database\BaseConnection->tableExists('courses')
+#6 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\app\Controllers\Admin\Dashboard.php(36): App\Controllers\Admin\Dashboard->safeCount(Object(CodeIgniter\Database\MySQLi\Connection), 'courses')
+#7 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\app\Controllers\Admin\Dashboard.php(26): App\Controllers\Admin\Dashboard->countCourses(Object(CodeIgniter\Database\MySQLi\Connection))
+#8 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\app\Controllers\Admin\Dashboard.php(14): App\Controllers\Admin\Dashboard->buildDashboardData()
+#9 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\CodeIgniter.php(951): App\Controllers\Admin\Dashboard->index()
+#10 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin\Dashboard))
+#11 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#13 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\rewrite.php(44): require_once('C:\\xampp\\htdocs...')
+#16 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Access denied for user ''@'localhost' (using password: NO) in C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Database\BaseConnection.php(1706): CodeIgniter\Database\BaseConnection->query('SHOW TABLES FRO...')
+#3 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Database\BaseConnection.php(1726): CodeIgniter\Database\BaseConnection->listTables()
+#4 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\app\Controllers\Admin\Dashboard.php(142): CodeIgniter\Database\BaseConnection->tableExists('courses')
+#5 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\app\Controllers\Admin\Dashboard.php(36): App\Controllers\Admin\Dashboard->safeCount(Object(CodeIgniter\Database\MySQLi\Connection), 'courses')
+#6 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\app\Controllers\Admin\Dashboard.php(26): App\Controllers\Admin\Dashboard->countCourses(Object(CodeIgniter\Database\MySQLi\Connection))
+#7 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\app\Controllers\Admin\Dashboard.php(14): App\Controllers\Admin\Dashboard->buildDashboardData()
+#8 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\CodeIgniter.php(951): App\Controllers\Admin\Dashboard->index()
+#9 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin\Dashboard))
+#10 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\rewrite.php(44): require_once('C:\\xampp\\htdocs...')
+#15 {main}
+ERROR - 2026-05-18 21:35:41 --> Error connecting to the database: mysqli_sql_exception: Access denied for user ''@'localhost' (using password: NO) in C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('localhost', '', Object(SensitiveParameterValue), '', 3306, '', 0)
+#1 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Database\BaseConnection.php(1706): CodeIgniter\Database\BaseConnection->query('SHOW TABLES FRO...')
+#4 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Database\BaseConnection.php(1726): CodeIgniter\Database\BaseConnection->listTables()
+#5 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\app\Controllers\Admin\Dashboard.php(41): CodeIgniter\Database\BaseConnection->tableExists('practicum_class...')
+#6 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\app\Controllers\Admin\Dashboard.php(27): App\Controllers\Admin\Dashboard->countActiveClasses(Object(CodeIgniter\Database\MySQLi\Connection))
+#7 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\app\Controllers\Admin\Dashboard.php(14): App\Controllers\Admin\Dashboard->buildDashboardData()
+#8 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\CodeIgniter.php(951): App\Controllers\Admin\Dashboard->index()
+#9 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin\Dashboard))
+#10 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#12 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\rewrite.php(44): require_once('C:\\xampp\\htdocs...')
+#15 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Access denied for user ''@'localhost' (using password: NO) in C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Database\BaseConnection.php(1706): CodeIgniter\Database\BaseConnection->query('SHOW TABLES FRO...')
+#3 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Database\BaseConnection.php(1726): CodeIgniter\Database\BaseConnection->listTables()
+#4 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\app\Controllers\Admin\Dashboard.php(41): CodeIgniter\Database\BaseConnection->tableExists('practicum_class...')
+#5 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\app\Controllers\Admin\Dashboard.php(27): App\Controllers\Admin\Dashboard->countActiveClasses(Object(CodeIgniter\Database\MySQLi\Connection))
+#6 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\app\Controllers\Admin\Dashboard.php(14): App\Controllers\Admin\Dashboard->buildDashboardData()
+#7 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\CodeIgniter.php(951): App\Controllers\Admin\Dashboard->index()
+#8 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin\Dashboard))
+#9 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#11 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#12 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#13 C:\xampp\htdocs\TekWeb\Teori\Tubes\sisfoPPU\system\rewrite.php(44): require_once('C:\\xampp\\htdocs...')
+#14 {main}
+CRITICAL - 2026-05-18 21:35:41 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: Access denied for user ''@'localhost' (using password: NO)
+[Method: GET, Route: admin/dashboard]
+in SYSTEMPATH\Database\BaseConnection.php on line 606.
+ 1 SYSTEMPATH\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH\Database\BaseConnection.php(1706): CodeIgniter\Database\BaseConnection->query('SHOW TABLES FROM ')
+ 3 SYSTEMPATH\Database\BaseConnection.php(1726): CodeIgniter\Database\BaseConnection->listTables()
+ 4 APPPATH\Controllers\Admin\Dashboard.php(41): CodeIgniter\Database\BaseConnection->tableExists('practicum_classes')
+ 5 APPPATH\Controllers\Admin\Dashboard.php(27): App\Controllers\Admin\Dashboard->countActiveClasses(Object(CodeIgniter\Database\MySQLi\Connection))
+ 6 APPPATH\Controllers\Admin\Dashboard.php(14): App\Controllers\Admin\Dashboard->buildDashboardData()
+ 7 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Admin\Dashboard->index()
+ 8 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin\Dashboard))
+ 9 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+13 SYSTEMPATH\rewrite.php(44): require_once('C:\\xampp\\htdocs\\TekWeb\\Teori\\Tubes\\sisfoPPU\\public\\index.php')

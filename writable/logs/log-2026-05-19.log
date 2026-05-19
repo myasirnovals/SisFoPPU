@@ -1,0 +1,4 @@
+CRITICAL - 2026-05-19 05:16:29 --> ErrorException: Cannot declare class App\Database\Migrations\CreateUsersTable, because the name is already in use
+[Method: CLI, Route: migrate]
+in APPPATH\Database\Migrations\2026-05-19-051343_CreateUsersTable.php on line 7.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
