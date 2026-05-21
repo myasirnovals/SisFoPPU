@@ -31,13 +31,21 @@
                             Data Master
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item <?= url_is('admin/akademik') ? 'active bg-primary text-white' : '' ?>" href="<?= site_url('admin/akademik') ?>">Data Akademik (Prodi & Tahun)</a></li>
                             <li><a class="dropdown-item <?= url_is('admin/matakuliah') ? 'active bg-primary text-white' : '' ?>" href="<?= site_url('admin/matakuliah') ?>">Data Mata Kuliah</a></li>
+                            <li><a class="dropdown-item <?= url_is('admin/kelas') ? 'active bg-primary text-white' : '' ?>" href="<?= site_url('admin/kelas') ?>">Manajemen Kelas</a></li>
                             <li><a class="dropdown-item <?= url_is('admin/pengguna') ? 'active bg-primary text-white' : '' ?>" href="<?= site_url('admin/pengguna') ?>">Manajemen Pengguna</a></li>
                         </ul>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link <?= url_is('admin/template') ? 'active' : '' ?>" href="<?= site_url('admin/template') ?>">Template Penilaian</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle <?= url_is('admin/template') || url_is('admin/hurufmutu') ? 'active' : '' ?>" href="#" id="nilaiDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Pengaturan Nilai
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="nilaiDropdown">
+                            <li><a class="dropdown-item <?= url_is('admin/template') ? 'active bg-primary text-white' : '' ?>" href="<?= site_url('admin/template') ?>">Komponen Template</a></li>
+                            <li><a class="dropdown-item <?= url_is('admin/hurufmutu') ? 'active bg-primary text-white' : '' ?>" href="<?= site_url('admin/hurufmutu') ?>">Rentang Huruf Mutu</a></li>
+                        </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-danger" href="<?= site_url('logout') ?>">Logout</a>
