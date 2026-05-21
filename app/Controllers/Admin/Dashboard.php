@@ -55,12 +55,12 @@ class Dashboard extends BaseController
     private function countStudents(BaseConnection $db): int
     {
         try {
-            if ($db->tableExists('users') && $db->tableExists('user_roles') && $db->tableExists('roles')) {
+            if ($db->tableExists('users') && $db->tableExists('user_roles')) {
                 $row = $db->table('users u')
                     ->select('COUNT(DISTINCT u.id) AS total')
                     ->join('user_roles ur', 'ur.user_id = u.id', 'inner')
                     ->join('roles r', 'r.id = ur.role_id', 'inner')
-                    ->where('r.name', 'mahasiswa')
+                    ->where('r.code', 'mahasiswa')
                     ->get()
                     ->getRowArray();
 

@@ -22,7 +22,7 @@ class ActivityLogModel extends Model
     {
         $request = service('request');
 
-        return $this->insert([
+        return (bool) $this->insert([
             'user_id'     => $userId,
             'activity'    => $activity,
             'description' => $description,

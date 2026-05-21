@@ -13,16 +13,19 @@ class CoordinatorAccessFilter implements FilterInterface
     {
         $session = session();
 
-        $roles = $this->normalizeValues($session->get('roles') ?? $session->get('role'));
-        $permissions = $this->normalizeValues($session->get('permissions'));
+        $roles = array_map('strtolower', $this->normalizeValues($session->get('roles') ?? $session->get('role')));
+        $permissions = array_map('strtolower', $this->normalizeValues($session->get('permissions')));
 
         if ($roles === [] && $permissions === []) {
             return null;
         }
 
-        $isCoordinator = in_array('Koordinator Praktikum', $roles, true) || in_array('dashboard.coordinator.view', $permissions, true);
+        $isCoordinator = in_array('koordinator', $roles, true)
+            || in_array('koordinator praktikum', $roles, true)
+            || in_array('dashboard.coordinator.view', $permissions, true);
+        $isAdmin = in_array('admin', $roles, true);
 
-        if ($isCoordinator && ! in_array('Admin', $roles, true)) {
+        if ($isCoordinator && ! $isAdmin) {
             return null;
         }
 

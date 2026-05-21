@@ -261,7 +261,7 @@
             <div class="col-lg-5 form-panel d-flex align-items-center">
                 <div class="form-wrap">
                     <h2 class="panel-title">Masuk</h2>
-                    <p class="panel-subtitle">Gunakan username atau email yang terdaftar untuk mengakses dashboard sesuai role Anda.</p>
+                    <p class="panel-subtitle">Gunakan NIM/NID 10 digit yang terdaftar untuk mengakses dashboard sesuai role Anda.</p>
 
                     <?php if ($success = session()->getFlashdata('success')): ?>
                         <div class="alert alert-success mb-3" role="alert">
@@ -290,7 +290,7 @@
                         <?= csrf_field() ?>
 
                         <div class="mb-3">
-                            <label for="identity" class="form-label">Username atau email</label>
+                            <label for="identity" class="form-label">NIM/NID</label>
                             <input
                                 type="text"
                                 class="form-control <?= isset($validation) && $validation !== null && $validation->hasError('identity') ? 'is-invalid' : '' ?>"
@@ -298,7 +298,10 @@
                                 name="identity"
                                 value="<?= esc(old('identity', $identity ?? '')) ?>"
                                 autocomplete="username"
-                                placeholder="contoh: admin atau admin@praktikum.test"
+                                inputmode="numeric"
+                                maxlength="10"
+                                pattern="\d{10}"
+                                placeholder="contoh: 1234567890"
                             >
                             <?php if (isset($validation) && $validation !== null && $validation->hasError('identity')): ?>
                                 <div class="invalid-feedback">

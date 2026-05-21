@@ -8,7 +8,7 @@ class AssistantDashboardModel extends Model
 {
     protected $DBGroup = 'default';
 
-    public function buildDashboardData(int $userId, string $assistantName, array $filters = [], array $permissions = []): array
+    public function buildDashboardData(string $userId, string $assistantName, array $filters = [], array $permissions = []): array
     {
         $academic = $this->resolveAcademicContext();
         $filters = $this->normalizeFilters($filters, $academic);
@@ -72,12 +72,12 @@ class AssistantDashboardModel extends Model
         ];
     }
 
-    private function resolveAssistantIds(int $userId): array
+    private function resolveAssistantIds(string $userId): array
     {
-        $ids = [$userId];
+        $ids = [];
         $db = db_connect();
 
-        if ($userId > 0 && $db->tableExists('assistants')) {
+        if ($userId !== '' && $db->tableExists('assistants')) {
             $assistant = $db->table('assistants')
                 ->select('id')
                 ->where('user_id', $userId)
@@ -90,7 +90,11 @@ class AssistantDashboardModel extends Model
             }
         }
 
-        return array_values(array_unique(array_filter(array_map('intval', $ids))));
+        if ($userId !== '') {
+            $ids[] = $userId;
+        }
+
+        return array_values(array_unique(array_filter($ids, static fn ($value): bool => $value !== '' && $value !== null)));
     }
 
     private function loadClassRows(array $assistantIds, array $filters): array
@@ -465,7 +469,7 @@ class AssistantDashboardModel extends Model
         return $prepared;
     }
 
-    private function loadActivityRows(int $userId, array $classRows): array
+    private function loadActivityRows(string $userId, array $classRows): array
     {
         $db = db_connect();
 

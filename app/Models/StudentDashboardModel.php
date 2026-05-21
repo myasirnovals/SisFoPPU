@@ -48,7 +48,7 @@ class StudentDashboardModel extends Model
         'Dibatalkan' => 'secondary',
     ];
 
-    public function buildDashboardData(int $userId, string $displayName): array
+    public function buildDashboardData(string $userId, string $displayName): array
     {
         $academic = $this->resolveAcademicContext();
         $student = $this->resolveStudentProfile($userId, $displayName);
@@ -77,7 +77,7 @@ class StudentDashboardModel extends Model
         ];
     }
 
-    public function buildDetailData(int $userId, int $classId): array
+    public function buildDetailData(string $userId, int $classId): array
     {
         $academic = $this->resolveAcademicContext();
         $student = $this->resolveStudentProfile($userId, '');
@@ -99,7 +99,7 @@ class StudentDashboardModel extends Model
         ];
     }
 
-    public function getStudentClassIds(int $userId): array
+    public function getStudentClassIds(string $userId): array
     {
         $student = $this->resolveStudentProfile($userId, '');
 
@@ -119,7 +119,7 @@ class StudentDashboardModel extends Model
         ];
     }
 
-    private function resolveStudentProfile(int $userId, string $displayName): array
+    private function resolveStudentProfile(string $userId, string $displayName): array
     {
         $db = db_connect();
         $profile = [
@@ -133,7 +133,7 @@ class StudentDashboardModel extends Model
             'academic_year_active' => '',
         ];
 
-        if ($userId <= 0) {
+        if ($userId === '') {
             return $profile;
         }
 
@@ -216,15 +216,21 @@ class StudentDashboardModel extends Model
     private function loadStudentClassIds(array $student): array
     {
         $db = db_connect();
-        $studentId = (int) ($student['student_id'] ?? $student['user_id'] ?? 0);
         $classIds = [];
 
-        if ($studentId <= 0) {
+        $baseUserId = (string) ($student['user_id'] ?? '');
+        $baseStudentId = (int) ($student['student_id'] ?? 0);
+
+        if ($baseUserId === '' && $baseStudentId <= 0) {
             return [];
         }
 
         if ($db->tableExists('class_students')) {
             $studentField = $this->resolveStudentField('class_students');
+            $studentId = $this->resolveStudentIdentifier($student, $studentField);
+            if ($this->isEmptyIdentifier($studentId, $studentField)) {
+                return [];
+            }
             $rows = $db->table('class_students')
                 ->select('class_id')
                 ->where($studentField, $studentId)
@@ -236,6 +242,10 @@ class StudentDashboardModel extends Model
 
         if ($classIds === [] && $db->tableExists('final_scores')) {
             $studentField = $this->resolveStudentField('final_scores');
+            $studentId = $this->resolveStudentIdentifier($student, $studentField);
+            if ($this->isEmptyIdentifier($studentId, $studentField)) {
+                return [];
+            }
             $rows = $db->table('final_scores')
                 ->select('class_id')
                 ->where($studentField, $studentId)
@@ -247,6 +257,10 @@ class StudentDashboardModel extends Model
 
         if ($classIds === [] && $db->tableExists('score_entries')) {
             $studentField = $this->resolveStudentField('score_entries');
+            $studentId = $this->resolveStudentIdentifier($student, $studentField);
+            if ($this->isEmptyIdentifier($studentId, $studentField)) {
+                return [];
+            }
             $rows = $db->table('score_entries')
                 ->select('class_id')
                 ->where($studentField, $studentId)
@@ -461,7 +475,10 @@ class StudentDashboardModel extends Model
         }
 
         $studentField = $this->resolveStudentField('attendance_records');
-        $studentId = (int) ($student['student_id'] ?? $student['user_id'] ?? 0);
+        $studentId = $this->resolveStudentIdentifier($student, $studentField);
+        if ($this->isEmptyIdentifier($studentId, $studentField)) {
+            return [];
+        }
         $rows = [];
 
         foreach ($classRows as $classRow) {
@@ -528,8 +545,11 @@ class StudentDashboardModel extends Model
         }
 
         $studentField = $this->resolveStudentField('attendance_records');
-        $studentId = (int) ($student['student_id'] ?? $student['user_id'] ?? 0);
-        $joinCondition = 'ar.session_id = s.id AND ar.' . $studentField . ' = ' . $studentId;
+        $studentId = $this->resolveStudentIdentifier($student, $studentField);
+        if ($this->isEmptyIdentifier($studentId, $studentField)) {
+            return [];
+        }
+        $joinCondition = 'ar.session_id = s.id AND ar.' . $studentField . ' = ' . $this->formatIdentifierForSql($studentId, $studentField);
 
         $rows = $db->table('attendance_sessions s')
             ->select('s.id, s.meeting_no, s.session_date, ar.status, ar.notes')
@@ -617,7 +637,10 @@ class StudentDashboardModel extends Model
         }
 
         $studentField = $this->resolveStudentField('score_entries');
-        $studentId = (int) ($student['student_id'] ?? $student['user_id'] ?? 0);
+        $studentId = $this->resolveStudentIdentifier($student, $studentField);
+        if ($this->isEmptyIdentifier($studentId, $studentField)) {
+            return [];
+        }
 
         $rows = $db->table('score_entries')
             ->select('class_id')
@@ -653,7 +676,18 @@ class StudentDashboardModel extends Model
         }
 
         $studentField = $this->resolveStudentField('final_scores');
-        $studentId = (int) ($student['student_id'] ?? $student['user_id'] ?? 0);
+        $studentId = $this->resolveStudentIdentifier($student, $studentField);
+        if ($this->isEmptyIdentifier($studentId, $studentField)) {
+            return [
+                'final_score' => null,
+                'grade_letter' => '-',
+                'status' => 'Draft',
+                'status_badge' => self::SCORE_STATUS_BADGES['Draft'],
+                'academic_status' => 'Belum Lengkap',
+                'academic_badge' => self::ACADEMIC_STATUS_BADGES['Belum Lengkap'],
+                'notes' => '-',
+            ];
+        }
 
         $rows = $db->table('final_scores')
             ->select('class_id, final_score, grade_letter, status, validation_status, notes')
@@ -688,7 +722,18 @@ class StudentDashboardModel extends Model
         }
 
         $studentField = $this->resolveStudentField('final_scores');
-        $studentId = (int) ($student['student_id'] ?? $student['user_id'] ?? 0);
+        $studentId = $this->resolveStudentIdentifier($student, $studentField);
+        if ($this->isEmptyIdentifier($studentId, $studentField)) {
+            return [
+                'final_score' => null,
+                'grade_letter' => '-',
+                'status' => 'Draft',
+                'status_badge' => self::SCORE_STATUS_BADGES['Draft'],
+                'academic_status' => 'Belum Lengkap',
+                'academic_badge' => self::ACADEMIC_STATUS_BADGES['Belum Lengkap'],
+                'notes' => '-',
+            ];
+        }
 
         $row = $db->table('final_scores')
             ->select('final_score, grade_letter, status, validation_status, notes')
@@ -724,7 +769,10 @@ class StudentDashboardModel extends Model
         }
 
         $studentField = $this->resolveStudentField('remedial_participants');
-        $studentId = (int) ($student['student_id'] ?? $student['user_id'] ?? 0);
+        $studentId = $this->resolveStudentIdentifier($student, $studentField);
+        if ($this->isEmptyIdentifier($studentId, $studentField)) {
+            return [];
+        }
 
         $rows = $db->table('remedial_participants')
             ->select('class_id, status, reason')
@@ -752,7 +800,10 @@ class StudentDashboardModel extends Model
 
         $classIds = array_values(array_map(static fn (array $row): int => (int) ($row['id'] ?? 0), $classRows));
         $studentField = $this->resolveStudentField('remedial_participants');
-        $studentId = (int) ($student['student_id'] ?? $student['user_id'] ?? 0);
+        $studentId = $this->resolveStudentIdentifier($student, $studentField);
+        if ($this->isEmptyIdentifier($studentId, $studentField)) {
+            return [];
+        }
 
         $builder = $db->table('remedial_participants rp');
         $builder->select([
@@ -853,12 +904,15 @@ class StudentDashboardModel extends Model
     private function loadNotifications(array $student, array $classRows): array
     {
         $db = db_connect();
-        $studentId = (int) ($student['user_id'] ?? $student['student_id'] ?? 0);
         $rows = [];
 
         if ($db->tableExists('notifications')) {
             $studentField = $this->resolveStudentField('notifications');
             if (! $this->fieldExists($studentField, 'notifications')) {
+                return [];
+            }
+            $studentId = $this->resolveStudentIdentifier($student, $studentField);
+            if ($this->isEmptyIdentifier($studentId, $studentField)) {
                 return [];
             }
             $rows = $db->table('notifications')
@@ -882,9 +936,13 @@ class StudentDashboardModel extends Model
         }
 
         if ($db->tableExists('activity_logs')) {
+            $userId = (string) ($student['user_id'] ?? '');
+            if ($userId === '') {
+                return [];
+            }
             $rows = $db->table('activity_logs')
                 ->select('activity, description, created_at')
-                ->where('user_id', $studentId)
+                ->where('user_id', $userId)
                 ->orderBy('created_at', 'DESC')
                 ->limit(6)
                 ->get()
@@ -912,7 +970,10 @@ class StudentDashboardModel extends Model
         }
 
         $studentField = $this->resolveStudentField('score_entries');
-        $studentId = (int) ($student['student_id'] ?? $student['user_id'] ?? 0);
+        $studentId = $this->resolveStudentIdentifier($student, $studentField);
+        if ($this->isEmptyIdentifier($studentId, $studentField)) {
+            return [];
+        }
         $builder = $db->table('score_entries se');
         $builder->select('se.component_id, se.score_value, se.notes');
         $builder->where('se.class_id', $classId);
@@ -1252,6 +1313,41 @@ class StudentDashboardModel extends Model
         }
 
         return date('d M Y H:i', $time);
+    }
+
+    private function resolveStudentIdentifier(array $student, string $field): string|int
+    {
+        $value = $student[$field] ?? null;
+
+        if ($value === null || $value === '') {
+            $value = $field === 'user_id'
+                ? ($student['user_id'] ?? $student['student_id'] ?? '')
+                : ($student['student_id'] ?? $student['user_id'] ?? 0);
+        }
+
+        if ($field === 'user_id') {
+            return (string) $value;
+        }
+
+        return (int) $value;
+    }
+
+    private function isEmptyIdentifier(string|int $value, string $field): bool
+    {
+        if ($field === 'user_id') {
+            return (string) $value === '';
+        }
+
+        return (int) $value <= 0;
+    }
+
+    private function formatIdentifierForSql(string|int $value, string $field): string
+    {
+        if ($field === 'user_id') {
+            return db_connect()->escape((string) $value);
+        }
+
+        return (string) (int) $value;
     }
 
     private function resolveStudentField(string $table): string
