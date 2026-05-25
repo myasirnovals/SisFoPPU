@@ -17,7 +17,7 @@ class DashboardController extends BaseController
         $session = session();
         $dashboardModel = new AssistantDashboardModel();
         $displayName = (string) ($session->get('full_name') ?: $session->get('name') ?: $session->get('username') ?: 'Asisten');
-        $userId = (int) ($session->get('user_id') ?? 0);
+        $userId = (string) ($session->get('user_id') ?? '');
         $permissions = is_array($session->get('permissions')) ? $session->get('permissions') : [];
 
         return view('assistant/dashboard/index', $dashboardModel->buildDashboardData($userId, $displayName, $this->collectFilters(), $permissions));

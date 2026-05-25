@@ -49,7 +49,7 @@ class DashboardController extends BaseController
     private function buildDashboardData(): array
     {
         $session = session();
-        $userId = (int) ($session->get('user_id') ?? 0);
+        $userId = (string) ($session->get('user_id') ?? '');
         $displayName = (string) ($session->get('full_name') ?: $session->get('name') ?: $session->get('username') ?: 'Pengguna');
         $roles = $this->normalizeRoles($session->get('roles') ?? $session->get('role'));
         $activeRole = strtolower(trim((string) ($session->get('role_active') ?: $session->get('role') ?: ($roles[0] ?? ''))));
@@ -126,7 +126,7 @@ class DashboardController extends BaseController
         ];
     }
 
-    private function resolveLecturerContext(int $userId, string $displayName, string $activeRole): array
+    private function resolveLecturerContext(string $userId, string $displayName, string $activeRole): array
     {
         if (in_array($activeRole, ['admin', 'koordinator'], true)) {
             return [
@@ -140,7 +140,7 @@ class DashboardController extends BaseController
         $lecturerModel = new LecturerModel();
         $lecturer = null;
 
-        if ($userId > 0) {
+        if ($userId !== '') {
             $lecturer = $lecturerModel->where('user_id', $userId)->first();
         }
 

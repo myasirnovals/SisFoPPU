@@ -17,7 +17,7 @@ class Dashboard extends BaseController
         helper('url');
 
         $session = session();
-        $userId = (int) ($session->get('user_id') ?? 0);
+        $userId = (string) ($session->get('user_id') ?? '');
         $displayName = (string) ($session->get('full_name') ?: $session->get('name') ?: $session->get('username') ?: 'Mahasiswa');
         $dashboardModel = new StudentDashboardModel();
 
@@ -33,7 +33,7 @@ class Dashboard extends BaseController
         helper('url');
 
         $session = session();
-        $userId = (int) ($session->get('user_id') ?? 0);
+        $userId = (string) ($session->get('user_id') ?? '');
         $dashboardModel = new StudentDashboardModel();
 
         if (! in_array($classId, $dashboardModel->getStudentClassIds($userId), true)) {

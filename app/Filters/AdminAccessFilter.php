@@ -13,16 +13,17 @@ class AdminAccessFilter implements FilterInterface
     {
         $session = session();
 
-        $roles = $this->normalizeValues($session->get('roles') ?? $session->get('role'));
-        $permissions = $this->normalizeValues($session->get('permissions'));
+        $roles = array_map('strtolower', $this->normalizeValues($session->get('roles') ?? $session->get('role')));
+        $permissions = array_map('strtolower', $this->normalizeValues($session->get('permissions')));
 
         if ($roles === [] && $permissions === []) {
             return null;
         }
 
-        $isAdmin = in_array('Admin', $roles, true) || in_array('dashboard.admin.view', $permissions, true);
+        $isAdmin = in_array('admin', $roles, true) || in_array('dashboard.admin.view', $permissions, true);
+        $isCoordinator = in_array('koordinator', $roles, true) || in_array('koordinator praktikum', $roles, true);
 
-        if ($isAdmin && ! in_array('Koordinator Praktikum', $roles, true)) {
+        if ($isAdmin && ! $isCoordinator) {
             return null;
         }
 

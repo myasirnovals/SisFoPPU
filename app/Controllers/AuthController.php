@@ -19,6 +19,14 @@ class AuthController extends BaseController
         'mahasiswa' => 'mahasiswa/dashboard',
     ];
 
+    private const ROLE_CODE_TO_ALIAS = [
+        'admin_sisfo' => 'admin',
+        'koordinator_praktikum' => 'koordinator',
+        'dosen' => 'dosen',
+        'asisten_praktikum' => 'asisten',
+        'mahasiswa' => 'mahasiswa',
+    ];
+
     public function __construct()
     {
         $this->userModel        = new UserModel();
@@ -40,8 +48,8 @@ class AuthController extends BaseController
     {
         $rules = [
             'identity' => [
-                'label' => 'Email atau Username',
-                'rules' => 'required|min_length[3]',
+                'label' => 'Login Identifier',
+                'rules' => 'required|regex_match[/^\d{10}$/]',
             ],
             'password' => [
                 'label' => 'Password',
@@ -59,7 +67,6 @@ class AuthController extends BaseController
         $identity = trim((string) (
             $this->request->getPost('identity')
             ?? $this->request->getPost('login')
-            ?? $this->request->getPost('email')
             ?? ''
         ));
         $password = $this->request->getPost('password');
@@ -76,14 +83,14 @@ class AuthController extends BaseController
             return redirect()
                 ->back()
                 ->withInput()
-                ->with('error', 'Email/username atau password salah.');
+                ->with('error', 'NIM/NID atau password salah.');
         }
 
-        if (($user['status'] ?? null) !== 'active') {
+        if ((int) ($user['is_active'] ?? 0) !== 1) {
             $this->activityLogModel->logActivity(
-                (int) $user['id'],
+                (string) $user['id'],
                 'LOGIN_BLOCKED',
-                'Login ditolak karena status akun: ' . (string) ($user['status'] ?? '-')
+                'Login ditolak karena akun nonaktif.'
             );
 
             return redirect()
@@ -95,13 +102,12 @@ class AuthController extends BaseController
         $identity = trim((string) (
             $this->request->getPost('identity')
             ?? $this->request->getPost('login')
-            ?? $this->request->getPost('email')
             ?? ''
         ));
 
         if (! password_verify($password, (string) ($user['password_hash'] ?? ''))) {
             $this->activityLogModel->logActivity(
-                (int) $user['id'],
+                (string) $user['id'],
                 'LOGIN_FAILED',
                 'Login gagal karena password salah.'
             );
@@ -109,33 +115,39 @@ class AuthController extends BaseController
             return redirect()
                 ->back()
                 ->withInput()
-                ->with('error', 'Email/username atau password salah.');
+                ->with('error', 'NIM/NID atau password salah.');
         }
 
-        $roles = $this->userModel->getUserRoleSlugs((int) $user['id']);
+        $roleCodes = $this->normalizeRoles($this->userModel->getUserRoleSlugs((string) $user['id']));
+        $roles = $this->mapRoleCodesToAliases($roleCodes);
         $activeRole = $this->chooseActiveRole($roles);
         $roleLabel = $this->roleLabel($activeRole);
+        $activeRoleCode = $this->roleCodeFromAlias($activeRole, $roleCodes);
 
         session()->regenerate();
 
         session()->set([
-            'user_id'      => (int) $user['id'],
+            'user_id'      => (string) $user['id'],
+            'login_identifier' => (string) ($user['login_identifier'] ?? $identity),
+            'identifier_type' => (string) ($user['identifier_type'] ?? ''),
             'identity'     => $identity,
-            'name'         => (string) ($user['name'] ?? $user['full_name'] ?? $user['username'] ?? ''),
-            'full_name'    => (string) ($user['full_name'] ?? $user['name'] ?? $user['username'] ?? ''),
-            'username'     => (string) ($user['username'] ?? ''),
+            'name'         => (string) ($user['full_name'] ?? ''),
+            'full_name'    => (string) ($user['full_name'] ?? ''),
+            'username'     => (string) ($user['login_identifier'] ?? ''),
             'email'        => (string) ($user['email'] ?? ''),
             'roles'        => $roles,
+            'role_codes'   => $roleCodes,
             'role'         => $activeRole,
             'role_active'  => $activeRole,
+            'role_code'    => $activeRoleCode,
             'role_label'   => $roleLabel,
             'is_logged_in' => true,
         ]);
 
-        $this->userModel->touchLastLogin((int) $user['id']);
+        $this->userModel->touchLastLogin((string) $user['id']);
 
         $this->activityLogModel->logActivity(
-            (int) $user['id'],
+            (string) $user['id'],
             'LOGIN_SUCCESS',
             'User berhasil login.'
         );
@@ -151,7 +163,7 @@ class AuthController extends BaseController
 
         if ($userId) {
             $this->activityLogModel->logActivity(
-                (int) $userId,
+                (string) $userId,
                 'LOGOUT',
                 'User logout dari sistem.'
             );
@@ -182,6 +194,32 @@ class AuthController extends BaseController
         }
 
         return $roles[0] ?? '';
+    }
+
+    private function mapRoleCodesToAliases(array $roleCodes): array
+    {
+        $aliases = [];
+
+        foreach ($roleCodes as $roleCode) {
+            $aliases[] = self::ROLE_CODE_TO_ALIAS[strtolower(trim((string) $roleCode))] ?? strtolower(trim((string) $roleCode));
+        }
+
+        return array_values(array_unique(array_filter($aliases)));
+    }
+
+    private function roleCodeFromAlias(string $alias, array $roleCodes): string
+    {
+        $alias = strtolower(trim($alias));
+
+        foreach ($roleCodes as $roleCode) {
+            $mappedAlias = self::ROLE_CODE_TO_ALIAS[strtolower(trim((string) $roleCode))] ?? strtolower(trim((string) $roleCode));
+
+            if ($mappedAlias === $alias) {
+                return (string) $roleCode;
+            }
+        }
+
+        return $roleCodes[0] ?? '';
     }
 
     private function roleLabel(string $role): string
