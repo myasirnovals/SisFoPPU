@@ -1,0 +1,112 @@
+DEBUG - 2026-06-03 23:44:40 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-06-03 23:52:22 --> CSRF token verified.
+DEBUG - 2026-06-03 23:52:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-06-03 23:52:22 --> Error connecting to the database: mysqli_sql_exception: Unknown database 'db_penilaian_praktikum' in C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('localhost', 'root', Object(SensitiveParameterValue), 'db_penilaian_pr...', 3306, '', 0)
+#1 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `u`.`id`...', Array, false)
+#4 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\app\Models\UserModel.php(53): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\app\Controllers\AuthController.php(74): App\Models\UserModel->findForAuthentication('0000000001')
+#6 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CodeIgniter.php(951): App\Controllers\AuthController->attemptLogin()
+#7 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AuthController))
+#8 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#9 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#10 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#11 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#12 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\rewrite.php(44): require_once('C:\\Users\\myasi\\...')
+#13 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Unknown database 'db_penilaian_praktikum' in C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `u`.`id`...', Array, false)
+#3 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\app\Models\UserModel.php(53): CodeIgniter\Database\BaseBuilder->get()
+#4 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\app\Controllers\AuthController.php(74): App\Models\UserModel->findForAuthentication('0000000001')
+#5 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CodeIgniter.php(951): App\Controllers\AuthController->attemptLogin()
+#6 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AuthController))
+#7 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#9 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\rewrite.php(44): require_once('C:\\Users\\myasi\\...')
+#12 {main}
+CRITICAL - 2026-06-03 23:52:22 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: Unknown database 'db_penilaian_praktikum'
+[Method: POST, Route: login]
+in SYSTEMPATH\Database\BaseConnection.php on line 606.
+ 1 SYSTEMPATH\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `u`.`id`, `u`.`login_identifier`, `u`.`identifier_type`, `u`.`full_name`, `u`.`email`, `u`.`phone`, `u`.`password_hash`, `u`.`is_active`, `u`.`last_login_at`, `u`.`created_at`, `u`.`updated_at`, `u`.`deleted_at`, GROUP_CONCAT(DISTINCT r.code ORDER BY ur.id ASC SEPARATOR ",") AS role_codes, GROUP_CONCAT(DISTINCT r.name ORDER BY ur.id ASC SEPARATOR "||") AS role_names
+FROM `users` `u`
+LEFT JOIN `user_roles` `ur` ON `ur`.`user_id` = `u`.`id`
+LEFT JOIN `roles` `r` ON `r`.`id` = `ur`.`role_id`
+WHERE `u`.`login_identifier` = :u.login_identifier:
+AND `u`.`deleted_at` IS NULL
+GROUP BY `u`.`id`', [...], false)
+ 3 APPPATH\Models\UserModel.php(53): CodeIgniter\Database\BaseBuilder->get()
+ 4 APPPATH\Controllers\AuthController.php(74): App\Models\UserModel->findForAuthentication('0000000001')
+ 5 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\AuthController->attemptLogin()
+ 6 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AuthController))
+ 7 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\myasi\\OneDrive\\Dokumen\\SisFoPPU\\public\\index.php')
+DEBUG - 2026-06-03 23:52:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-06-03 23:54:20 --> CSRF token verified.
+DEBUG - 2026-06-03 23:54:20 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-06-03 23:54:20 --> Error connecting to the database: mysqli_sql_exception: Unknown database 'db_penilaian_praktikum' in C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('localhost', 'root', Object(SensitiveParameterValue), 'db_penilaian_pr...', 3306, '', 0)
+#1 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `u`.`id`...', Array, false)
+#4 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\app\Models\UserModel.php(53): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\app\Controllers\AuthController.php(74): App\Models\UserModel->findForAuthentication('0000000001')
+#6 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CodeIgniter.php(951): App\Controllers\AuthController->attemptLogin()
+#7 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AuthController))
+#8 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#9 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#10 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#11 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#12 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\rewrite.php(44): require_once('C:\\Users\\myasi\\...')
+#13 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Unknown database 'db_penilaian_praktikum' in C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `u`.`id`...', Array, false)
+#3 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\app\Models\UserModel.php(53): CodeIgniter\Database\BaseBuilder->get()
+#4 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\app\Controllers\AuthController.php(74): App\Models\UserModel->findForAuthentication('0000000001')
+#5 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CodeIgniter.php(951): App\Controllers\AuthController->attemptLogin()
+#6 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AuthController))
+#7 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#9 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\rewrite.php(44): require_once('C:\\Users\\myasi\\...')
+#12 {main}
+CRITICAL - 2026-06-03 23:54:20 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: Unknown database 'db_penilaian_praktikum'
+[Method: POST, Route: login]
+in SYSTEMPATH\Database\BaseConnection.php on line 606.
+ 1 SYSTEMPATH\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `u`.`id`, `u`.`login_identifier`, `u`.`identifier_type`, `u`.`full_name`, `u`.`email`, `u`.`phone`, `u`.`password_hash`, `u`.`is_active`, `u`.`last_login_at`, `u`.`created_at`, `u`.`updated_at`, `u`.`deleted_at`, GROUP_CONCAT(DISTINCT r.code ORDER BY ur.id ASC SEPARATOR ",") AS role_codes, GROUP_CONCAT(DISTINCT r.name ORDER BY ur.id ASC SEPARATOR "||") AS role_names
+FROM `users` `u`
+LEFT JOIN `user_roles` `ur` ON `ur`.`user_id` = `u`.`id`
+LEFT JOIN `roles` `r` ON `r`.`id` = `ur`.`role_id`
+WHERE `u`.`login_identifier` = :u.login_identifier:
+AND `u`.`deleted_at` IS NULL
+GROUP BY `u`.`id`', [...], false)
+ 3 APPPATH\Models\UserModel.php(53): CodeIgniter\Database\BaseBuilder->get()
+ 4 APPPATH\Controllers\AuthController.php(74): App\Models\UserModel->findForAuthentication('0000000001')
+ 5 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\AuthController->attemptLogin()
+ 6 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AuthController))
+ 7 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\myasi\\OneDrive\\Dokumen\\SisFoPPU\\public\\index.php')

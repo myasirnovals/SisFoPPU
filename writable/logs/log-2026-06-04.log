@@ -1,0 +1,633 @@
+ERROR - 2026-06-04 00:04:26 --> Can't create table `db_penilaian_praktikum`.`kelas` (errno: 150 "Foreign key constraint is incorrectly formed")
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('CREATE TABLE `kelas` (
+	`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`nama_kelas` VARCHAR(50) NOT NULL,
+	`mata_kuliah_id` INT(11) UNSIGNED NOT NULL,
+	`dosen_id` INT(11) UNSIGNED NULL,
+	`tahun_akademik_id` INT(11) UNSIGNED NOT NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	CONSTRAINT `pk_kelas` PRIMARY KEY(`id`),
+	CONSTRAINT `kelas_mata_kuliah_id_foreign` FOREIGN KEY (`mata_kuliah_id`) REFERENCES `mata_kuliah`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `kelas_dosen_id_foreign` FOREIGN KEY (`dosen_id`) REFERENCES `users`(`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+	CONSTRAINT `kelas_tahun_akademik_id_foreign` FOREIGN KEY (`tahun_akademik_id`) REFERENCES `tahun_akademik`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('CREATE TABLE `kelas` (
+	`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`nama_kelas` VARCHAR(50) NOT NULL,
+	`mata_kuliah_id` INT(11) UNSIGNED NOT NULL,
+	`dosen_id` INT(11) UNSIGNED NULL,
+	`tahun_akademik_id` INT(11) UNSIGNED NOT NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	CONSTRAINT `pk_kelas` PRIMARY KEY(`id`),
+	CONSTRAINT `kelas_mata_kuliah_id_foreign` FOREIGN KEY (`mata_kuliah_id`) REFERENCES `mata_kuliah`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `kelas_dosen_id_foreign` FOREIGN KEY (`dosen_id`) REFERENCES `users`(`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+	CONSTRAINT `kelas_tahun_akademik_id_foreign` FOREIGN KEY (`tahun_akademik_id`) REFERENCES `tahun_akademik`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('CREATE TABLE `kelas` (
+	`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`nama_kelas` VARCHAR(50) NOT NULL,
+	`mata_kuliah_id` INT(11) UNSIGNED NOT NULL,
+	`dosen_id` INT(11) UNSIGNED NULL,
+	`tahun_akademik_id` INT(11) UNSIGNED NOT NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	CONSTRAINT `pk_kelas` PRIMARY KEY(`id`),
+	CONSTRAINT `kelas_mata_kuliah_id_foreign` FOREIGN KEY (`mata_kuliah_id`) REFERENCES `mata_kuliah`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `kelas_dosen_id_foreign` FOREIGN KEY (`dosen_id`) REFERENCES `users`(`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+	CONSTRAINT `kelas_tahun_akademik_id_foreign` FOREIGN KEY (`tahun_akademik_id`) REFERENCES `tahun_akademik`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 4 SYSTEMPATH\Database\Forge.php(570): CodeIgniter\Database\BaseConnection->query('CREATE TABLE `kelas` (
+	`id` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`nama_kelas` VARCHAR(50) NOT NULL,
+	`mata_kuliah_id` INT(11) UNSIGNED NOT NULL,
+	`dosen_id` INT(11) UNSIGNED NULL,
+	`tahun_akademik_id` INT(11) UNSIGNED NOT NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	CONSTRAINT `pk_kelas` PRIMARY KEY(`id`),
+	CONSTRAINT `kelas_mata_kuliah_id_foreign` FOREIGN KEY (`mata_kuliah_id`) REFERENCES `mata_kuliah`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `kelas_dosen_id_foreign` FOREIGN KEY (`dosen_id`) REFERENCES `users`(`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+	CONSTRAINT `kelas_tahun_akademik_id_foreign` FOREIGN KEY (`tahun_akademik_id`) REFERENCES `tahun_akademik`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 5 APPPATH\Database\Migrations\2026-05-19-052531_CreateKelasTable.php(52): CodeIgniter\Database\Forge->createTable('kelas')
+ 6 SYSTEMPATH\Database\MigrationRunner.php(1014): App\Database\Migrations\CreateKelasTable->up()
+ 7 SYSTEMPATH\Database\MigrationRunner.php(202): CodeIgniter\Database\MigrationRunner->migrate('up', Object(stdClass))
+ 8 SYSTEMPATH\Commands\Database\Migrate.php(89): CodeIgniter\Database\MigrationRunner->latest(null)
+ 9 SYSTEMPATH\CLI\SignalTrait.php(245): CodeIgniter\Commands\Database\Migrate::CodeIgniter\Commands\Database\{closure}()
+10 SYSTEMPATH\Commands\Database\Migrate.php(88): CodeIgniter\Commands\Database\Migrate->withSignalsBlocked(Object(Closure))
+11 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Migrate->run([])
+12 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('migrate', [])
+13 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+14 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+15 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+DEBUG - 2026-06-04 00:16:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-06-04 00:17:14 --> CSRF token verified.
+DEBUG - 2026-06-04 00:17:14 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-06-04 00:17:14 --> Error: Call to undefined method App\Controllers\AuthController::normalizeRoles()
+[Method: POST, Route: login]
+in APPPATH\Controllers\AuthController.php on line 121.
+ 1 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\AuthController->attemptLogin()
+ 2 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AuthController))
+ 3 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 4 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 7 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\myasi\\OneDrive\\Dokumen\\SisFoPPU\\public\\index.php')
+INFO - 2026-06-04 00:23:21 --> CSRF token verified.
+DEBUG - 2026-06-04 00:23:21 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-06-04 00:23:21 --> Unknown column 'activity' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('INSERT INTO `activity_logs` (`user_id`, `activity`, `description`, `ip_address`, `user_agent`, `created_at`) VALUES (1, \'LOGIN_SUCCESS\', \'User berhasil login.\', \'::1\', \'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0\', \'2026-06-04 00:23:21\')', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `activity_logs` (`user_id`, `activity`, `description`, `ip_address`, `user_agent`, `created_at`) VALUES (1, \'LOGIN_SUCCESS\', \'User berhasil login.\', \'::1\', \'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0\', \'2026-06-04 00:23:21\')')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `activity_logs` (`user_id`, `activity`, `description`, `ip_address`, `user_agent`, `created_at`) VALUES (1, \'LOGIN_SUCCESS\', \'User berhasil login.\', \'::1\', \'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0\', \'2026-06-04 00:23:21\')')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `activity_logs` (`user_id`, `activity`, `description`, `ip_address`, `user_agent`, `created_at`) VALUES (:user_id:, :activity:, :description:, :ip_address:, :user_agent:, :created_at:)', [...], false)
+ 5 SYSTEMPATH\Model.php(355): CodeIgniter\Database\BaseBuilder->insert()
+ 6 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert([...])
+ 7 SYSTEMPATH\Model.php(668): CodeIgniter\BaseModel->insert([...], true)
+ 8 APPPATH\Models\ActivityLogModel.php(25): CodeIgniter\Model->insert([...])
+ 9 APPPATH\Controllers\AuthController.php(149): App\Models\ActivityLogModel->logActivity(1, 'LOGIN_SUCCESS', 'User berhasil login.')
+10 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\AuthController->attemptLogin()
+11 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AuthController))
+12 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+13 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+14 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+15 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+16 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\myasi\\OneDrive\\Dokumen\\SisFoPPU\\public\\index.php')
+CRITICAL - 2026-06-04 00:23:21 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'activity' in 'field list'
+[Method: POST, Route: login]
+in SYSTEMPATH\Database\BaseConnection.php on line 865.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `activity_logs` (`user_id`, `activity`, `description`, `ip_address`, `user_agent`, `created_at`) VALUES (:user_id:, :activity:, :description:, :ip_address:, :user_agent:, :created_at:)', [...], false)
+ 2 SYSTEMPATH\Model.php(355): CodeIgniter\Database\BaseBuilder->insert()
+ 3 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert([...])
+ 4 SYSTEMPATH\Model.php(668): CodeIgniter\BaseModel->insert([...], true)
+ 5 APPPATH\Models\ActivityLogModel.php(25): CodeIgniter\Model->insert([...])
+ 6 APPPATH\Controllers\AuthController.php(149): App\Models\ActivityLogModel->logActivity(1, 'LOGIN_SUCCESS', 'User berhasil login.')
+ 7 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\AuthController->attemptLogin()
+ 8 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AuthController))
+ 9 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+13 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\myasi\\OneDrive\\Dokumen\\SisFoPPU\\public\\index.php')
+CRITICAL - 2026-06-04 00:23:21 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'activity' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 310.
+ 1 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `activity_logs` (`user_id`, `activity`, `description`, `ip_address`, `user_agent`, `created_at`) VALUES (1, \'LOGIN_SUCCESS\', \'User berhasil login.\', \'::1\', \'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0\', \'2026-06-04 00:23:21\')')
+ 2 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `activity_logs` (`user_id`, `activity`, `description`, `ip_address`, `user_agent`, `created_at`) VALUES (1, \'LOGIN_SUCCESS\', \'User berhasil login.\', \'::1\', \'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0\', \'2026-06-04 00:23:21\')')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `activity_logs` (`user_id`, `activity`, `description`, `ip_address`, `user_agent`, `created_at`) VALUES (:user_id:, :activity:, :description:, :ip_address:, :user_agent:, :created_at:)', [...], false)
+ 4 SYSTEMPATH\Model.php(355): CodeIgniter\Database\BaseBuilder->insert()
+ 5 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert([...])
+ 6 SYSTEMPATH\Model.php(668): CodeIgniter\BaseModel->insert([...], true)
+ 7 APPPATH\Models\ActivityLogModel.php(25): CodeIgniter\Model->insert([...])
+ 8 APPPATH\Controllers\AuthController.php(149): App\Models\ActivityLogModel->logActivity(1, 'LOGIN_SUCCESS', 'User berhasil login.')
+ 9 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\AuthController->attemptLogin()
+10 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AuthController))
+11 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\myasi\\OneDrive\\Dokumen\\SisFoPPU\\public\\index.php')
+CRITICAL - 2026-06-04 00:23:21 --> [Caused by] mysqli_sql_exception: Unknown column 'activity' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('INSERT INTO `activity_logs` (`user_id`, `activity`, `description`, `ip_address`, `user_agent`, `created_at`) VALUES (1, \'LOGIN_SUCCESS\', \'User berhasil login.\', \'::1\', \'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0\', \'2026-06-04 00:23:21\')', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `activity_logs` (`user_id`, `activity`, `description`, `ip_address`, `user_agent`, `created_at`) VALUES (1, \'LOGIN_SUCCESS\', \'User berhasil login.\', \'::1\', \'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0\', \'2026-06-04 00:23:21\')')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `activity_logs` (`user_id`, `activity`, `description`, `ip_address`, `user_agent`, `created_at`) VALUES (1, \'LOGIN_SUCCESS\', \'User berhasil login.\', \'::1\', \'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36 Edg/148.0.0.0\', \'2026-06-04 00:23:21\')')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `activity_logs` (`user_id`, `activity`, `description`, `ip_address`, `user_agent`, `created_at`) VALUES (:user_id:, :activity:, :description:, :ip_address:, :user_agent:, :created_at:)', [...], false)
+ 5 SYSTEMPATH\Model.php(355): CodeIgniter\Database\BaseBuilder->insert()
+ 6 SYSTEMPATH\BaseModel.php(899): CodeIgniter\Model->doInsert([...])
+ 7 SYSTEMPATH\Model.php(668): CodeIgniter\BaseModel->insert([...], true)
+ 8 APPPATH\Models\ActivityLogModel.php(25): CodeIgniter\Model->insert([...])
+ 9 APPPATH\Controllers\AuthController.php(149): App\Models\ActivityLogModel->logActivity(1, 'LOGIN_SUCCESS', 'User berhasil login.')
+10 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\AuthController->attemptLogin()
+11 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AuthController))
+12 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+13 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+14 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+15 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+16 SYSTEMPATH\rewrite.php(44): require_once('C:\\Users\\myasi\\OneDrive\\Dokumen\\SisFoPPU\\public\\index.php')
+INFO - 2026-06-04 00:35:51 --> CSRF token verified.
+DEBUG - 2026-06-04 00:35:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-06-04 00:35:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-06-04 00:35:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-06-04 00:36:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-06-04 00:45:10 --> Unknown column 'nip' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('SELECT *
+FROM `coordinators`
+WHERE `nip` = \'0000000002\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *
+FROM `coordinators`
+WHERE `nip` = \'0000000002\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *
+FROM `coordinators`
+WHERE `nip` = \'0000000002\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `coordinators`
+WHERE `nip` = :nip:', [...], false)
+ 5 APPPATH\Database\Seeds\InitialSystemSeeder.php(270): CodeIgniter\Database\BaseBuilder->get()
+ 6 APPPATH\Database\Seeds\InitialSystemSeeder.php(256): App\Database\Seeds\InitialSystemSeeder->upsertByCode('coordinators', 'nip', [...])
+ 7 SYSTEMPATH\Database\Seeder.php(155): App\Database\Seeds\InitialSystemSeeder->run()
+ 8 SYSTEMPATH\Commands\Database\Seed.php(79): CodeIgniter\Database\Seeder->call('App\\Database\\Seeds\\InitialSystemSeeder')
+ 9 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run([])
+10 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', [...])
+11 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+12 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+13 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 00:45:49 --> Unknown column 'nip' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('SELECT *
+FROM `coordinators`
+WHERE `nip` = \'0000000002\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *
+FROM `coordinators`
+WHERE `nip` = \'0000000002\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *
+FROM `coordinators`
+WHERE `nip` = \'0000000002\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `coordinators`
+WHERE `nip` = :nip:', [...], false)
+ 5 APPPATH\Database\Seeds\InitialSystemSeeder.php(283): CodeIgniter\Database\BaseBuilder->get()
+ 6 APPPATH\Database\Seeds\InitialSystemSeeder.php(269): App\Database\Seeds\InitialSystemSeeder->upsertByCode('coordinators', 'nip', [...])
+ 7 SYSTEMPATH\Database\Seeder.php(155): App\Database\Seeds\InitialSystemSeeder->run()
+ 8 SYSTEMPATH\Commands\Database\Seed.php(79): CodeIgniter\Database\Seeder->call('App\\Database\\Seeds\\InitialSystemSeeder')
+ 9 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run([])
+10 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', [...])
+11 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+12 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+13 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 00:47:22 --> Table 'users' already exists
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('CREATE TABLE `users` (
+	`id` CHAR(10) NOT NULL,
+	`login_identifier` CHAR(10) NOT NULL,
+	`identifier_type` ENUM(\'NIM\',\'NID\',\'NIP\') NOT NULL,
+	`password_hash` VARCHAR(255) NOT NULL,
+	`full_name` VARCHAR(150) NOT NULL,
+	`email` VARCHAR(150) NULL,
+	`phone` VARCHAR(25) NULL,
+	`is_active` TINYINT(1) NOT NULL DEFAULT 1,
+	`last_login_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_users` PRIMARY KEY(`id`),
+	UNIQUE KEY `login_identifier` (`login_identifier`),
+	UNIQUE KEY `email` (`email`),
+	KEY `identifier_type` (`identifier_type`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('CREATE TABLE `users` (
+	`id` CHAR(10) NOT NULL,
+	`login_identifier` CHAR(10) NOT NULL,
+	`identifier_type` ENUM(\'NIM\',\'NID\',\'NIP\') NOT NULL,
+	`password_hash` VARCHAR(255) NOT NULL,
+	`full_name` VARCHAR(150) NOT NULL,
+	`email` VARCHAR(150) NULL,
+	`phone` VARCHAR(25) NULL,
+	`is_active` TINYINT(1) NOT NULL DEFAULT 1,
+	`last_login_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_users` PRIMARY KEY(`id`),
+	UNIQUE KEY `login_identifier` (`login_identifier`),
+	UNIQUE KEY `email` (`email`),
+	KEY `identifier_type` (`identifier_type`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('CREATE TABLE `users` (
+	`id` CHAR(10) NOT NULL,
+	`login_identifier` CHAR(10) NOT NULL,
+	`identifier_type` ENUM(\'NIM\',\'NID\',\'NIP\') NOT NULL,
+	`password_hash` VARCHAR(255) NOT NULL,
+	`full_name` VARCHAR(150) NOT NULL,
+	`email` VARCHAR(150) NULL,
+	`phone` VARCHAR(25) NULL,
+	`is_active` TINYINT(1) NOT NULL DEFAULT 1,
+	`last_login_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_users` PRIMARY KEY(`id`),
+	UNIQUE KEY `login_identifier` (`login_identifier`),
+	UNIQUE KEY `email` (`email`),
+	KEY `identifier_type` (`identifier_type`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 4 SYSTEMPATH\Database\Forge.php(570): CodeIgniter\Database\BaseConnection->query('CREATE TABLE `users` (
+	`id` CHAR(10) NOT NULL,
+	`login_identifier` CHAR(10) NOT NULL,
+	`identifier_type` ENUM(\'NIM\',\'NID\',\'NIP\') NOT NULL,
+	`password_hash` VARCHAR(255) NOT NULL,
+	`full_name` VARCHAR(150) NOT NULL,
+	`email` VARCHAR(150) NULL,
+	`phone` VARCHAR(25) NULL,
+	`is_active` TINYINT(1) NOT NULL DEFAULT 1,
+	`last_login_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_users` PRIMARY KEY(`id`),
+	UNIQUE KEY `login_identifier` (`login_identifier`),
+	UNIQUE KEY `email` (`email`),
+	KEY `identifier_type` (`identifier_type`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 5 APPPATH\Database\Migrations\2026-05-21-000001_create_auth_core_tables.php(69): CodeIgniter\Database\Forge->createTable('users')
+ 6 SYSTEMPATH\Database\MigrationRunner.php(1014): App\Database\Migrations\CreateAuthCoreTables->up()
+ 7 SYSTEMPATH\Database\MigrationRunner.php(202): CodeIgniter\Database\MigrationRunner->migrate('up', Object(stdClass))
+ 8 SYSTEMPATH\Commands\Database\Migrate.php(89): CodeIgniter\Database\MigrationRunner->latest(null)
+ 9 SYSTEMPATH\CLI\SignalTrait.php(245): CodeIgniter\Commands\Database\Migrate::CodeIgniter\Commands\Database\{closure}()
+10 SYSTEMPATH\Commands\Database\Migrate.php(88): CodeIgniter\Commands\Database\Migrate->withSignalsBlocked(Object(Closure))
+11 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Migrate->run([])
+12 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('migrate', [])
+13 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+14 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+15 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 00:47:44 --> Unknown column 'nip' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('SELECT *
+FROM `coordinators`
+WHERE `nip` = \'0000000002\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *
+FROM `coordinators`
+WHERE `nip` = \'0000000002\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *
+FROM `coordinators`
+WHERE `nip` = \'0000000002\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `coordinators`
+WHERE `nip` = :nip:', [...], false)
+ 5 APPPATH\Database\Seeds\InitialSystemSeeder.php(283): CodeIgniter\Database\BaseBuilder->get()
+ 6 APPPATH\Database\Seeds\InitialSystemSeeder.php(269): App\Database\Seeds\InitialSystemSeeder->upsertByCode('coordinators', 'nip', [...])
+ 7 SYSTEMPATH\Database\Seeder.php(155): App\Database\Seeds\InitialSystemSeeder->run()
+ 8 SYSTEMPATH\Commands\Database\Seed.php(79): CodeIgniter\Database\Seeder->call('App\\Database\\Seeds\\InitialSystemSeeder')
+ 9 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run([])
+10 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', [...])
+11 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+12 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+13 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 00:51:07 --> Unknown column 'nip' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('SELECT *
+FROM `coordinators`
+WHERE `nip` = \'0000000002\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *
+FROM `coordinators`
+WHERE `nip` = \'0000000002\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *
+FROM `coordinators`
+WHERE `nip` = \'0000000002\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `coordinators`
+WHERE `nip` = :nip:', [...], false)
+ 5 APPPATH\Database\Seeds\InitialSystemSeeder.php(283): CodeIgniter\Database\BaseBuilder->get()
+ 6 APPPATH\Database\Seeds\InitialSystemSeeder.php(269): App\Database\Seeds\InitialSystemSeeder->upsertByCode('coordinators', 'nip', [...])
+ 7 SYSTEMPATH\Database\Seeder.php(155): App\Database\Seeds\InitialSystemSeeder->run()
+ 8 SYSTEMPATH\Commands\Database\Seed.php(79): CodeIgniter\Database\Seeder->call('App\\Database\\Seeds\\InitialSystemSeeder')
+ 9 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run([])
+10 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', [...])
+11 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+12 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+13 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 00:52:07 --> Unknown column 'unit_name' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('INSERT INTO `coordinators` (`unit_name`, `position`, `status`, `deleted_at`, `user_id`, `nid`, `created_at`, `updated_at`) VALUES (\'Laboratorium\', \'Koordinator Praktikum\', \'aktif\', NULL, \'0000000002\', \'0000000002\', \'2026-06-04 00:52:07\', \'2026-06-04 00:52:07\')', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `coordinators` (`unit_name`, `position`, `status`, `deleted_at`, `user_id`, `nid`, `created_at`, `updated_at`) VALUES (\'Laboratorium\', \'Koordinator Praktikum\', \'aktif\', NULL, \'0000000002\', \'0000000002\', \'2026-06-04 00:52:07\', \'2026-06-04 00:52:07\')')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `coordinators` (`unit_name`, `position`, `status`, `deleted_at`, `user_id`, `nid`, `created_at`, `updated_at`) VALUES (\'Laboratorium\', \'Koordinator Praktikum\', \'aktif\', NULL, \'0000000002\', \'0000000002\', \'2026-06-04 00:52:07\', \'2026-06-04 00:52:07\')')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `coordinators` (`unit_name`, `position`, `status`, `deleted_at`, `user_id`, `nid`, `created_at`, `updated_at`) VALUES (:unit_name:, :position:, :status:, :deleted_at:, :user_id:, :nid:, :created_at:, :updated_at:)', [...], false)
+ 5 APPPATH\Database\Seeds\InitialSystemSeeder.php(288): CodeIgniter\Database\BaseBuilder->insert([...])
+ 6 APPPATH\Database\Seeds\InitialSystemSeeder.php(271): App\Database\Seeds\InitialSystemSeeder->upsertByCode('coordinators', 'nid', [...])
+ 7 SYSTEMPATH\Database\Seeder.php(155): App\Database\Seeds\InitialSystemSeeder->run()
+ 8 SYSTEMPATH\Commands\Database\Seed.php(79): CodeIgniter\Database\Seeder->call('App\\Database\\Seeds\\InitialSystemSeeder')
+ 9 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run([])
+10 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', [...])
+11 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+12 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+13 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 02:18:37 --> Error connecting to the database: mysqli_sql_exception: No connection could be made because the target machine actively refused it in C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('localhost', 'root', Object(SensitiveParameterValue), 'db_penilaian_pr...', 3306, '', 0)
+#1 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Database.php(74): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Config.php(111): CodeIgniter\Database\Database->loadForge(Object(CodeIgniter\Database\MySQLi\Connection))
+#4 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Seeder.php(103): CodeIgniter\Database\Config::forge('default')
+#5 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Commands\Database\Seed.php(71): CodeIgniter\Database\Seeder->__construct(Object(Config\Database))
+#6 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run(Array)
+#7 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', Array)
+#8 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(442): CodeIgniter\CLI\Console->run()
+#9 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#10 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#11 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: No connection could be made because the target machine actively refused it in C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Database.php(74): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Config.php(111): CodeIgniter\Database\Database->loadForge(Object(CodeIgniter\Database\MySQLi\Connection))
+#3 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Seeder.php(103): CodeIgniter\Database\Config::forge('default')
+#4 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Commands\Database\Seed.php(71): CodeIgniter\Database\Seeder->__construct(Object(Config\Database))
+#5 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run(Array)
+#6 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', Array)
+#7 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(442): CodeIgniter\CLI\Console->run()
+#8 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#9 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#10 {main}
+CRITICAL - 2026-06-04 02:18:37 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: No connection could be made because the target machine actively refused it
+[Method: CLI, Route: db:seed/InitialSystemSeeder]
+in SYSTEMPATH\Database\BaseConnection.php on line 606.
+ 1 SYSTEMPATH\Database\Database.php(74): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH\Database\Config.php(111): CodeIgniter\Database\Database->loadForge(Object(CodeIgniter\Database\MySQLi\Connection))
+ 3 SYSTEMPATH\Database\Seeder.php(103): CodeIgniter\Database\Config::forge('default')
+ 4 SYSTEMPATH\Commands\Database\Seed.php(71): CodeIgniter\Database\Seeder->__construct(Object(Config\Database))
+ 5 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run([...])
+ 6 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', [...])
+ 7 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+ 8 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+ 9 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 02:18:37 --> Error connecting to the database: mysqli_sql_exception: No connection could be made because the target machine actively refused it in C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('localhost', 'root', Object(SensitiveParameterValue), 'db_penilaian_pr...', 3306, '', 0)
+#1 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Database.php(74): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Config.php(111): CodeIgniter\Database\Database->loadForge(Object(CodeIgniter\Database\MySQLi\Connection))
+#4 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Seeder.php(103): CodeIgniter\Database\Config::forge('default')
+#5 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Commands\Database\Seed.php(71): CodeIgniter\Database\Seeder->__construct(Object(Config\Database))
+#6 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run(Array)
+#7 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', Array)
+#8 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(442): CodeIgniter\CLI\Console->run()
+#9 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#10 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#11 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: No connection could be made because the target machine actively refused it in C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Database.php(74): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Config.php(111): CodeIgniter\Database\Database->loadForge(Object(CodeIgniter\Database\MySQLi\Connection))
+#3 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Seeder.php(103): CodeIgniter\Database\Config::forge('default')
+#4 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Commands\Database\Seed.php(71): CodeIgniter\Database\Seeder->__construct(Object(Config\Database))
+#5 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run(Array)
+#6 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', Array)
+#7 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(442): CodeIgniter\CLI\Console->run()
+#8 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#9 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#10 {main}
+CRITICAL - 2026-06-04 02:18:37 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: No connection could be made because the target machine actively refused it
+[Method: CLI, Route: db:seed/InitialSystemSeeder]
+in SYSTEMPATH\Database\BaseConnection.php on line 606.
+ 1 SYSTEMPATH\Database\Database.php(74): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH\Database\Config.php(111): CodeIgniter\Database\Database->loadForge(Object(CodeIgniter\Database\MySQLi\Connection))
+ 3 SYSTEMPATH\Database\Seeder.php(103): CodeIgniter\Database\Config::forge('default')
+ 4 SYSTEMPATH\Commands\Database\Seed.php(71): CodeIgniter\Database\Seeder->__construct(Object(Config\Database))
+ 5 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run([...])
+ 6 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', [...])
+ 7 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+ 8 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+ 9 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 02:18:53 --> Error connecting to the database: mysqli_sql_exception: No connection could be made because the target machine actively refused it in C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('localhost', 'root', Object(SensitiveParameterValue), 'db_penilaian_pr...', 3306, '', 0)
+#1 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Database.php(74): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Config.php(111): CodeIgniter\Database\Database->loadForge(Object(CodeIgniter\Database\MySQLi\Connection))
+#4 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Seeder.php(103): CodeIgniter\Database\Config::forge('default')
+#5 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Commands\Database\Seed.php(71): CodeIgniter\Database\Seeder->__construct(Object(Config\Database))
+#6 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run(Array)
+#7 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', Array)
+#8 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(442): CodeIgniter\CLI\Console->run()
+#9 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#10 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#11 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: No connection could be made because the target machine actively refused it in C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Database.php(74): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Config.php(111): CodeIgniter\Database\Database->loadForge(Object(CodeIgniter\Database\MySQLi\Connection))
+#3 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Seeder.php(103): CodeIgniter\Database\Config::forge('default')
+#4 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Commands\Database\Seed.php(71): CodeIgniter\Database\Seeder->__construct(Object(Config\Database))
+#5 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run(Array)
+#6 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', Array)
+#7 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(442): CodeIgniter\CLI\Console->run()
+#8 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#9 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#10 {main}
+CRITICAL - 2026-06-04 02:18:53 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: No connection could be made because the target machine actively refused it
+[Method: CLI, Route: db:seed/InitialSystemSeeder]
+in SYSTEMPATH\Database\BaseConnection.php on line 606.
+ 1 SYSTEMPATH\Database\Database.php(74): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH\Database\Config.php(111): CodeIgniter\Database\Database->loadForge(Object(CodeIgniter\Database\MySQLi\Connection))
+ 3 SYSTEMPATH\Database\Seeder.php(103): CodeIgniter\Database\Config::forge('default')
+ 4 SYSTEMPATH\Commands\Database\Seed.php(71): CodeIgniter\Database\Seeder->__construct(Object(Config\Database))
+ 5 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run([...])
+ 6 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', [...])
+ 7 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+ 8 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+ 9 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 02:19:25 --> Error connecting to the database: mysqli_sql_exception: No connection could be made because the target machine actively refused it in C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('localhost', 'root', Object(SensitiveParameterValue), 'db_penilaian_pr...', 3306, '', 0)
+#1 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Database.php(74): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Config.php(111): CodeIgniter\Database\Database->loadForge(Object(CodeIgniter\Database\MySQLi\Connection))
+#4 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Seeder.php(103): CodeIgniter\Database\Config::forge('default')
+#5 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Commands\Database\Seed.php(71): CodeIgniter\Database\Seeder->__construct(Object(Config\Database))
+#6 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run(Array)
+#7 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', Array)
+#8 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(442): CodeIgniter\CLI\Console->run()
+#9 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#10 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#11 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: No connection could be made because the target machine actively refused it in C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Database.php(74): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Config.php(111): CodeIgniter\Database\Database->loadForge(Object(CodeIgniter\Database\MySQLi\Connection))
+#3 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Seeder.php(103): CodeIgniter\Database\Config::forge('default')
+#4 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Commands\Database\Seed.php(71): CodeIgniter\Database\Seeder->__construct(Object(Config\Database))
+#5 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run(Array)
+#6 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', Array)
+#7 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(442): CodeIgniter\CLI\Console->run()
+#8 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#9 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#10 {main}
+CRITICAL - 2026-06-04 02:19:25 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: No connection could be made because the target machine actively refused it
+[Method: CLI, Route: db:seed/InitialSystemSeeder]
+in SYSTEMPATH\Database\BaseConnection.php on line 606.
+ 1 SYSTEMPATH\Database\Database.php(74): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH\Database\Config.php(111): CodeIgniter\Database\Database->loadForge(Object(CodeIgniter\Database\MySQLi\Connection))
+ 3 SYSTEMPATH\Database\Seeder.php(103): CodeIgniter\Database\Config::forge('default')
+ 4 SYSTEMPATH\Commands\Database\Seed.php(71): CodeIgniter\Database\Seeder->__construct(Object(Config\Database))
+ 5 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run([...])
+ 6 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', [...])
+ 7 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+ 8 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+ 9 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 02:19:51 --> Error connecting to the database: mysqli_sql_exception: No connection could be made because the target machine actively refused it in C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('localhost', 'root', Object(SensitiveParameterValue), 'db_penilaian_pr...', 3306, '', 0)
+#1 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Database.php(74): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Config.php(111): CodeIgniter\Database\Database->loadForge(Object(CodeIgniter\Database\MySQLi\Connection))
+#4 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Seeder.php(103): CodeIgniter\Database\Config::forge('default')
+#5 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Commands\Database\Seed.php(71): CodeIgniter\Database\Seeder->__construct(Object(Config\Database))
+#6 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run(Array)
+#7 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', Array)
+#8 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(442): CodeIgniter\CLI\Console->run()
+#9 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#10 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#11 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: No connection could be made because the target machine actively refused it in C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Database.php(74): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Config.php(111): CodeIgniter\Database\Database->loadForge(Object(CodeIgniter\Database\MySQLi\Connection))
+#3 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Seeder.php(103): CodeIgniter\Database\Config::forge('default')
+#4 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Commands\Database\Seed.php(71): CodeIgniter\Database\Seeder->__construct(Object(Config\Database))
+#5 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run(Array)
+#6 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', Array)
+#7 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(442): CodeIgniter\CLI\Console->run()
+#8 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#9 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#10 {main}
+CRITICAL - 2026-06-04 02:19:51 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: No connection could be made because the target machine actively refused it
+[Method: CLI, Route: db:seed/InitialSystemSeeder]
+in SYSTEMPATH\Database\BaseConnection.php on line 606.
+ 1 SYSTEMPATH\Database\Database.php(74): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH\Database\Config.php(111): CodeIgniter\Database\Database->loadForge(Object(CodeIgniter\Database\MySQLi\Connection))
+ 3 SYSTEMPATH\Database\Seeder.php(103): CodeIgniter\Database\Config::forge('default')
+ 4 SYSTEMPATH\Commands\Database\Seed.php(71): CodeIgniter\Database\Seeder->__construct(Object(Config\Database))
+ 5 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run([...])
+ 6 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', [...])
+ 7 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+ 8 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+ 9 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 02:20:23 --> Error connecting to the database: mysqli_sql_exception: No connection could be made because the target machine actively refused it in C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('localhost', 'root', Object(SensitiveParameterValue), 'db_penilaian_pr...', 3306, '', 0)
+#1 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Database.php(74): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Config.php(111): CodeIgniter\Database\Database->loadForge(Object(CodeIgniter\Database\MySQLi\Connection))
+#4 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Seeder.php(103): CodeIgniter\Database\Config::forge('default')
+#5 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Commands\Database\Seed.php(71): CodeIgniter\Database\Seeder->__construct(Object(Config\Database))
+#6 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run(Array)
+#7 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', Array)
+#8 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(442): CodeIgniter\CLI\Console->run()
+#9 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#10 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#11 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: No connection could be made because the target machine actively refused it in C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Database.php(74): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Config.php(111): CodeIgniter\Database\Database->loadForge(Object(CodeIgniter\Database\MySQLi\Connection))
+#3 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Seeder.php(103): CodeIgniter\Database\Config::forge('default')
+#4 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Commands\Database\Seed.php(71): CodeIgniter\Database\Seeder->__construct(Object(Config\Database))
+#5 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run(Array)
+#6 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', Array)
+#7 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(442): CodeIgniter\CLI\Console->run()
+#8 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#9 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#10 {main}
+CRITICAL - 2026-06-04 02:20:23 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: No connection could be made because the target machine actively refused it
+[Method: CLI, Route: db:seed/InitialSystemSeeder]
+in SYSTEMPATH\Database\BaseConnection.php on line 606.
+ 1 SYSTEMPATH\Database\Database.php(74): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH\Database\Config.php(111): CodeIgniter\Database\Database->loadForge(Object(CodeIgniter\Database\MySQLi\Connection))
+ 3 SYSTEMPATH\Database\Seeder.php(103): CodeIgniter\Database\Config::forge('default')
+ 4 SYSTEMPATH\Commands\Database\Seed.php(71): CodeIgniter\Database\Seeder->__construct(Object(Config\Database))
+ 5 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run([...])
+ 6 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', [...])
+ 7 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+ 8 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+ 9 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 02:20:59 --> Error connecting to the database: mysqli_sql_exception: No connection could be made because the target machine actively refused it in C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('localhost', 'root', Object(SensitiveParameterValue), 'db_penilaian_pr...', 3306, '', 0)
+#1 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Database.php(74): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Config.php(111): CodeIgniter\Database\Database->loadForge(Object(CodeIgniter\Database\MySQLi\Connection))
+#4 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Seeder.php(103): CodeIgniter\Database\Config::forge('default')
+#5 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Commands\Database\Seed.php(71): CodeIgniter\Database\Seeder->__construct(Object(Config\Database))
+#6 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run(Array)
+#7 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', Array)
+#8 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(442): CodeIgniter\CLI\Console->run()
+#9 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#10 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#11 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: No connection could be made because the target machine actively refused it in C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Database.php(74): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Config.php(111): CodeIgniter\Database\Database->loadForge(Object(CodeIgniter\Database\MySQLi\Connection))
+#3 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Database\Seeder.php(103): CodeIgniter\Database\Config::forge('default')
+#4 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Commands\Database\Seed.php(71): CodeIgniter\Database\Seeder->__construct(Object(Config\Database))
+#5 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run(Array)
+#6 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', Array)
+#7 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(442): CodeIgniter\CLI\Console->run()
+#8 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\system\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#9 C:\Users\myasi\OneDrive\Dokumen\SisFoPPU\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#10 {main}
+CRITICAL - 2026-06-04 02:20:59 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: No connection could be made because the target machine actively refused it
+[Method: CLI, Route: db:seed/InitialSystemSeeder]
+in SYSTEMPATH\Database\BaseConnection.php on line 606.
+ 1 SYSTEMPATH\Database\Database.php(74): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH\Database\Config.php(111): CodeIgniter\Database\Database->loadForge(Object(CodeIgniter\Database\MySQLi\Connection))
+ 3 SYSTEMPATH\Database\Seeder.php(103): CodeIgniter\Database\Config::forge('default')
+ 4 SYSTEMPATH\Commands\Database\Seed.php(71): CodeIgniter\Database\Seeder->__construct(Object(Config\Database))
+ 5 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run([...])
+ 6 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', [...])
+ 7 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+ 8 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+ 9 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))

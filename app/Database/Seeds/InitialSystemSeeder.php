@@ -44,6 +44,9 @@ class InitialSystemSeeder extends Seeder
             ['name' => 'Kelola notifikasi', 'code' => 'notification.manage', 'module' => 'notification', 'description' => 'Mengirim dan mengelola notifikasi'],
         ];
 
+        // Mapping permission yang diberikan per role
+
+
         foreach ($permissions as $permission) {
             $this->upsertByCode('permissions', 'code', $permission + ['created_at' => $now, 'updated_at' => $now]);
         }
@@ -123,50 +126,162 @@ class InitialSystemSeeder extends Seeder
             $this->upsertByCode('grade_scales', 'scale_code', $scale + ['created_at' => $now, 'updated_at' => $now]);
         }
 
-        $adminIdentifier = '0000000001';
-        $user = $this->db->table('users')->where('login_identifier', $adminIdentifier)->get()->getRowArray();
-
-        if ($user === null) {
-            $this->db->table('users')->insert([
-                'id' => $adminIdentifier,
-                'login_identifier' => $adminIdentifier,
+            // Dummy user untuk setiap role (hanya 1 user per role) + isi tabel detail role
+        $dummyUsersByRole = [
+            [
+                'role_code' => 'admin_sisfo',
                 'identifier_type' => 'NIP',
-                'password_hash' => password_hash('admin12345', PASSWORD_DEFAULT),
+                'login_identifier' => '0000000001',
+                'password' => 'admin12345',
                 'full_name' => 'Administrator SISFO',
                 'email' => 'sisfo@example.edu',
-                'phone' => null,
-                'is_active' => 1,
-                'created_at' => $now,
-                'updated_at' => $now,
-                'deleted_at' => null,
-            ]);
-            $userId = (string) $adminIdentifier;
-        } else {
-            $userId = (string) $user['id'];
-            $this->db->table('users')->where('id', $userId)->update([
+                'detail_table' => 'admins',
+                'detail_code_field' => 'nip',
+                'detail' => [
+                    'unit_name' => 'SISFO',
+                    'position' => 'Petugas SISFO',
+                    'status' => 'aktif',
+                    'deleted_at' => null,
+                ],
+                'detail_code_value' => '0000000001',
+            ],
+            [
+                'role_code' => 'koordinator_praktikum',
                 'identifier_type' => 'NIP',
-                'password_hash' => password_hash('admin12345', PASSWORD_DEFAULT),
-                'full_name' => 'Administrator SISFO',
-                'is_active' => 1,
-                'updated_at' => $now,
-            ]);
-        }
+                'login_identifier' => '0000000002',
+                'password' => 'koordinator12345',
+                'full_name' => 'Koordinator Praktikum',
+                'email' => 'koordinator@example.edu',
+                'detail_table' => 'coordinators',
+                'detail_code_field' => 'nid',
+                'detail' => [
+                    'study_program_id' => 1,
+                    'status' => 'aktif',
+                    'deleted_at' => null,
+                ],
+                'detail_code_value' => '0000000002',
+            ],
+            [
+                'role_code' => 'dosen',
+                'identifier_type' => 'NIP',
+                'login_identifier' => '0000000003',
+                'password' => 'dosen12345',
+                'full_name' => 'Dosen Pengampu',
+                'email' => 'dosen@example.edu',
+                'detail_table' => 'lecturers',
+                'detail_code_field' => 'nid',
+                'detail' => [
+                    'study_program_id' => 1,
+                    'status' => 'aktif',
+                    'deleted_at' => null,
+                ],
+                'detail_code_value' => '0000000003',
+            ],
+            [
+                'role_code' => 'asisten_praktikum',
+                'identifier_type' => 'NID',
+                'login_identifier' => '0000000004',
+                'password' => 'asisten12345',
+                'full_name' => 'Asisten Praktikum',
+                'email' => 'asisten@example.edu',
+                'detail_table' => 'assistants',
+                'detail_code_field' => 'nim',
+                'detail' => [
+                    'study_program_id' => 1,
+                    'status' => 'aktif',
+                    'deleted_at' => null,
+                ],
+                'detail_code_value' => '0000000004',
+            ],
+            [
+                'role_code' => 'mahasiswa',
+                'identifier_type' => 'NIM',
+                'login_identifier' => '0000000005',
+                'password' => 'mahasiswa12345',
+                'full_name' => 'Mahasiswa Praktikum',
+                'email' => 'mahasiswa@example.edu',
+                'detail_table' => 'students',
+                'detail_code_field' => 'nim',
+                'detail' => [
+                    'study_program_id' => 1,
+                    'class_year' => 2024,
+                    'status' => 'aktif',
+                    'deleted_at' => null,
+                ],
+                'detail_code_value' => '0000000005',
+            ],
+        ];
 
-        $adminRoleId = $roleIds['admin_sisfo'] ?? null;
-        if ($adminRoleId !== null) {
-            $this->upsertComposite('user_roles', ['user_id' => $userId, 'role_id' => $adminRoleId], ['created_at' => $now]);
-        }
 
-        $this->upsertByCode('admins', 'nip', [
-            'user_id' => $userId,
-            'nip' => $adminIdentifier,
-            'unit_name' => 'SISFO',
-            'position' => 'Petugas SISFO',
-            'status' => 'aktif',
-            'created_at' => $now,
-            'updated_at' => $now,
-            'deleted_at' => null,
-        ]);
+        foreach ($dummyUsersByRole as $dummy) {
+            $roleCode = (string) $dummy['role_code'];
+            $roleId = $roleIds[$roleCode] ?? null;
+            if ($roleId === null) {
+                continue;
+            }
+
+            $identifier = (string) $dummy['login_identifier'];
+            $user = $this->db->table('users')->where('login_identifier', $identifier)->get()->getRowArray();
+
+            if ($user === null) {
+                $this->db->table('users')->insert([
+                    'id' => $identifier,
+                    'login_identifier' => $identifier,
+                    'identifier_type' => $dummy['identifier_type'],
+                    'password_hash' => password_hash($dummy['password'], PASSWORD_DEFAULT),
+                    'full_name' => $dummy['full_name'],
+                    'email' => $dummy['email'],
+                    'phone' => null,
+                    'is_active' => 1,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                    'deleted_at' => null,
+                ]);
+                $userId = $identifier;
+            } else {
+                $userId = (string) $user['id'];
+                $this->db->table('users')->where('id', $userId)->update([
+                    'identifier_type' => $dummy['identifier_type'],
+                    'password_hash' => password_hash($dummy['password'], PASSWORD_DEFAULT),
+                    'full_name' => $dummy['full_name'],
+                    'email' => $dummy['email'],
+                    'is_active' => 1,
+                    'updated_at' => $now,
+                ]);
+            }
+
+            $this->upsertComposite('user_roles', ['user_id' => (string) $userId, 'role_id' => (int) $roleId], ['created_at' => $now]);
+
+            // Tabel detail role (admins/coordinators/lecturers/assistants/students)
+            $detailTable = $dummy['detail_table'];
+            $detailCodeField = $dummy['detail_code_field'];
+            $detailCodeValue = (string) $dummy['detail_code_value'];
+
+            // Pastikan field upsertByCode sesuai dengan kolom unik di tabelnya.
+            // Dari migration: coordinators pakai UNIQUE 'nip', admins pakai UNIQUE 'nip' (tapi di seeder sebelumnya ada ketidaksesuaian).
+            // Gunakan mapping spesifik agar tidak error.
+            // Mapping kolom unik per tabel sesuai dengan skema DB yang sedang dipakai.
+            $uniqueFieldByTable = [
+                'admins' => 'nip',
+                'coordinators' => 'nid',
+                'lecturers' => 'nid',
+                'assistants' => 'nim',
+                'students' => 'nim',
+            ];
+
+            $uniqueCodeField = $uniqueFieldByTable[$detailTable] ?? $detailCodeField;
+
+
+            $this->upsertByCode($detailTable, $uniqueCodeField, array_merge(
+                $dummy['detail'],
+                [
+                    'user_id' => (string) $userId,
+                    $uniqueCodeField => $detailCodeValue,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ]
+            ));
+        }
     }
 
     private function upsertByCode(string $table, string $codeField, array $data): void

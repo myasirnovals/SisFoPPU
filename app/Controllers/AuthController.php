@@ -233,4 +233,18 @@ class AuthController extends BaseController
             default => 'Pengguna',
         };
     }
+
+    /**
+     * Menormalkan array role codes yang didapat dari database.
+     * * @param array $roles
+     * @return array
+     */
+    private function normalizeRoles(array $roles): array
+    {
+        // Pastikan format role seragam, misalnya menghapus spasi ekstra 
+        // dan memastikan bentuknya array of strings yang valid.
+        // Sesuaikan logika ini jika bentuk array dari getUserRoleSlugs() berbeda (misal array of objects).
+        
+        return array_filter(array_map('trim', $roles));
+    }
 }

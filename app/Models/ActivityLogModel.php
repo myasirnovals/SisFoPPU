@@ -24,7 +24,7 @@ class ActivityLogModel extends Model
 
         return (bool) $this->insert([
             'user_id'     => $userId,
-            'activity'    => $activity,
+            'action'    => $activity,
             'description' => $description,
             'ip_address'  => $request->getIPAddress(),
             'user_agent'  => $request->getUserAgent()->getAgentString(),
