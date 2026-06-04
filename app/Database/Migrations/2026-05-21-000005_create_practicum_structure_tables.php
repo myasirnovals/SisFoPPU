@@ -141,10 +141,11 @@ class CreatePracticumStructureTables extends Migration
                 'type'     => 'INT',
                 'unsigned' => true,
             ],
-            'student_id' => [
-                'type'     => 'INT',
-                'unsigned' => true,
+            'student_nim' => [
+                'type' => 'CHAR',
+                'constraint' => 10,
             ],
+
             'group_id' => [
                 'type'     => 'INT',
                 'unsigned' => true,

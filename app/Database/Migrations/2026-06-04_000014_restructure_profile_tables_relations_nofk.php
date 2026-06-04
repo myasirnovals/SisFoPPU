@@ -13,11 +13,13 @@ class RestructureProfileTablesRelationsNoFK extends Migration
 {
     public function up()
     {
+        // Drop existing profile tables (nama sama) agar struktur final konsisten.
         $this->forge->dropTable('assistants', true);
         $this->forge->dropTable('lecturers', true);
         $this->forge->dropTable('students', true);
         $this->forge->dropTable('coordinators', true);
         $this->forge->dropTable('admins', true);
+
 
         $this->forge->addField([
             'user_nim' => ['type' => 'CHAR', 'constraint' => 10],
@@ -29,9 +31,12 @@ class RestructureProfileTablesRelationsNoFK extends Migration
             'deleted_at' => ['type' => 'DATETIME', 'null' => true],
         ]);
         $this->forge->addKey('user_nim', true);
+        // FK ke users.id (users sudah dibuat di 2026-05-21_000001_create_auth_core_tables.php)
+        $this->forge->addForeignKey('user_nim', 'users', 'id', 'RESTRICT', 'CASCADE');
         $this->forge->createTable('students');
 
         $this->forge->addField([
+
             'user_nim' => ['type' => 'CHAR', 'constraint' => 10],
             'study_program_id' => ['type' => 'INT', 'unsigned' => true, 'null' => true],
             'status' => ['type' => 'ENUM', 'constraint' => ['aktif','tidak_aktif'], 'default' => 'aktif'],
@@ -40,9 +45,11 @@ class RestructureProfileTablesRelationsNoFK extends Migration
             'deleted_at' => ['type' => 'DATETIME', 'null' => true],
         ]);
         $this->forge->addKey('user_nim', true);
+        $this->forge->addForeignKey('user_nim', 'users', 'id', 'RESTRICT', 'CASCADE');
         $this->forge->createTable('assistants');
 
         $this->forge->addField([
+
             'user_nid' => ['type' => 'CHAR', 'constraint' => 10],
             'study_program_id' => ['type' => 'INT', 'unsigned' => true, 'null' => true],
             'status' => ['type' => 'ENUM', 'constraint' => ['aktif','tidak_aktif'], 'default' => 'aktif'],
@@ -51,9 +58,11 @@ class RestructureProfileTablesRelationsNoFK extends Migration
             'deleted_at' => ['type' => 'DATETIME', 'null' => true],
         ]);
         $this->forge->addKey('user_nid', true);
+        $this->forge->addForeignKey('user_nid', 'users', 'id', 'RESTRICT', 'CASCADE');
         $this->forge->createTable('lecturers');
 
         $this->forge->addField([
+
             'user_nid' => ['type' => 'CHAR', 'constraint' => 10],
             'unit_name' => ['type' => 'VARCHAR', 'constraint' => 100, 'default' => 'SISFO'],
             'position' => ['type' => 'VARCHAR', 'constraint' => 100, 'null' => true],
@@ -63,9 +72,11 @@ class RestructureProfileTablesRelationsNoFK extends Migration
             'deleted_at' => ['type' => 'DATETIME', 'null' => true],
         ]);
         $this->forge->addKey('user_nid', true);
+        $this->forge->addForeignKey('user_nid', 'users', 'id', 'RESTRICT', 'CASCADE');
         $this->forge->createTable('coordinators');
 
         $this->forge->addField([
+
             'user_nip' => ['type' => 'CHAR', 'constraint' => 10],
             'unit_name' => ['type' => 'VARCHAR', 'constraint' => 100, 'default' => 'SISFO'],
             'position' => ['type' => 'VARCHAR', 'constraint' => 100, 'null' => true],
@@ -75,8 +86,10 @@ class RestructureProfileTablesRelationsNoFK extends Migration
             'deleted_at' => ['type' => 'DATETIME', 'null' => true],
         ]);
         $this->forge->addKey('user_nip', true);
+        $this->forge->addForeignKey('user_nip', 'users', 'id', 'RESTRICT', 'CASCADE');
         $this->forge->createTable('admins');
     }
+
 
     public function down()
     {
