@@ -24,12 +24,13 @@ class CreateKelasTable extends Migration
                 'constraint' => 11,
                 'unsigned'   => true,
             ],
-            'dosen_id' => [
-                'type'       => 'INT',
-                'constraint' => 11,
-                'unsigned'   => true,
+            // Dosen direlasikan via NID (user_nid)
+            'dosen_nid' => [
+                'type'       => 'CHAR',
+                'constraint' => 10,
                 'null'       => true,
             ],
+
             'tahun_akademik_id' => [
                 'type'       => 'INT',
                 'constraint' => 11,
@@ -47,7 +48,8 @@ class CreateKelasTable extends Migration
 
         $this->forge->addKey('id', true);
         $this->forge->addForeignKey('mata_kuliah_id', 'mata_kuliah', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('dosen_id', 'users', 'id', 'CASCADE', 'SET NULL');
+        // Foreign key lama dosen_id -> users(id) dihapus karena sekarang relasi via NID
+
         $this->forge->addForeignKey('tahun_akademik_id', 'tahun_akademik', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('kelas');
     }
