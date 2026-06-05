@@ -118,15 +118,32 @@ class AuthController extends BaseController
                 ->with('error', 'NIM/NID atau password salah.');
         }
 
-        $roleCodes = $this->normalizeRoles($this->userModel->getUserRoleSlugs((string) $user['id']));
+        $roleCodes = $this->normalizeRoles((array) ($user['role_codes'] ?? []));
         $roles = $this->mapRoleCodesToAliases($roleCodes);
         $activeRole = $this->chooseActiveRole($roles);
+
+        if ($activeRole === '') {
+            $this->activityLogModel->logActivity(
+                (string) $user['id'],
+                'LOGIN_BLOCKED',
+                'Login ditolak karena role pengguna tidak valid/terpetakan.'
+            );
+
+            session()->destroy();
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Role pengguna tidak valid.');
+        }
+
         $roleLabel = $this->roleLabel($activeRole);
         $activeRoleCode = $this->roleCodeFromAlias($activeRole, $roleCodes);
 
         session()->regenerate();
 
         session()->set([
+
             'user_id'      => (string) $user['id'],
             'login_identifier' => (string) ($user['login_identifier'] ?? $identity),
             'identifier_type' => (string) ($user['identifier_type'] ?? ''),
