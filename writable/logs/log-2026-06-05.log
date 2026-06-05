@@ -2227,3 +2227,279 @@ WHERE `id` = :id:', [...], false)
 12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
 13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
 14 SYSTEMPATH\rewrite.php(44): require_once('H:\\Documents\\materi-pembelajaran\\SisFoPPU\\public\\index.php')
+DEBUG - 2026-06-05 02:03:57 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-06-05 02:03:58 --> Unknown column 'class_id' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('SELECT `class_id`
+FROM `class_students`
+WHERE `student_id` = 5', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `class_id`
+FROM `class_students`
+WHERE `student_id` = 5')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `class_id`
+FROM `class_students`
+WHERE `student_id` = 5')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `class_id`
+FROM `class_students`
+WHERE `student_id` = :student_id:', [...], false)
+ 5 APPPATH\Models\StudentDashboardModel.php(253): CodeIgniter\Database\BaseBuilder->get()
+ 6 APPPATH\Models\StudentDashboardModel.php(297): App\Models\StudentDashboardModel->loadStudentClassIds([...])
+ 7 APPPATH\Models\StudentDashboardModel.php(56): App\Models\StudentDashboardModel->loadClassRows([...], [...])
+ 8 APPPATH\Controllers\Mahasiswa\Dashboard.php(24): App\Models\StudentDashboardModel->buildDashboardData('0000000005', 'Mahasiswa Praktikum')
+ 9 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Mahasiswa\Dashboard->index()
+10 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Mahasiswa\Dashboard))
+11 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('H:\\Documents\\materi-pembelajaran\\SisFoPPU\\public\\index.php')
+CRITICAL - 2026-06-05 02:03:58 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'class_id' in 'field list'
+[Method: GET, Route: mahasiswa/dashboard]
+in SYSTEMPATH\Database\BaseConnection.php on line 865.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `class_id`
+FROM `class_students`
+WHERE `student_id` = :student_id:', [...], false)
+ 2 APPPATH\Models\StudentDashboardModel.php(253): CodeIgniter\Database\BaseBuilder->get()
+ 3 APPPATH\Models\StudentDashboardModel.php(297): App\Models\StudentDashboardModel->loadStudentClassIds([...])
+ 4 APPPATH\Models\StudentDashboardModel.php(56): App\Models\StudentDashboardModel->loadClassRows([...], [...])
+ 5 APPPATH\Controllers\Mahasiswa\Dashboard.php(24): App\Models\StudentDashboardModel->buildDashboardData('0000000005', 'Mahasiswa Praktikum')
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Mahasiswa\Dashboard->index()
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Mahasiswa\Dashboard))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('H:\\Documents\\materi-pembelajaran\\SisFoPPU\\public\\index.php')
+CRITICAL - 2026-06-05 02:03:58 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'class_id' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 310.
+ 1 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `class_id`
+FROM `class_students`
+WHERE `student_id` = 5')
+ 2 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `class_id`
+FROM `class_students`
+WHERE `student_id` = 5')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `class_id`
+FROM `class_students`
+WHERE `student_id` = :student_id:', [...], false)
+ 4 APPPATH\Models\StudentDashboardModel.php(253): CodeIgniter\Database\BaseBuilder->get()
+ 5 APPPATH\Models\StudentDashboardModel.php(297): App\Models\StudentDashboardModel->loadStudentClassIds([...])
+ 6 APPPATH\Models\StudentDashboardModel.php(56): App\Models\StudentDashboardModel->loadClassRows([...], [...])
+ 7 APPPATH\Controllers\Mahasiswa\Dashboard.php(24): App\Models\StudentDashboardModel->buildDashboardData('0000000005', 'Mahasiswa Praktikum')
+ 8 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Mahasiswa\Dashboard->index()
+ 9 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Mahasiswa\Dashboard))
+10 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+14 SYSTEMPATH\rewrite.php(44): require_once('H:\\Documents\\materi-pembelajaran\\SisFoPPU\\public\\index.php')
+CRITICAL - 2026-06-05 02:03:58 --> [Caused by] mysqli_sql_exception: Unknown column 'class_id' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('SELECT `class_id`
+FROM `class_students`
+WHERE `student_id` = 5', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `class_id`
+FROM `class_students`
+WHERE `student_id` = 5')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `class_id`
+FROM `class_students`
+WHERE `student_id` = 5')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `class_id`
+FROM `class_students`
+WHERE `student_id` = :student_id:', [...], false)
+ 5 APPPATH\Models\StudentDashboardModel.php(253): CodeIgniter\Database\BaseBuilder->get()
+ 6 APPPATH\Models\StudentDashboardModel.php(297): App\Models\StudentDashboardModel->loadStudentClassIds([...])
+ 7 APPPATH\Models\StudentDashboardModel.php(56): App\Models\StudentDashboardModel->loadClassRows([...], [...])
+ 8 APPPATH\Controllers\Mahasiswa\Dashboard.php(24): App\Models\StudentDashboardModel->buildDashboardData('0000000005', 'Mahasiswa Praktikum')
+ 9 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Mahasiswa\Dashboard->index()
+10 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Mahasiswa\Dashboard))
+11 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('H:\\Documents\\materi-pembelajaran\\SisFoPPU\\public\\index.php')
+DEBUG - 2026-06-05 05:42:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2026-06-05 05:46:52 --> CSRF token verified.
+DEBUG - 2026-06-05 05:46:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-06-05 05:46:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-06-05 05:46:53 --> Unknown column 'class_id' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('SELECT `class_id`
+FROM `class_students`
+WHERE `student_id` = 5', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `class_id`
+FROM `class_students`
+WHERE `student_id` = 5')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `class_id`
+FROM `class_students`
+WHERE `student_id` = 5')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `class_id`
+FROM `class_students`
+WHERE `student_id` = :student_id:', [...], false)
+ 5 APPPATH\Models\StudentDashboardModel.php(253): CodeIgniter\Database\BaseBuilder->get()
+ 6 APPPATH\Models\StudentDashboardModel.php(297): App\Models\StudentDashboardModel->loadStudentClassIds([...])
+ 7 APPPATH\Models\StudentDashboardModel.php(56): App\Models\StudentDashboardModel->loadClassRows([...], [...])
+ 8 APPPATH\Controllers\Mahasiswa\Dashboard.php(24): App\Models\StudentDashboardModel->buildDashboardData('0000000005', 'Mahasiswa Praktikum')
+ 9 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Mahasiswa\Dashboard->index()
+10 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Mahasiswa\Dashboard))
+11 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('H:\\Documents\\materi-pembelajaran\\SisFoPPU\\public\\index.php')
+CRITICAL - 2026-06-05 05:46:53 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'class_id' in 'field list'
+[Method: GET, Route: mahasiswa/dashboard]
+in SYSTEMPATH\Database\BaseConnection.php on line 865.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `class_id`
+FROM `class_students`
+WHERE `student_id` = :student_id:', [...], false)
+ 2 APPPATH\Models\StudentDashboardModel.php(253): CodeIgniter\Database\BaseBuilder->get()
+ 3 APPPATH\Models\StudentDashboardModel.php(297): App\Models\StudentDashboardModel->loadStudentClassIds([...])
+ 4 APPPATH\Models\StudentDashboardModel.php(56): App\Models\StudentDashboardModel->loadClassRows([...], [...])
+ 5 APPPATH\Controllers\Mahasiswa\Dashboard.php(24): App\Models\StudentDashboardModel->buildDashboardData('0000000005', 'Mahasiswa Praktikum')
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Mahasiswa\Dashboard->index()
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Mahasiswa\Dashboard))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('H:\\Documents\\materi-pembelajaran\\SisFoPPU\\public\\index.php')
+CRITICAL - 2026-06-05 05:46:53 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'class_id' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 310.
+ 1 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `class_id`
+FROM `class_students`
+WHERE `student_id` = 5')
+ 2 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `class_id`
+FROM `class_students`
+WHERE `student_id` = 5')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `class_id`
+FROM `class_students`
+WHERE `student_id` = :student_id:', [...], false)
+ 4 APPPATH\Models\StudentDashboardModel.php(253): CodeIgniter\Database\BaseBuilder->get()
+ 5 APPPATH\Models\StudentDashboardModel.php(297): App\Models\StudentDashboardModel->loadStudentClassIds([...])
+ 6 APPPATH\Models\StudentDashboardModel.php(56): App\Models\StudentDashboardModel->loadClassRows([...], [...])
+ 7 APPPATH\Controllers\Mahasiswa\Dashboard.php(24): App\Models\StudentDashboardModel->buildDashboardData('0000000005', 'Mahasiswa Praktikum')
+ 8 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Mahasiswa\Dashboard->index()
+ 9 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Mahasiswa\Dashboard))
+10 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+14 SYSTEMPATH\rewrite.php(44): require_once('H:\\Documents\\materi-pembelajaran\\SisFoPPU\\public\\index.php')
+CRITICAL - 2026-06-05 05:46:53 --> [Caused by] mysqli_sql_exception: Unknown column 'class_id' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('SELECT `class_id`
+FROM `class_students`
+WHERE `student_id` = 5', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `class_id`
+FROM `class_students`
+WHERE `student_id` = 5')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `class_id`
+FROM `class_students`
+WHERE `student_id` = 5')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `class_id`
+FROM `class_students`
+WHERE `student_id` = :student_id:', [...], false)
+ 5 APPPATH\Models\StudentDashboardModel.php(253): CodeIgniter\Database\BaseBuilder->get()
+ 6 APPPATH\Models\StudentDashboardModel.php(297): App\Models\StudentDashboardModel->loadStudentClassIds([...])
+ 7 APPPATH\Models\StudentDashboardModel.php(56): App\Models\StudentDashboardModel->loadClassRows([...], [...])
+ 8 APPPATH\Controllers\Mahasiswa\Dashboard.php(24): App\Models\StudentDashboardModel->buildDashboardData('0000000005', 'Mahasiswa Praktikum')
+ 9 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Mahasiswa\Dashboard->index()
+10 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Mahasiswa\Dashboard))
+11 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('H:\\Documents\\materi-pembelajaran\\SisFoPPU\\public\\index.php')
+DEBUG - 2026-06-05 05:56:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-06-05 05:56:53 --> Unknown column 'student_id' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('SELECT `practicum_class_id`
+FROM `class_students`
+WHERE `student_id` = 5', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `practicum_class_id`
+FROM `class_students`
+WHERE `student_id` = 5')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `practicum_class_id`
+FROM `class_students`
+WHERE `student_id` = 5')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `practicum_class_id`
+FROM `class_students`
+WHERE `student_id` = :student_id:', [...], false)
+ 5 APPPATH\Models\StudentDashboardModel.php(255): CodeIgniter\Database\BaseBuilder->get()
+ 6 APPPATH\Models\StudentDashboardModel.php(306): App\Models\StudentDashboardModel->loadStudentClassIds([...])
+ 7 APPPATH\Models\StudentDashboardModel.php(56): App\Models\StudentDashboardModel->loadClassRows([...], [...])
+ 8 APPPATH\Controllers\Mahasiswa\Dashboard.php(24): App\Models\StudentDashboardModel->buildDashboardData('0000000005', 'Mahasiswa Praktikum')
+ 9 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Mahasiswa\Dashboard->index()
+10 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Mahasiswa\Dashboard))
+11 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('H:\\Documents\\materi-pembelajaran\\SisFoPPU\\public\\index.php')
+CRITICAL - 2026-06-05 05:56:53 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'student_id' in 'where clause'
+[Method: GET, Route: mahasiswa/dashboard]
+in SYSTEMPATH\Database\BaseConnection.php on line 865.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `practicum_class_id`
+FROM `class_students`
+WHERE `student_id` = :student_id:', [...], false)
+ 2 APPPATH\Models\StudentDashboardModel.php(255): CodeIgniter\Database\BaseBuilder->get()
+ 3 APPPATH\Models\StudentDashboardModel.php(306): App\Models\StudentDashboardModel->loadStudentClassIds([...])
+ 4 APPPATH\Models\StudentDashboardModel.php(56): App\Models\StudentDashboardModel->loadClassRows([...], [...])
+ 5 APPPATH\Controllers\Mahasiswa\Dashboard.php(24): App\Models\StudentDashboardModel->buildDashboardData('0000000005', 'Mahasiswa Praktikum')
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Mahasiswa\Dashboard->index()
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Mahasiswa\Dashboard))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('H:\\Documents\\materi-pembelajaran\\SisFoPPU\\public\\index.php')
+CRITICAL - 2026-06-05 05:56:53 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'student_id' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 310.
+ 1 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `practicum_class_id`
+FROM `class_students`
+WHERE `student_id` = 5')
+ 2 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `practicum_class_id`
+FROM `class_students`
+WHERE `student_id` = 5')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `practicum_class_id`
+FROM `class_students`
+WHERE `student_id` = :student_id:', [...], false)
+ 4 APPPATH\Models\StudentDashboardModel.php(255): CodeIgniter\Database\BaseBuilder->get()
+ 5 APPPATH\Models\StudentDashboardModel.php(306): App\Models\StudentDashboardModel->loadStudentClassIds([...])
+ 6 APPPATH\Models\StudentDashboardModel.php(56): App\Models\StudentDashboardModel->loadClassRows([...], [...])
+ 7 APPPATH\Controllers\Mahasiswa\Dashboard.php(24): App\Models\StudentDashboardModel->buildDashboardData('0000000005', 'Mahasiswa Praktikum')
+ 8 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Mahasiswa\Dashboard->index()
+ 9 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Mahasiswa\Dashboard))
+10 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+14 SYSTEMPATH\rewrite.php(44): require_once('H:\\Documents\\materi-pembelajaran\\SisFoPPU\\public\\index.php')
+CRITICAL - 2026-06-05 05:56:53 --> [Caused by] mysqli_sql_exception: Unknown column 'student_id' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('SELECT `practicum_class_id`
+FROM `class_students`
+WHERE `student_id` = 5', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('SELECT `practicum_class_id`
+FROM `class_students`
+WHERE `student_id` = 5')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT `practicum_class_id`
+FROM `class_students`
+WHERE `student_id` = 5')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT `practicum_class_id`
+FROM `class_students`
+WHERE `student_id` = :student_id:', [...], false)
+ 5 APPPATH\Models\StudentDashboardModel.php(255): CodeIgniter\Database\BaseBuilder->get()
+ 6 APPPATH\Models\StudentDashboardModel.php(306): App\Models\StudentDashboardModel->loadStudentClassIds([...])
+ 7 APPPATH\Models\StudentDashboardModel.php(56): App\Models\StudentDashboardModel->loadClassRows([...], [...])
+ 8 APPPATH\Controllers\Mahasiswa\Dashboard.php(24): App\Models\StudentDashboardModel->buildDashboardData('0000000005', 'Mahasiswa Praktikum')
+ 9 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Mahasiswa\Dashboard->index()
+10 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Mahasiswa\Dashboard))
+11 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('H:\\Documents\\materi-pembelajaran\\SisFoPPU\\public\\index.php')
+DEBUG - 2026-06-05 06:00:04 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-06-05 06:00:21 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-06-05 06:00:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.

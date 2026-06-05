@@ -155,8 +155,24 @@ class StudentDashboardModel extends Model
                 continue;
             }
 
-            $keyField = $db->fieldExists('user_id', $table) ? 'user_id' : 'id';
+            // Tentukan field kunci yang benar-benar ada di tabel tersebut.
+            // Jangan pernah fallback langsung ke `id` karena beberapa tabel (students/mahasiswa)
+            // mungkin memakai PK berbeda.
+            $keyCandidates = ['user_id', 'student_id', 'mahasiswa_id', 'id'];
+            $keyField = null;
+            foreach ($keyCandidates as $candidate) {
+                if ($db->fieldExists($candidate, $table)) {
+                    $keyField = $candidate;
+                    break;
+                }
+            }
+
+            if ($keyField === null) {
+                continue;
+            }
+
             $studentRow = $db->table($table)->where($keyField, $userId)->get()->getRowArray();
+
 
             if ($studentRow === null) {
                 continue;
@@ -227,17 +243,31 @@ class StudentDashboardModel extends Model
 
         if ($db->tableExists('class_students')) {
             $studentField = $this->resolveStudentField('class_students');
+
+            // Di skema ini, class_students umumnya memakai `student_nim` (bukan student_id).
+            if ($this->fieldExists('student_nim', 'class_students')) {
+                $studentField = 'student_nim';
+            }
+
+            if (! $this->fieldExists($studentField, 'class_students')) {
+                return [];
+            }
+
             $studentId = $this->resolveStudentIdentifier($student, $studentField);
             if ($this->isEmptyIdentifier($studentId, $studentField)) {
                 return [];
             }
-            $rows = $db->table('class_students')
-                ->select('class_id')
-                ->where($studentField, $studentId)
-                ->get()
-                ->getResultArray();
 
-            $classIds = array_merge($classIds, array_map(static fn (array $row): int => (int) ($row['class_id'] ?? 0), $rows));
+            $classIdField = $this->findFirstField('class_students', ['class_id', 'practicum_class_id']);
+            if ($classIdField !== null) {
+                $rows = $db->table('class_students')
+                    ->select($classIdField)
+                    ->where($studentField, $studentId)
+                    ->get()
+                    ->getResultArray();
+
+                $classIds = array_merge($classIds, array_map(static fn (array $row): int => (int) ($row[$classIdField] ?? 0), $rows));
+            }
         }
 
         if ($classIds === [] && $db->tableExists('final_scores')) {
@@ -246,13 +276,16 @@ class StudentDashboardModel extends Model
             if ($this->isEmptyIdentifier($studentId, $studentField)) {
                 return [];
             }
-            $rows = $db->table('final_scores')
-                ->select('class_id')
-                ->where($studentField, $studentId)
-                ->get()
-                ->getResultArray();
+            $classIdField = $this->findFirstField('final_scores', ['class_id', 'practicum_class_id']);
+            if ($classIdField !== null) {
+                $rows = $db->table('final_scores')
+                    ->select($classIdField)
+                    ->where($studentField, $studentId)
+                    ->get()
+                    ->getResultArray();
 
-            $classIds = array_merge($classIds, array_map(static fn (array $row): int => (int) ($row['class_id'] ?? 0), $rows));
+                $classIds = array_merge($classIds, array_map(static fn (array $row): int => (int) ($row[$classIdField] ?? 0), $rows));
+            }
         }
 
         if ($classIds === [] && $db->tableExists('score_entries')) {
@@ -261,13 +294,16 @@ class StudentDashboardModel extends Model
             if ($this->isEmptyIdentifier($studentId, $studentField)) {
                 return [];
             }
-            $rows = $db->table('score_entries')
-                ->select('class_id')
-                ->where($studentField, $studentId)
-                ->get()
-                ->getResultArray();
+            $classIdField = $this->findFirstField('score_entries', ['class_id', 'practicum_class_id']);
+            if ($classIdField !== null) {
+                $rows = $db->table('score_entries')
+                    ->select($classIdField)
+                    ->where($studentField, $studentId)
+                    ->get()
+                    ->getResultArray();
 
-            $classIds = array_merge($classIds, array_map(static fn (array $row): int => (int) ($row['class_id'] ?? 0), $rows));
+                $classIds = array_merge($classIds, array_map(static fn (array $row): int => (int) ($row[$classIdField] ?? 0), $rows));
+            }
         }
 
         $classIds = array_values(array_unique(array_filter($classIds)));
