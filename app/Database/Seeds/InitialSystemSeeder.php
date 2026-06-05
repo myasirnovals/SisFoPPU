@@ -155,7 +155,8 @@ class InitialSystemSeeder extends Seeder
                 'detail_table' => 'coordinators',
                 'detail_code_field' => 'nid',
                 'detail' => [
-                    'study_program_id' => 1,
+                    'unit_name' => 'SISFO',
+                    'position' => 'Koordinator Praktikum',
                     'status' => 'aktif',
                     'deleted_at' => null,
                 ],
@@ -260,22 +261,31 @@ class InitialSystemSeeder extends Seeder
             // Pastikan field upsertByCode sesuai dengan kolom unik di tabelnya.
             // Dari migration: coordinators pakai UNIQUE 'nip', admins pakai UNIQUE 'nip' (tapi di seeder sebelumnya ada ketidaksesuaian).
             // Gunakan mapping spesifik agar tidak error.
-            // Mapping kolom unik per tabel sesuai dengan skema DB yang sedang dipakai.
+            // Mapping kolom unik per tabel sesuai dengan skema DB yang sedang dipakai (migration 2026-06-04).
+            // Kolom PK/unique final adalah:
+            // - admins.user_nip
+            // - coordinators.user_nid
+            // - lecturers.user_nid
+            // - assistants.user_nim
+            // - students.user_nim
             $uniqueFieldByTable = [
-                'admins' => 'nip',
-                'coordinators' => 'nid',
-                'lecturers' => 'nid',
-                'assistants' => 'nim',
-                'students' => 'nim',
+                'admins' => 'user_nip',
+                'coordinators' => 'user_nid',
+                'lecturers' => 'user_nid',
+                'assistants' => 'user_nim',
+                'students' => 'user_nim',
             ];
 
             $uniqueCodeField = $uniqueFieldByTable[$detailTable] ?? $detailCodeField;
 
-
+            // Sesuaikan kolom field detail yang ditambah oleh seeder.
+            // Skema terbaru profile tables memakai kolom user_nim/user_nid/user_nip, bukan user_id.
+            // Maka kita upsert berdasarkan kolom unik tersebut.
+            // pastikan data yang di-upsert hanya berisi kolom yang sesuai skema tabel profile.
+            // Pastikan field upsertByCode hanya berisi kolom yang sesuai skema tabel profile.
             $this->upsertByCode($detailTable, $uniqueCodeField, array_merge(
                 $dummy['detail'],
                 [
-                    'user_id' => (string) $userId,
                     $uniqueCodeField => $detailCodeValue,
                     'created_at' => $now,
                     'updated_at' => $now,

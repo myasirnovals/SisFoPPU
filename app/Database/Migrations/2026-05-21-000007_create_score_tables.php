@@ -8,6 +8,25 @@ class CreateScoreTables extends Migration
 {
     public function up()
     {
+        if ($this->db->tableExists('score_change_logs')) {
+            $this->forge->dropTable('score_change_logs', true);
+        }
+        if ($this->db->tableExists('score_notes')) {
+            $this->forge->dropTable('score_notes', true);
+        }
+        if ($this->db->tableExists('final_scores')) {
+            $this->forge->dropTable('final_scores', true);
+        }
+        if ($this->db->tableExists('score_details')) {
+            $this->forge->dropTable('score_details', true);
+        }
+        if ($this->db->tableExists('score_entries')) {
+            $this->forge->dropTable('score_entries', true);
+        }
+        if ($this->db->tableExists('score_statuses')) {
+            $this->forge->dropTable('score_statuses', true);
+        }
+
         $this->forge->addField([
             'id' => [
                 'type'           => 'INT',
@@ -149,14 +168,15 @@ class CreateScoreTables extends Migration
         $this->forge->addKey('component_id');
         $this->forge->addKey('subcomponent_id');
         $this->forge->addKey('status_id');
-        $this->forge->addForeignKey('practicum_class_id', 'practicum_classes', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('group_id', 'practicum_groups', 'id', 'SET NULL', 'CASCADE');
-        $this->forge->addForeignKey('student_id', 'students', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('component_id', 'assessment_components', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('subcomponent_id', 'assessment_subcomponents', 'id', 'SET NULL', 'CASCADE');
-        $this->forge->addForeignKey('status_id', 'score_statuses', 'id', 'SET NULL', 'CASCADE');
-        $this->forge->addForeignKey('submitted_by', 'users', 'id', 'SET NULL', 'CASCADE');
-        $this->forge->addForeignKey('validated_by', 'users', 'id', 'SET NULL', 'CASCADE');
+        // Foreign key ditunda
+        // $this->forge->addForeignKey('practicum_class_id', 'practicum_classes', 'id', 'CASCADE', 'CASCADE');
+        // $this->forge->addForeignKey('group_id', 'practicum_groups', 'id', 'SET NULL', 'CASCADE');
+        // $this->forge->addForeignKey('student_id', 'students', 'id', 'CASCADE', 'CASCADE');
+        // $this->forge->addForeignKey('component_id', 'assessment_components', 'id', 'CASCADE', 'CASCADE');
+        // $this->forge->addForeignKey('subcomponent_id', 'assessment_subcomponents', 'id', 'SET NULL', 'CASCADE');
+        // $this->forge->addForeignKey('status_id', 'score_statuses', 'id', 'SET NULL', 'CASCADE');
+        // $this->forge->addForeignKey('submitted_by', 'users', 'id', 'SET NULL', 'CASCADE');
+        // $this->forge->addForeignKey('validated_by', 'users', 'id', 'SET NULL', 'CASCADE');
         $this->forge->createTable('score_entries');
 
         $this->forge->addField([
@@ -292,10 +312,11 @@ class CreateScoreTables extends Migration
         $this->forge->addKey('student_id');
         $this->forge->addKey('status');
         $this->forge->addKey('validation_status');
-        $this->forge->addForeignKey('practicum_class_id', 'practicum_classes', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('group_id', 'practicum_groups', 'id', 'SET NULL', 'CASCADE');
-        $this->forge->addForeignKey('student_id', 'students', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('validated_by', 'users', 'id', 'SET NULL', 'CASCADE');
+        // Foreign key ditunda
+        // $this->forge->addForeignKey('practicum_class_id', 'practicum_classes', 'id', 'CASCADE', 'CASCADE');
+        // $this->forge->addForeignKey('group_id', 'practicum_groups', 'id', 'SET NULL', 'CASCADE');
+        // $this->forge->addForeignKey('student_id', 'students', 'id', 'CASCADE', 'CASCADE');
+        // $this->forge->addForeignKey('validated_by', 'users', 'id', 'SET NULL', 'CASCADE');
         $this->forge->createTable('final_scores');
 
         $this->forge->addField([
@@ -339,9 +360,10 @@ class CreateScoreTables extends Migration
         $this->forge->addKey('id', true);
         $this->forge->addKey('score_entry_id');
         $this->forge->addKey('final_score_id');
-        $this->forge->addForeignKey('score_entry_id', 'score_entries', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('final_score_id', 'final_scores', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('created_by', 'users', 'id', 'SET NULL', 'CASCADE');
+        // Foreign key ditunda
+        // $this->forge->addForeignKey('score_entry_id', 'score_entries', 'id', 'CASCADE', 'CASCADE');
+        // $this->forge->addForeignKey('final_score_id', 'final_scores', 'id', 'CASCADE', 'CASCADE');
+        // $this->forge->addForeignKey('created_by', 'users', 'id', 'SET NULL', 'CASCADE');
         $this->forge->createTable('score_notes');
 
         $this->forge->addField([
@@ -399,11 +421,23 @@ class CreateScoreTables extends Migration
 
     public function down()
     {
-        $this->forge->dropTable('score_change_logs', true);
-        $this->forge->dropTable('score_notes', true);
-        $this->forge->dropTable('final_scores', true);
-        $this->forge->dropTable('score_details', true);
-        $this->forge->dropTable('score_entries', true);
-        $this->forge->dropTable('score_statuses', true);
+        if ($this->db->tableExists('score_change_logs')) {
+            $this->forge->dropTable('score_change_logs', true);
+        }
+        if ($this->db->tableExists('score_notes')) {
+            $this->forge->dropTable('score_notes', true);
+        }
+        if ($this->db->tableExists('final_scores')) {
+            $this->forge->dropTable('final_scores', true);
+        }
+        if ($this->db->tableExists('score_details')) {
+            $this->forge->dropTable('score_details', true);
+        }
+        if ($this->db->tableExists('score_entries')) {
+            $this->forge->dropTable('score_entries', true);
+        }
+        if ($this->db->tableExists('score_statuses')) {
+            $this->forge->dropTable('score_statuses', true);
+        }
     }
 }

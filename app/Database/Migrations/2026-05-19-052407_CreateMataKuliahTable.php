@@ -8,6 +8,10 @@ class CreateMataKuliahTable extends Migration
 {
     public function up()
     {
+        if ($this->db->tableExists('mata_kuliah')) {
+            $this->forge->dropTable('mata_kuliah', true);
+        }
+
         $this->forge->addField([
             'id' => [
                 'type'           => 'INT',
@@ -51,6 +55,9 @@ class CreateMataKuliahTable extends Migration
 
     public function down()
     {
-        $this->forge->dropTable('mata_kuliah');
+        if ($this->db->tableExists('mata_kuliah')) {
+            $this->forge->dropTable('mata_kuliah', true);
+        }
     }
 }
+

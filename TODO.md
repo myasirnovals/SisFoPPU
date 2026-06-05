@@ -1,13 +1,11 @@
-# TODO
+# TODO - Fix Seed Error
 
-## 1) Identifikasi duplikat migration profile
-- [x] Baca migration utama dan alternatif: `_nofk`, `_relations`, `create_profile_tables`, `fix_profile_fk_types`.
-- [x] Tentukan file alternatif/duplikat yang up()-nya `return;` (non-aktif).
+## Info
+- Error saat `php spark db:seed InitialSystemSeeder`: `Undefined variable $data` di `app/Database/Seeds/InitialSystemSeeder.php` baris ~285.
 
-## 2) Hapus file migration duplikatif/alternatif untuk keamanan migrate
-- [x] Hapus: `app/Database/Migrations/2026-06-04_000012_restructure_profile_tables_relations.php`
-- [x] Hapus: `app/Database/Migrations/2026-05-21-000003_create_profile_tables.php`
-- [x] Hapus: `app/Database/Migrations/2026-06-04_000013_fix_profile_fk_types.php`
-- [x] Update checklist ini setelah berhasil
-
+## Langkah
+- [ ] Buat rencana perbaikan.
+- [ ] Perbaiki seeder: hapus/benahi penggunaan `unset($data['user_id']);` agar tidak ada variable `$data` yang tidak didefinisikan.
+- [ ] Jalankan `php spark db:seed InitialSystemSeeder` untuk verifikasi.
+- [ ] Jika muncul error lanjutan (mis. kolom unik/tabel profile), perbaiki mapping field sesuai skema migration.
 

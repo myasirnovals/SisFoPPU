@@ -8,6 +8,10 @@ class CreateHurufMutuTable extends Migration
 {
     public function up()
     {
+        if ($this->db->tableExists('huruf_mutu')) {
+            $this->forge->dropTable('huruf_mutu', true);
+        }
+
         $this->forge->addField([
             'id' => [
                 'type'           => 'INT',
@@ -47,6 +51,9 @@ class CreateHurufMutuTable extends Migration
 
     public function down()
     {
-        $this->forge->dropTable('huruf_mutu');
+        if ($this->db->tableExists('huruf_mutu')) {
+            $this->forge->dropTable('huruf_mutu', true);
+        }
     }
 }
+

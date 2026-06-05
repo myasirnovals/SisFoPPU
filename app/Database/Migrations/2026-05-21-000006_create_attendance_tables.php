@@ -8,6 +8,17 @@ class CreateAttendanceTables extends Migration
 {
     public function up()
     {
+        // Drop child first
+        if ($this->db->tableExists('attendance_records')) {
+            $this->forge->dropTable('attendance_records', true);
+        }
+        if ($this->db->tableExists('attendance_sessions')) {
+            $this->forge->dropTable('attendance_sessions', true);
+        }
+        if ($this->db->tableExists('attendance_statuses')) {
+            $this->forge->dropTable('attendance_statuses', true);
+        }
+
         $this->forge->addField([
             'id' => [
                 'type'           => 'INT',
@@ -122,10 +133,11 @@ class CreateAttendanceTables extends Migration
         $this->forge->addKey('group_id');
         $this->forge->addKey('status');
         $this->forge->addKey('session_date');
-        $this->forge->addForeignKey('practicum_class_id', 'practicum_classes', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('group_id', 'practicum_groups', 'id', 'SET NULL', 'CASCADE');
-        $this->forge->addForeignKey('created_by', 'users', 'id', 'SET NULL', 'CASCADE');
-        $this->forge->addForeignKey('updated_by', 'users', 'id', 'SET NULL', 'CASCADE');
+        // Foreign key ditunda (constraint MySQL terkadang gagal terbentuk)
+        // $this->forge->addForeignKey('practicum_class_id', 'practicum_classes', 'id', 'CASCADE', 'CASCADE');
+        // $this->forge->addForeignKey('group_id', 'practicum_groups', 'id', 'SET NULL', 'CASCADE');
+        // $this->forge->addForeignKey('created_by', 'users', 'id', 'SET NULL', 'CASCADE');
+        // $this->forge->addForeignKey('updated_by', 'users', 'id', 'SET NULL', 'CASCADE');
         $this->forge->createTable('attendance_sessions');
 
         $this->forge->addField([
@@ -178,18 +190,26 @@ class CreateAttendanceTables extends Migration
         $this->forge->addKey('attendance_session_id');
         $this->forge->addKey('student_id');
         $this->forge->addKey('attendance_status_id');
-        $this->forge->addForeignKey('attendance_session_id', 'attendance_sessions', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('student_id', 'students', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('attendance_status_id', 'attendance_statuses', 'id', 'RESTRICT', 'CASCADE');
-        $this->forge->addForeignKey('previous_attendance_status_id', 'attendance_statuses', 'id', 'SET NULL', 'CASCADE');
-        $this->forge->addForeignKey('marked_by', 'users', 'id', 'SET NULL', 'CASCADE');
+        // Foreign key ditunda
+        // $this->forge->addForeignKey('attendance_session_id', 'attendance_sessions', 'id', 'CASCADE', 'CASCADE');
+        // $this->forge->addForeignKey('student_id', 'students', 'id', 'CASCADE', 'CASCADE');
+        // $this->forge->addForeignKey('attendance_status_id', 'attendance_statuses', 'id', 'RESTRICT', 'CASCADE');
+        // $this->forge->addForeignKey('previous_attendance_status_id', 'attendance_statuses', 'id', 'SET NULL', 'CASCADE');
+        // $this->forge->addForeignKey('marked_by', 'users', 'id', 'SET NULL', 'CASCADE');
         $this->forge->createTable('attendance_records');
     }
 
     public function down()
     {
-        $this->forge->dropTable('attendance_records', true);
-        $this->forge->dropTable('attendance_sessions', true);
-        $this->forge->dropTable('attendance_statuses', true);
+        if ($this->db->tableExists('attendance_records')) {
+            $this->forge->dropTable('attendance_records', true);
+        }
+        if ($this->db->tableExists('attendance_sessions')) {
+            $this->forge->dropTable('attendance_sessions', true);
+        }
+        if ($this->db->tableExists('attendance_statuses')) {
+            $this->forge->dropTable('attendance_statuses', true);
+        }
     }
 }
+

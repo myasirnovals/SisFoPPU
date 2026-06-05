@@ -8,6 +8,25 @@ class CreateAssessmentTables extends Migration
 {
     public function up()
     {
+        if ($this->db->tableExists('remedial_rules')) {
+            $this->forge->dropTable('remedial_rules', true);
+        }
+        if ($this->db->tableExists('passing_rules')) {
+            $this->forge->dropTable('passing_rules', true);
+        }
+        if ($this->db->tableExists('grade_scales')) {
+            $this->forge->dropTable('grade_scales', true);
+        }
+        if ($this->db->tableExists('assessment_subcomponents')) {
+            $this->forge->dropTable('assessment_subcomponents', true);
+        }
+        if ($this->db->tableExists('assessment_components')) {
+            $this->forge->dropTable('assessment_components', true);
+        }
+        if ($this->db->tableExists('assessment_templates')) {
+            $this->forge->dropTable('assessment_templates', true);
+        }
+
         $this->forge->addField([
             'id' => [
                 'type'           => 'INT',
@@ -365,11 +384,23 @@ class CreateAssessmentTables extends Migration
 
     public function down()
     {
-        $this->forge->dropTable('remedial_rules', true);
-        $this->forge->dropTable('passing_rules', true);
-        $this->forge->dropTable('grade_scales', true);
-        $this->forge->dropTable('assessment_subcomponents', true);
-        $this->forge->dropTable('assessment_components', true);
-        $this->forge->dropTable('assessment_templates', true);
+        if ($this->db->tableExists('remedial_rules')) {
+            $this->forge->dropTable('remedial_rules', true);
+        }
+        if ($this->db->tableExists('passing_rules')) {
+            $this->forge->dropTable('passing_rules', true);
+        }
+        if ($this->db->tableExists('grade_scales')) {
+            $this->forge->dropTable('grade_scales', true);
+        }
+        if ($this->db->tableExists('assessment_subcomponents')) {
+            $this->forge->dropTable('assessment_subcomponents', true);
+        }
+        if ($this->db->tableExists('assessment_components')) {
+            $this->forge->dropTable('assessment_components', true);
+        }
+        if ($this->db->tableExists('assessment_templates')) {
+            $this->forge->dropTable('assessment_templates', true);
+        }
     }
 }

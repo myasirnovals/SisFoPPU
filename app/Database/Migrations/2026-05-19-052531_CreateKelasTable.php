@@ -8,6 +8,10 @@ class CreateKelasTable extends Migration
 {
     public function up()
     {
+        if ($this->db->tableExists('kelas')) {
+            $this->forge->dropTable('kelas', true);
+        }
+
         $this->forge->addField([
             'id' => [
                 'type'           => 'INT',
@@ -56,6 +60,9 @@ class CreateKelasTable extends Migration
 
     public function down()
     {
-        $this->forge->dropTable('kelas');
+        if ($this->db->tableExists('kelas')) {
+            $this->forge->dropTable('kelas', true);
+        }
     }
 }
+

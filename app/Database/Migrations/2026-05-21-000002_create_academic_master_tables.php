@@ -8,6 +8,22 @@ class CreateAcademicMasterTables extends Migration
 {
     public function up()
     {
+        if ($this->db->tableExists('courses')) {
+            $this->forge->dropTable('courses', true);
+        }
+        if ($this->db->tableExists('laboratories')) {
+            $this->forge->dropTable('laboratories', true);
+        }
+        if ($this->db->tableExists('semesters')) {
+            $this->forge->dropTable('semesters', true);
+        }
+        if ($this->db->tableExists('academic_years')) {
+            $this->forge->dropTable('academic_years', true);
+        }
+        if ($this->db->tableExists('study_programs')) {
+            $this->forge->dropTable('study_programs', true);
+        }
+
         $this->forge->addField([
             'id' => [
                 'type'           => 'INT',
@@ -244,10 +260,20 @@ class CreateAcademicMasterTables extends Migration
 
     public function down()
     {
-        $this->forge->dropTable('courses', true);
-        $this->forge->dropTable('laboratories', true);
-        $this->forge->dropTable('semesters', true);
-        $this->forge->dropTable('academic_years', true);
-        $this->forge->dropTable('study_programs', true);
+        if ($this->db->tableExists('courses')) {
+            $this->forge->dropTable('courses', true);
+        }
+        if ($this->db->tableExists('laboratories')) {
+            $this->forge->dropTable('laboratories', true);
+        }
+        if ($this->db->tableExists('semesters')) {
+            $this->forge->dropTable('semesters', true);
+        }
+        if ($this->db->tableExists('academic_years')) {
+            $this->forge->dropTable('academic_years', true);
+        }
+        if ($this->db->tableExists('study_programs')) {
+            $this->forge->dropTable('study_programs', true);
+        }
     }
 }

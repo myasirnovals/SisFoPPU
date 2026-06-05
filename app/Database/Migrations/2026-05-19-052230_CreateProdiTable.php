@@ -8,6 +8,10 @@ class CreateProdiTable extends Migration
 {
     public function up()
     {
+        if ($this->db->tableExists('prodi')) {
+            $this->forge->dropTable('prodi', true);
+        }
+
         $this->forge->addField([
             'id' => [
                 'type'           => 'INT',
@@ -44,6 +48,9 @@ class CreateProdiTable extends Migration
 
     public function down()
     {
-        $this->forge->dropTable('prodi');
+        if ($this->db->tableExists('prodi')) {
+            $this->forge->dropTable('prodi', true);
+        }
     }
 }
+

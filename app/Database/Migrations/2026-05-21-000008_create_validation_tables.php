@@ -8,6 +8,13 @@ class CreateValidationTables extends Migration
 {
     public function up()
     {
+        if ($this->db->tableExists('score_revision_requests')) {
+            $this->forge->dropTable('score_revision_requests', true);
+        }
+        if ($this->db->tableExists('validation_logs')) {
+            $this->forge->dropTable('validation_logs', true);
+        }
+
         $this->forge->addField([
             'id' => [
                 'type'           => 'INT',
@@ -131,7 +138,11 @@ class CreateValidationTables extends Migration
 
     public function down()
     {
-        $this->forge->dropTable('score_revision_requests', true);
-        $this->forge->dropTable('validation_logs', true);
+        if ($this->db->tableExists('score_revision_requests')) {
+            $this->forge->dropTable('score_revision_requests', true);
+        }
+        if ($this->db->tableExists('validation_logs')) {
+            $this->forge->dropTable('validation_logs', true);
+        }
     }
 }

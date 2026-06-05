@@ -3257,3 +3257,1359 @@ in SYSTEMPATH\Database\BaseConnection.php on line 606.
  9 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
 10 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
 11 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 23:13:55 --> Table 'db_penilaian_praktikum.attendance_statuses' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('SELECT *
+FROM `attendance_statuses`
+WHERE `code` = \'hadir\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *
+FROM `attendance_statuses`
+WHERE `code` = \'hadir\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *
+FROM `attendance_statuses`
+WHERE `code` = \'hadir\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `attendance_statuses`
+WHERE `code` = :code:', [...], false)
+ 5 APPPATH\Database\Seeds\InitialSystemSeeder.php(299): CodeIgniter\Database\BaseBuilder->get()
+ 6 APPPATH\Database\Seeds\InitialSystemSeeder.php(100): App\Database\Seeds\InitialSystemSeeder->upsertByCode('attendance_statuses', 'code', [...])
+ 7 SYSTEMPATH\Database\Seeder.php(155): App\Database\Seeds\InitialSystemSeeder->run()
+ 8 SYSTEMPATH\Commands\Database\Seed.php(79): CodeIgniter\Database\Seeder->call('App\\Database\\Seeds\\InitialSystemSeeder')
+ 9 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run([])
+10 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', [...])
+11 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+12 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+13 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 23:14:07 --> Table 'practicum_classes' already exists
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('CREATE TABLE `practicum_classes` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`course_id` INT UNSIGNED NOT NULL,
+	`academic_year_id` INT UNSIGNED NOT NULL,
+	`semester_id` INT UNSIGNED NOT NULL,
+	`laboratory_id` INT UNSIGNED NULL,
+	`template_id` INT UNSIGNED NULL,
+	`class_code` VARCHAR(50) NOT NULL,
+	`class_name` VARCHAR(150) NOT NULL,
+	`status` ENUM(\'draft\',\'aktif\',\'selesai\',\'terkunci\',\'diarsipkan\') NOT NULL DEFAULT \'draft\',
+	`deadline_at` DATETIME NULL,
+	`description` TEXT NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_practicum_classes` PRIMARY KEY(`id`),
+	CONSTRAINT `practicum_classes_course_id_foreign` FOREIGN KEY (`course_id`) REFERENCES `courses`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `practicum_classes_academic_year_id_foreign` FOREIGN KEY (`academic_year_id`) REFERENCES `academic_years`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `practicum_classes_semester_id_foreign` FOREIGN KEY (`semester_id`) REFERENCES `semesters`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `practicum_classes_laboratory_id_foreign` FOREIGN KEY (`laboratory_id`) REFERENCES `laboratories`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `practicum_classes_template_id_foreign` FOREIGN KEY (`template_id`) REFERENCES `assessment_templates`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `class_code` (`class_code`),
+	KEY `course_id` (`course_id`),
+	KEY `academic_year_id` (`academic_year_id`),
+	KEY `semester_id` (`semester_id`),
+	KEY `laboratory_id` (`laboratory_id`),
+	KEY `template_id` (`template_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('CREATE TABLE `practicum_classes` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`course_id` INT UNSIGNED NOT NULL,
+	`academic_year_id` INT UNSIGNED NOT NULL,
+	`semester_id` INT UNSIGNED NOT NULL,
+	`laboratory_id` INT UNSIGNED NULL,
+	`template_id` INT UNSIGNED NULL,
+	`class_code` VARCHAR(50) NOT NULL,
+	`class_name` VARCHAR(150) NOT NULL,
+	`status` ENUM(\'draft\',\'aktif\',\'selesai\',\'terkunci\',\'diarsipkan\') NOT NULL DEFAULT \'draft\',
+	`deadline_at` DATETIME NULL,
+	`description` TEXT NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_practicum_classes` PRIMARY KEY(`id`),
+	CONSTRAINT `practicum_classes_course_id_foreign` FOREIGN KEY (`course_id`) REFERENCES `courses`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `practicum_classes_academic_year_id_foreign` FOREIGN KEY (`academic_year_id`) REFERENCES `academic_years`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `practicum_classes_semester_id_foreign` FOREIGN KEY (`semester_id`) REFERENCES `semesters`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `practicum_classes_laboratory_id_foreign` FOREIGN KEY (`laboratory_id`) REFERENCES `laboratories`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `practicum_classes_template_id_foreign` FOREIGN KEY (`template_id`) REFERENCES `assessment_templates`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `class_code` (`class_code`),
+	KEY `course_id` (`course_id`),
+	KEY `academic_year_id` (`academic_year_id`),
+	KEY `semester_id` (`semester_id`),
+	KEY `laboratory_id` (`laboratory_id`),
+	KEY `template_id` (`template_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('CREATE TABLE `practicum_classes` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`course_id` INT UNSIGNED NOT NULL,
+	`academic_year_id` INT UNSIGNED NOT NULL,
+	`semester_id` INT UNSIGNED NOT NULL,
+	`laboratory_id` INT UNSIGNED NULL,
+	`template_id` INT UNSIGNED NULL,
+	`class_code` VARCHAR(50) NOT NULL,
+	`class_name` VARCHAR(150) NOT NULL,
+	`status` ENUM(\'draft\',\'aktif\',\'selesai\',\'terkunci\',\'diarsipkan\') NOT NULL DEFAULT \'draft\',
+	`deadline_at` DATETIME NULL,
+	`description` TEXT NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_practicum_classes` PRIMARY KEY(`id`),
+	CONSTRAINT `practicum_classes_course_id_foreign` FOREIGN KEY (`course_id`) REFERENCES `courses`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `practicum_classes_academic_year_id_foreign` FOREIGN KEY (`academic_year_id`) REFERENCES `academic_years`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `practicum_classes_semester_id_foreign` FOREIGN KEY (`semester_id`) REFERENCES `semesters`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `practicum_classes_laboratory_id_foreign` FOREIGN KEY (`laboratory_id`) REFERENCES `laboratories`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `practicum_classes_template_id_foreign` FOREIGN KEY (`template_id`) REFERENCES `assessment_templates`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `class_code` (`class_code`),
+	KEY `course_id` (`course_id`),
+	KEY `academic_year_id` (`academic_year_id`),
+	KEY `semester_id` (`semester_id`),
+	KEY `laboratory_id` (`laboratory_id`),
+	KEY `template_id` (`template_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 4 SYSTEMPATH\Database\Forge.php(570): CodeIgniter\Database\BaseConnection->query('CREATE TABLE `practicum_classes` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`course_id` INT UNSIGNED NOT NULL,
+	`academic_year_id` INT UNSIGNED NOT NULL,
+	`semester_id` INT UNSIGNED NOT NULL,
+	`laboratory_id` INT UNSIGNED NULL,
+	`template_id` INT UNSIGNED NULL,
+	`class_code` VARCHAR(50) NOT NULL,
+	`class_name` VARCHAR(150) NOT NULL,
+	`status` ENUM(\'draft\',\'aktif\',\'selesai\',\'terkunci\',\'diarsipkan\') NOT NULL DEFAULT \'draft\',
+	`deadline_at` DATETIME NULL,
+	`description` TEXT NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_practicum_classes` PRIMARY KEY(`id`),
+	CONSTRAINT `practicum_classes_course_id_foreign` FOREIGN KEY (`course_id`) REFERENCES `courses`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `practicum_classes_academic_year_id_foreign` FOREIGN KEY (`academic_year_id`) REFERENCES `academic_years`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `practicum_classes_semester_id_foreign` FOREIGN KEY (`semester_id`) REFERENCES `semesters`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `practicum_classes_laboratory_id_foreign` FOREIGN KEY (`laboratory_id`) REFERENCES `laboratories`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `practicum_classes_template_id_foreign` FOREIGN KEY (`template_id`) REFERENCES `assessment_templates`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `class_code` (`class_code`),
+	KEY `course_id` (`course_id`),
+	KEY `academic_year_id` (`academic_year_id`),
+	KEY `semester_id` (`semester_id`),
+	KEY `laboratory_id` (`laboratory_id`),
+	KEY `template_id` (`template_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 5 APPPATH\Database\Migrations\2026-05-21-000005_create_practicum_structure_tables.php(85): CodeIgniter\Database\Forge->createTable('practicum_classes')
+ 6 SYSTEMPATH\Database\MigrationRunner.php(1014): App\Database\Migrations\CreatePracticumStructureTables->up()
+ 7 SYSTEMPATH\Database\MigrationRunner.php(202): CodeIgniter\Database\MigrationRunner->migrate('up', Object(stdClass))
+ 8 SYSTEMPATH\Commands\Database\Migrate.php(89): CodeIgniter\Database\MigrationRunner->latest(null)
+ 9 SYSTEMPATH\CLI\SignalTrait.php(245): CodeIgniter\Commands\Database\Migrate::CodeIgniter\Commands\Database\{closure}()
+10 SYSTEMPATH\Commands\Database\Migrate.php(88): CodeIgniter\Commands\Database\Migrate->withSignalsBlocked(Object(Closure))
+11 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Migrate->run([...])
+12 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('migrate', [...])
+13 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+14 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+15 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 23:14:17 --> Table 'db_penilaian_praktikum.attendance_statuses' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('SELECT *
+FROM `attendance_statuses`
+WHERE `code` = \'hadir\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *
+FROM `attendance_statuses`
+WHERE `code` = \'hadir\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *
+FROM `attendance_statuses`
+WHERE `code` = \'hadir\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `attendance_statuses`
+WHERE `code` = :code:', [...], false)
+ 5 APPPATH\Database\Seeds\InitialSystemSeeder.php(299): CodeIgniter\Database\BaseBuilder->get()
+ 6 APPPATH\Database\Seeds\InitialSystemSeeder.php(100): App\Database\Seeds\InitialSystemSeeder->upsertByCode('attendance_statuses', 'code', [...])
+ 7 SYSTEMPATH\Database\Seeder.php(155): App\Database\Seeds\InitialSystemSeeder->run()
+ 8 SYSTEMPATH\Commands\Database\Seed.php(79): CodeIgniter\Database\Seeder->call('App\\Database\\Seeds\\InitialSystemSeeder')
+ 9 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run([])
+10 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', [...])
+11 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+12 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+13 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 23:14:54 --> Table 'db_penilaian_praktikum.attendance_statuses' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('SELECT *
+FROM `attendance_statuses`
+WHERE `code` = \'hadir\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *
+FROM `attendance_statuses`
+WHERE `code` = \'hadir\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *
+FROM `attendance_statuses`
+WHERE `code` = \'hadir\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `attendance_statuses`
+WHERE `code` = :code:', [...], false)
+ 5 APPPATH\Database\Seeds\InitialSystemSeeder.php(299): CodeIgniter\Database\BaseBuilder->get()
+ 6 APPPATH\Database\Seeds\InitialSystemSeeder.php(100): App\Database\Seeds\InitialSystemSeeder->upsertByCode('attendance_statuses', 'code', [...])
+ 7 SYSTEMPATH\Database\Seeder.php(155): App\Database\Seeds\InitialSystemSeeder->run()
+ 8 SYSTEMPATH\Commands\Database\Seed.php(79): CodeIgniter\Database\Seeder->call('App\\Database\\Seeds\\InitialSystemSeeder')
+ 9 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run([])
+10 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', [...])
+11 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+12 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+13 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 23:15:10 --> Table 'db_penilaian_praktikum.attendance_statuses' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('SELECT *
+FROM `attendance_statuses`
+WHERE `code` = \'hadir\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *
+FROM `attendance_statuses`
+WHERE `code` = \'hadir\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *
+FROM `attendance_statuses`
+WHERE `code` = \'hadir\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `attendance_statuses`
+WHERE `code` = :code:', [...], false)
+ 5 APPPATH\Database\Seeds\InitialSystemSeeder.php(299): CodeIgniter\Database\BaseBuilder->get()
+ 6 APPPATH\Database\Seeds\InitialSystemSeeder.php(100): App\Database\Seeds\InitialSystemSeeder->upsertByCode('attendance_statuses', 'code', [...])
+ 7 SYSTEMPATH\Database\Seeder.php(155): App\Database\Seeds\InitialSystemSeeder->run()
+ 8 SYSTEMPATH\Commands\Database\Seed.php(79): CodeIgniter\Database\Seeder->call('App\\Database\\Seeds\\InitialSystemSeeder')
+ 9 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run([])
+10 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', [...])
+11 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+12 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+13 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 23:15:28 --> Table 'db_penilaian_praktikum.attendance_statuses' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('SELECT *
+FROM `attendance_statuses`
+WHERE `code` = \'hadir\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *
+FROM `attendance_statuses`
+WHERE `code` = \'hadir\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *
+FROM `attendance_statuses`
+WHERE `code` = \'hadir\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `attendance_statuses`
+WHERE `code` = :code:', [...], false)
+ 5 APPPATH\Database\Seeds\InitialSystemSeeder.php(299): CodeIgniter\Database\BaseBuilder->get()
+ 6 APPPATH\Database\Seeds\InitialSystemSeeder.php(100): App\Database\Seeds\InitialSystemSeeder->upsertByCode('attendance_statuses', 'code', [...])
+ 7 SYSTEMPATH\Database\Seeder.php(155): App\Database\Seeds\InitialSystemSeeder->run()
+ 8 SYSTEMPATH\Commands\Database\Seed.php(79): CodeIgniter\Database\Seeder->call('App\\Database\\Seeds\\InitialSystemSeeder')
+ 9 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run([])
+10 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', [...])
+11 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+12 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+13 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 23:17:22 --> Table 'db_penilaian_praktikum.attendance_statuses' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('SELECT *
+FROM `attendance_statuses`
+WHERE `code` = \'hadir\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *
+FROM `attendance_statuses`
+WHERE `code` = \'hadir\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *
+FROM `attendance_statuses`
+WHERE `code` = \'hadir\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `attendance_statuses`
+WHERE `code` = :code:', [...], false)
+ 5 APPPATH\Database\Seeds\InitialSystemSeeder.php(299): CodeIgniter\Database\BaseBuilder->get()
+ 6 APPPATH\Database\Seeds\InitialSystemSeeder.php(100): App\Database\Seeds\InitialSystemSeeder->upsertByCode('attendance_statuses', 'code', [...])
+ 7 SYSTEMPATH\Database\Seeder.php(155): App\Database\Seeds\InitialSystemSeeder->run()
+ 8 SYSTEMPATH\Commands\Database\Seed.php(79): CodeIgniter\Database\Seeder->call('App\\Database\\Seeds\\InitialSystemSeeder')
+ 9 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run([])
+10 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', [...])
+11 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+12 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+13 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 23:19:13 --> Table 'practicum_classes' already exists
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('CREATE TABLE `practicum_classes` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`course_id` INT UNSIGNED NOT NULL,
+	`academic_year_id` INT UNSIGNED NOT NULL,
+	`semester_id` INT UNSIGNED NOT NULL,
+	`laboratory_id` INT UNSIGNED NULL,
+	`template_id` INT UNSIGNED NULL,
+	`class_code` VARCHAR(50) NOT NULL,
+	`class_name` VARCHAR(150) NOT NULL,
+	`status` ENUM(\'draft\',\'aktif\',\'selesai\',\'terkunci\',\'diarsipkan\') NOT NULL DEFAULT \'draft\',
+	`deadline_at` DATETIME NULL,
+	`description` TEXT NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_practicum_classes` PRIMARY KEY(`id`),
+	CONSTRAINT `practicum_classes_course_id_foreign` FOREIGN KEY (`course_id`) REFERENCES `courses`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `practicum_classes_academic_year_id_foreign` FOREIGN KEY (`academic_year_id`) REFERENCES `academic_years`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `practicum_classes_semester_id_foreign` FOREIGN KEY (`semester_id`) REFERENCES `semesters`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `practicum_classes_laboratory_id_foreign` FOREIGN KEY (`laboratory_id`) REFERENCES `laboratories`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `practicum_classes_template_id_foreign` FOREIGN KEY (`template_id`) REFERENCES `assessment_templates`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `class_code` (`class_code`),
+	KEY `course_id` (`course_id`),
+	KEY `academic_year_id` (`academic_year_id`),
+	KEY `semester_id` (`semester_id`),
+	KEY `laboratory_id` (`laboratory_id`),
+	KEY `template_id` (`template_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('CREATE TABLE `practicum_classes` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`course_id` INT UNSIGNED NOT NULL,
+	`academic_year_id` INT UNSIGNED NOT NULL,
+	`semester_id` INT UNSIGNED NOT NULL,
+	`laboratory_id` INT UNSIGNED NULL,
+	`template_id` INT UNSIGNED NULL,
+	`class_code` VARCHAR(50) NOT NULL,
+	`class_name` VARCHAR(150) NOT NULL,
+	`status` ENUM(\'draft\',\'aktif\',\'selesai\',\'terkunci\',\'diarsipkan\') NOT NULL DEFAULT \'draft\',
+	`deadline_at` DATETIME NULL,
+	`description` TEXT NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_practicum_classes` PRIMARY KEY(`id`),
+	CONSTRAINT `practicum_classes_course_id_foreign` FOREIGN KEY (`course_id`) REFERENCES `courses`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `practicum_classes_academic_year_id_foreign` FOREIGN KEY (`academic_year_id`) REFERENCES `academic_years`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `practicum_classes_semester_id_foreign` FOREIGN KEY (`semester_id`) REFERENCES `semesters`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `practicum_classes_laboratory_id_foreign` FOREIGN KEY (`laboratory_id`) REFERENCES `laboratories`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `practicum_classes_template_id_foreign` FOREIGN KEY (`template_id`) REFERENCES `assessment_templates`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `class_code` (`class_code`),
+	KEY `course_id` (`course_id`),
+	KEY `academic_year_id` (`academic_year_id`),
+	KEY `semester_id` (`semester_id`),
+	KEY `laboratory_id` (`laboratory_id`),
+	KEY `template_id` (`template_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('CREATE TABLE `practicum_classes` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`course_id` INT UNSIGNED NOT NULL,
+	`academic_year_id` INT UNSIGNED NOT NULL,
+	`semester_id` INT UNSIGNED NOT NULL,
+	`laboratory_id` INT UNSIGNED NULL,
+	`template_id` INT UNSIGNED NULL,
+	`class_code` VARCHAR(50) NOT NULL,
+	`class_name` VARCHAR(150) NOT NULL,
+	`status` ENUM(\'draft\',\'aktif\',\'selesai\',\'terkunci\',\'diarsipkan\') NOT NULL DEFAULT \'draft\',
+	`deadline_at` DATETIME NULL,
+	`description` TEXT NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_practicum_classes` PRIMARY KEY(`id`),
+	CONSTRAINT `practicum_classes_course_id_foreign` FOREIGN KEY (`course_id`) REFERENCES `courses`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `practicum_classes_academic_year_id_foreign` FOREIGN KEY (`academic_year_id`) REFERENCES `academic_years`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `practicum_classes_semester_id_foreign` FOREIGN KEY (`semester_id`) REFERENCES `semesters`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `practicum_classes_laboratory_id_foreign` FOREIGN KEY (`laboratory_id`) REFERENCES `laboratories`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `practicum_classes_template_id_foreign` FOREIGN KEY (`template_id`) REFERENCES `assessment_templates`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `class_code` (`class_code`),
+	KEY `course_id` (`course_id`),
+	KEY `academic_year_id` (`academic_year_id`),
+	KEY `semester_id` (`semester_id`),
+	KEY `laboratory_id` (`laboratory_id`),
+	KEY `template_id` (`template_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 4 SYSTEMPATH\Database\Forge.php(570): CodeIgniter\Database\BaseConnection->query('CREATE TABLE `practicum_classes` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`course_id` INT UNSIGNED NOT NULL,
+	`academic_year_id` INT UNSIGNED NOT NULL,
+	`semester_id` INT UNSIGNED NOT NULL,
+	`laboratory_id` INT UNSIGNED NULL,
+	`template_id` INT UNSIGNED NULL,
+	`class_code` VARCHAR(50) NOT NULL,
+	`class_name` VARCHAR(150) NOT NULL,
+	`status` ENUM(\'draft\',\'aktif\',\'selesai\',\'terkunci\',\'diarsipkan\') NOT NULL DEFAULT \'draft\',
+	`deadline_at` DATETIME NULL,
+	`description` TEXT NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_practicum_classes` PRIMARY KEY(`id`),
+	CONSTRAINT `practicum_classes_course_id_foreign` FOREIGN KEY (`course_id`) REFERENCES `courses`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `practicum_classes_academic_year_id_foreign` FOREIGN KEY (`academic_year_id`) REFERENCES `academic_years`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `practicum_classes_semester_id_foreign` FOREIGN KEY (`semester_id`) REFERENCES `semesters`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `practicum_classes_laboratory_id_foreign` FOREIGN KEY (`laboratory_id`) REFERENCES `laboratories`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `practicum_classes_template_id_foreign` FOREIGN KEY (`template_id`) REFERENCES `assessment_templates`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `class_code` (`class_code`),
+	KEY `course_id` (`course_id`),
+	KEY `academic_year_id` (`academic_year_id`),
+	KEY `semester_id` (`semester_id`),
+	KEY `laboratory_id` (`laboratory_id`),
+	KEY `template_id` (`template_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 5 APPPATH\Database\Migrations\2026-05-21-000005_create_practicum_structure_tables.php(85): CodeIgniter\Database\Forge->createTable('practicum_classes')
+ 6 SYSTEMPATH\Database\MigrationRunner.php(1014): App\Database\Migrations\CreatePracticumStructureTables->up()
+ 7 SYSTEMPATH\Database\MigrationRunner.php(202): CodeIgniter\Database\MigrationRunner->migrate('up', Object(stdClass))
+ 8 SYSTEMPATH\Commands\Database\Migrate.php(89): CodeIgniter\Database\MigrationRunner->latest(null)
+ 9 SYSTEMPATH\CLI\SignalTrait.php(245): CodeIgniter\Commands\Database\Migrate::CodeIgniter\Commands\Database\{closure}()
+10 SYSTEMPATH\Commands\Database\Migrate.php(88): CodeIgniter\Commands\Database\Migrate->withSignalsBlocked(Object(Closure))
+11 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Migrate->run([])
+12 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('migrate', [])
+13 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+14 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+15 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 23:21:29 --> Table 'users' already exists
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('CREATE TABLE `users` (
+	`id` CHAR(10) NOT NULL,
+	`login_identifier` CHAR(10) NOT NULL,
+	`identifier_type` ENUM(\'NIM\',\'NID\',\'NIP\') NOT NULL,
+	`password_hash` VARCHAR(255) NOT NULL,
+	`full_name` VARCHAR(150) NOT NULL,
+	`email` VARCHAR(150) NULL,
+	`phone` VARCHAR(25) NULL,
+	`is_active` TINYINT(1) NOT NULL DEFAULT 1,
+	`last_login_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_users` PRIMARY KEY(`id`),
+	UNIQUE KEY `login_identifier` (`login_identifier`),
+	UNIQUE KEY `email` (`email`),
+	KEY `identifier_type` (`identifier_type`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('CREATE TABLE `users` (
+	`id` CHAR(10) NOT NULL,
+	`login_identifier` CHAR(10) NOT NULL,
+	`identifier_type` ENUM(\'NIM\',\'NID\',\'NIP\') NOT NULL,
+	`password_hash` VARCHAR(255) NOT NULL,
+	`full_name` VARCHAR(150) NOT NULL,
+	`email` VARCHAR(150) NULL,
+	`phone` VARCHAR(25) NULL,
+	`is_active` TINYINT(1) NOT NULL DEFAULT 1,
+	`last_login_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_users` PRIMARY KEY(`id`),
+	UNIQUE KEY `login_identifier` (`login_identifier`),
+	UNIQUE KEY `email` (`email`),
+	KEY `identifier_type` (`identifier_type`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('CREATE TABLE `users` (
+	`id` CHAR(10) NOT NULL,
+	`login_identifier` CHAR(10) NOT NULL,
+	`identifier_type` ENUM(\'NIM\',\'NID\',\'NIP\') NOT NULL,
+	`password_hash` VARCHAR(255) NOT NULL,
+	`full_name` VARCHAR(150) NOT NULL,
+	`email` VARCHAR(150) NULL,
+	`phone` VARCHAR(25) NULL,
+	`is_active` TINYINT(1) NOT NULL DEFAULT 1,
+	`last_login_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_users` PRIMARY KEY(`id`),
+	UNIQUE KEY `login_identifier` (`login_identifier`),
+	UNIQUE KEY `email` (`email`),
+	KEY `identifier_type` (`identifier_type`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 4 SYSTEMPATH\Database\Forge.php(570): CodeIgniter\Database\BaseConnection->query('CREATE TABLE `users` (
+	`id` CHAR(10) NOT NULL,
+	`login_identifier` CHAR(10) NOT NULL,
+	`identifier_type` ENUM(\'NIM\',\'NID\',\'NIP\') NOT NULL,
+	`password_hash` VARCHAR(255) NOT NULL,
+	`full_name` VARCHAR(150) NOT NULL,
+	`email` VARCHAR(150) NULL,
+	`phone` VARCHAR(25) NULL,
+	`is_active` TINYINT(1) NOT NULL DEFAULT 1,
+	`last_login_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_users` PRIMARY KEY(`id`),
+	UNIQUE KEY `login_identifier` (`login_identifier`),
+	UNIQUE KEY `email` (`email`),
+	KEY `identifier_type` (`identifier_type`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 5 APPPATH\Database\Migrations\2026-05-21-000001_create_auth_core_tables.php(69): CodeIgniter\Database\Forge->createTable('users')
+ 6 SYSTEMPATH\Database\MigrationRunner.php(1014): App\Database\Migrations\CreateAuthCoreTables->up()
+ 7 SYSTEMPATH\Database\MigrationRunner.php(202): CodeIgniter\Database\MigrationRunner->migrate('up', Object(stdClass))
+ 8 SYSTEMPATH\Commands\Database\Migrate.php(89): CodeIgniter\Database\MigrationRunner->latest(null)
+ 9 SYSTEMPATH\CLI\SignalTrait.php(245): CodeIgniter\Commands\Database\Migrate::CodeIgniter\Commands\Database\{closure}()
+10 SYSTEMPATH\Commands\Database\Migrate.php(88): CodeIgniter\Commands\Database\Migrate->withSignalsBlocked(Object(Closure))
+11 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Migrate->run([])
+12 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('migrate', [])
+13 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+14 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+15 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 23:21:42 --> Table 'db_penilaian_praktikum.role_permissions' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('SELECT *
+FROM `role_permissions`
+WHERE `role_id` = 1
+AND `permission_id` = 1', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *
+FROM `role_permissions`
+WHERE `role_id` = 1
+AND `permission_id` = 1')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *
+FROM `role_permissions`
+WHERE `role_id` = 1
+AND `permission_id` = 1')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `role_permissions`
+WHERE `role_id` = :role_id:
+AND `permission_id` = :permission_id:', [...], false)
+ 5 APPPATH\Database\Seeds\InitialSystemSeeder.php(316): CodeIgniter\Database\BaseBuilder->get()
+ 6 APPPATH\Database\Seeds\InitialSystemSeeder.php(87): App\Database\Seeds\InitialSystemSeeder->upsertComposite('role_permissions', [...], [...])
+ 7 SYSTEMPATH\Database\Seeder.php(155): App\Database\Seeds\InitialSystemSeeder->run()
+ 8 SYSTEMPATH\Commands\Database\Seed.php(79): CodeIgniter\Database\Seeder->call('App\\Database\\Seeds\\InitialSystemSeeder')
+ 9 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Seed->run([])
+10 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('db:seed', [...])
+11 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+12 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+13 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 23:32:39 --> Can't create table `db_penilaian_praktikum`.`class_students` (errno: 150 "Foreign key constraint is incorrectly formed")
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('CREATE TABLE `class_students` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`student_nim` CHAR(10) NOT NULL,
+	`group_id` INT UNSIGNED NULL,
+	`enrollment_status` ENUM(\'aktif\',\'drop\',\'lulus\',\'remedial\') NOT NULL DEFAULT \'aktif\',
+	`enrolled_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	CONSTRAINT `pk_class_students` PRIMARY KEY(`id`),
+	CONSTRAINT `class_students_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_student_nim_foreign` FOREIGN KEY (`student_nim`) REFERENCES `students`(`user_nim`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `practicum_groups`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `practicum_class_id_student_nim` (`practicum_class_id`, `student_nim`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `student_nim` (`student_nim`),
+	KEY `group_id` (`group_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('CREATE TABLE `class_students` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`student_nim` CHAR(10) NOT NULL,
+	`group_id` INT UNSIGNED NULL,
+	`enrollment_status` ENUM(\'aktif\',\'drop\',\'lulus\',\'remedial\') NOT NULL DEFAULT \'aktif\',
+	`enrolled_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	CONSTRAINT `pk_class_students` PRIMARY KEY(`id`),
+	CONSTRAINT `class_students_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_student_nim_foreign` FOREIGN KEY (`student_nim`) REFERENCES `students`(`user_nim`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `practicum_groups`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `practicum_class_id_student_nim` (`practicum_class_id`, `student_nim`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `student_nim` (`student_nim`),
+	KEY `group_id` (`group_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('CREATE TABLE `class_students` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`student_nim` CHAR(10) NOT NULL,
+	`group_id` INT UNSIGNED NULL,
+	`enrollment_status` ENUM(\'aktif\',\'drop\',\'lulus\',\'remedial\') NOT NULL DEFAULT \'aktif\',
+	`enrolled_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	CONSTRAINT `pk_class_students` PRIMARY KEY(`id`),
+	CONSTRAINT `class_students_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_student_nim_foreign` FOREIGN KEY (`student_nim`) REFERENCES `students`(`user_nim`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `practicum_groups`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `practicum_class_id_student_nim` (`practicum_class_id`, `student_nim`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `student_nim` (`student_nim`),
+	KEY `group_id` (`group_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 4 SYSTEMPATH\Database\Forge.php(570): CodeIgniter\Database\BaseConnection->query('CREATE TABLE `class_students` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`student_nim` CHAR(10) NOT NULL,
+	`group_id` INT UNSIGNED NULL,
+	`enrollment_status` ENUM(\'aktif\',\'drop\',\'lulus\',\'remedial\') NOT NULL DEFAULT \'aktif\',
+	`enrolled_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	CONSTRAINT `pk_class_students` PRIMARY KEY(`id`),
+	CONSTRAINT `class_students_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_student_nim_foreign` FOREIGN KEY (`student_nim`) REFERENCES `students`(`user_nim`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `practicum_groups`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `practicum_class_id_student_nim` (`practicum_class_id`, `student_nim`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `student_nim` (`student_nim`),
+	KEY `group_id` (`group_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 5 APPPATH\Database\Migrations\2026-05-21-000005_create_practicum_structure_tables.php(197): CodeIgniter\Database\Forge->createTable('class_students')
+ 6 SYSTEMPATH\Database\MigrationRunner.php(1014): App\Database\Migrations\CreatePracticumStructureTables->up()
+ 7 SYSTEMPATH\Database\MigrationRunner.php(202): CodeIgniter\Database\MigrationRunner->migrate('up', Object(stdClass))
+ 8 SYSTEMPATH\Commands\Database\Migrate.php(89): CodeIgniter\Database\MigrationRunner->latest(null)
+ 9 SYSTEMPATH\CLI\SignalTrait.php(245): CodeIgniter\Commands\Database\Migrate::CodeIgniter\Commands\Database\{closure}()
+10 SYSTEMPATH\Commands\Database\Migrate.php(88): CodeIgniter\Commands\Database\Migrate->withSignalsBlocked(Object(Closure))
+11 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Migrate->run([])
+12 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('migrate', [])
+13 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+14 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+15 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 23:36:01 --> Can't create table `db_penilaian_praktikum`.`class_students` (errno: 150 "Foreign key constraint is incorrectly formed")
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('CREATE TABLE `class_students` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`student_nim` CHAR(10) NOT NULL,
+	`group_id` INT UNSIGNED NULL,
+	`enrollment_status` ENUM(\'aktif\',\'drop\',\'lulus\',\'remedial\') NOT NULL DEFAULT \'aktif\',
+	`enrolled_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	CONSTRAINT `pk_class_students` PRIMARY KEY(`id`),
+	CONSTRAINT `class_students_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_student_nim_foreign` FOREIGN KEY (`student_nim`) REFERENCES `students`(`user_nim`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `practicum_groups`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `practicum_class_id_student_nim` (`practicum_class_id`, `student_nim`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `student_nim` (`student_nim`),
+	KEY `group_id` (`group_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('CREATE TABLE `class_students` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`student_nim` CHAR(10) NOT NULL,
+	`group_id` INT UNSIGNED NULL,
+	`enrollment_status` ENUM(\'aktif\',\'drop\',\'lulus\',\'remedial\') NOT NULL DEFAULT \'aktif\',
+	`enrolled_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	CONSTRAINT `pk_class_students` PRIMARY KEY(`id`),
+	CONSTRAINT `class_students_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_student_nim_foreign` FOREIGN KEY (`student_nim`) REFERENCES `students`(`user_nim`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `practicum_groups`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `practicum_class_id_student_nim` (`practicum_class_id`, `student_nim`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `student_nim` (`student_nim`),
+	KEY `group_id` (`group_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('CREATE TABLE `class_students` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`student_nim` CHAR(10) NOT NULL,
+	`group_id` INT UNSIGNED NULL,
+	`enrollment_status` ENUM(\'aktif\',\'drop\',\'lulus\',\'remedial\') NOT NULL DEFAULT \'aktif\',
+	`enrolled_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	CONSTRAINT `pk_class_students` PRIMARY KEY(`id`),
+	CONSTRAINT `class_students_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_student_nim_foreign` FOREIGN KEY (`student_nim`) REFERENCES `students`(`user_nim`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `practicum_groups`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `practicum_class_id_student_nim` (`practicum_class_id`, `student_nim`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `student_nim` (`student_nim`),
+	KEY `group_id` (`group_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 4 SYSTEMPATH\Database\Forge.php(570): CodeIgniter\Database\BaseConnection->query('CREATE TABLE `class_students` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`student_nim` CHAR(10) NOT NULL,
+	`group_id` INT UNSIGNED NULL,
+	`enrollment_status` ENUM(\'aktif\',\'drop\',\'lulus\',\'remedial\') NOT NULL DEFAULT \'aktif\',
+	`enrolled_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	CONSTRAINT `pk_class_students` PRIMARY KEY(`id`),
+	CONSTRAINT `class_students_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_student_nim_foreign` FOREIGN KEY (`student_nim`) REFERENCES `students`(`user_nim`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `practicum_groups`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `practicum_class_id_student_nim` (`practicum_class_id`, `student_nim`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `student_nim` (`student_nim`),
+	KEY `group_id` (`group_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 5 APPPATH\Database\Migrations\2026-05-21-000005_create_practicum_structure_tables.php(197): CodeIgniter\Database\Forge->createTable('class_students')
+ 6 SYSTEMPATH\Database\MigrationRunner.php(1014): App\Database\Migrations\CreatePracticumStructureTables->up()
+ 7 SYSTEMPATH\Database\MigrationRunner.php(202): CodeIgniter\Database\MigrationRunner->migrate('up', Object(stdClass))
+ 8 SYSTEMPATH\Commands\Database\Migrate.php(89): CodeIgniter\Database\MigrationRunner->latest(null)
+ 9 SYSTEMPATH\CLI\SignalTrait.php(245): CodeIgniter\Commands\Database\Migrate::CodeIgniter\Commands\Database\{closure}()
+10 SYSTEMPATH\Commands\Database\Migrate.php(88): CodeIgniter\Commands\Database\Migrate->withSignalsBlocked(Object(Closure))
+11 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Migrate->run([])
+12 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('migrate', [])
+13 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+14 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+15 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 23:37:05 --> Can't create table `db_penilaian_praktikum`.`class_students` (errno: 150 "Foreign key constraint is incorrectly formed")
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('CREATE TABLE `class_students` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`student_nim` CHAR(10) NOT NULL,
+	`group_id` INT UNSIGNED NULL,
+	`enrollment_status` ENUM(\'aktif\',\'drop\',\'lulus\',\'remedial\') NOT NULL DEFAULT \'aktif\',
+	`enrolled_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	CONSTRAINT `pk_class_students` PRIMARY KEY(`id`),
+	CONSTRAINT `class_students_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_student_nim_foreign` FOREIGN KEY (`student_nim`) REFERENCES `students`(`user_nim`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `practicum_groups`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `practicum_class_id_student_nim` (`practicum_class_id`, `student_nim`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `student_nim` (`student_nim`),
+	KEY `group_id` (`group_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('CREATE TABLE `class_students` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`student_nim` CHAR(10) NOT NULL,
+	`group_id` INT UNSIGNED NULL,
+	`enrollment_status` ENUM(\'aktif\',\'drop\',\'lulus\',\'remedial\') NOT NULL DEFAULT \'aktif\',
+	`enrolled_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	CONSTRAINT `pk_class_students` PRIMARY KEY(`id`),
+	CONSTRAINT `class_students_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_student_nim_foreign` FOREIGN KEY (`student_nim`) REFERENCES `students`(`user_nim`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `practicum_groups`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `practicum_class_id_student_nim` (`practicum_class_id`, `student_nim`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `student_nim` (`student_nim`),
+	KEY `group_id` (`group_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('CREATE TABLE `class_students` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`student_nim` CHAR(10) NOT NULL,
+	`group_id` INT UNSIGNED NULL,
+	`enrollment_status` ENUM(\'aktif\',\'drop\',\'lulus\',\'remedial\') NOT NULL DEFAULT \'aktif\',
+	`enrolled_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	CONSTRAINT `pk_class_students` PRIMARY KEY(`id`),
+	CONSTRAINT `class_students_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_student_nim_foreign` FOREIGN KEY (`student_nim`) REFERENCES `students`(`user_nim`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `practicum_groups`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `practicum_class_id_student_nim` (`practicum_class_id`, `student_nim`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `student_nim` (`student_nim`),
+	KEY `group_id` (`group_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 4 SYSTEMPATH\Database\Forge.php(570): CodeIgniter\Database\BaseConnection->query('CREATE TABLE `class_students` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`student_nim` CHAR(10) NOT NULL,
+	`group_id` INT UNSIGNED NULL,
+	`enrollment_status` ENUM(\'aktif\',\'drop\',\'lulus\',\'remedial\') NOT NULL DEFAULT \'aktif\',
+	`enrolled_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	CONSTRAINT `pk_class_students` PRIMARY KEY(`id`),
+	CONSTRAINT `class_students_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_student_nim_foreign` FOREIGN KEY (`student_nim`) REFERENCES `students`(`user_nim`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `practicum_groups`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `practicum_class_id_student_nim` (`practicum_class_id`, `student_nim`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `student_nim` (`student_nim`),
+	KEY `group_id` (`group_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 5 APPPATH\Database\Migrations\2026-05-21-000005_create_practicum_structure_tables.php(197): CodeIgniter\Database\Forge->createTable('class_students')
+ 6 SYSTEMPATH\Database\MigrationRunner.php(1014): App\Database\Migrations\CreatePracticumStructureTables->up()
+ 7 SYSTEMPATH\Database\MigrationRunner.php(202): CodeIgniter\Database\MigrationRunner->migrate('up', Object(stdClass))
+ 8 SYSTEMPATH\Commands\Database\Migrate.php(89): CodeIgniter\Database\MigrationRunner->latest(null)
+ 9 SYSTEMPATH\CLI\SignalTrait.php(245): CodeIgniter\Commands\Database\Migrate::CodeIgniter\Commands\Database\{closure}()
+10 SYSTEMPATH\Commands\Database\Migrate.php(88): CodeIgniter\Commands\Database\Migrate->withSignalsBlocked(Object(Closure))
+11 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Migrate->run([])
+12 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('migrate', [])
+13 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+14 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+15 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 23:37:22 --> Can't create table `db_penilaian_praktikum`.`class_students` (errno: 150 "Foreign key constraint is incorrectly formed")
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('CREATE TABLE `class_students` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`student_nim` CHAR(10) NOT NULL,
+	`group_id` INT UNSIGNED NULL,
+	`enrollment_status` ENUM(\'aktif\',\'drop\',\'lulus\',\'remedial\') NOT NULL DEFAULT \'aktif\',
+	`enrolled_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	CONSTRAINT `pk_class_students` PRIMARY KEY(`id`),
+	CONSTRAINT `class_students_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_student_nim_foreign` FOREIGN KEY (`student_nim`) REFERENCES `students`(`user_nim`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `practicum_groups`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `practicum_class_id_student_nim` (`practicum_class_id`, `student_nim`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `student_nim` (`student_nim`),
+	KEY `group_id` (`group_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('CREATE TABLE `class_students` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`student_nim` CHAR(10) NOT NULL,
+	`group_id` INT UNSIGNED NULL,
+	`enrollment_status` ENUM(\'aktif\',\'drop\',\'lulus\',\'remedial\') NOT NULL DEFAULT \'aktif\',
+	`enrolled_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	CONSTRAINT `pk_class_students` PRIMARY KEY(`id`),
+	CONSTRAINT `class_students_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_student_nim_foreign` FOREIGN KEY (`student_nim`) REFERENCES `students`(`user_nim`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `practicum_groups`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `practicum_class_id_student_nim` (`practicum_class_id`, `student_nim`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `student_nim` (`student_nim`),
+	KEY `group_id` (`group_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('CREATE TABLE `class_students` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`student_nim` CHAR(10) NOT NULL,
+	`group_id` INT UNSIGNED NULL,
+	`enrollment_status` ENUM(\'aktif\',\'drop\',\'lulus\',\'remedial\') NOT NULL DEFAULT \'aktif\',
+	`enrolled_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	CONSTRAINT `pk_class_students` PRIMARY KEY(`id`),
+	CONSTRAINT `class_students_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_student_nim_foreign` FOREIGN KEY (`student_nim`) REFERENCES `students`(`user_nim`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `practicum_groups`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `practicum_class_id_student_nim` (`practicum_class_id`, `student_nim`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `student_nim` (`student_nim`),
+	KEY `group_id` (`group_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 4 SYSTEMPATH\Database\Forge.php(570): CodeIgniter\Database\BaseConnection->query('CREATE TABLE `class_students` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`student_nim` CHAR(10) NOT NULL,
+	`group_id` INT UNSIGNED NULL,
+	`enrollment_status` ENUM(\'aktif\',\'drop\',\'lulus\',\'remedial\') NOT NULL DEFAULT \'aktif\',
+	`enrolled_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	CONSTRAINT `pk_class_students` PRIMARY KEY(`id`),
+	CONSTRAINT `class_students_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_student_nim_foreign` FOREIGN KEY (`student_nim`) REFERENCES `students`(`user_nim`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `class_students_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `practicum_groups`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `practicum_class_id_student_nim` (`practicum_class_id`, `student_nim`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `student_nim` (`student_nim`),
+	KEY `group_id` (`group_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 5 APPPATH\Database\Migrations\2026-05-21-000005_create_practicum_structure_tables.php(197): CodeIgniter\Database\Forge->createTable('class_students')
+ 6 SYSTEMPATH\Database\MigrationRunner.php(1014): App\Database\Migrations\CreatePracticumStructureTables->up()
+ 7 SYSTEMPATH\Database\MigrationRunner.php(202): CodeIgniter\Database\MigrationRunner->migrate('up', Object(stdClass))
+ 8 SYSTEMPATH\Commands\Database\Migrate.php(89): CodeIgniter\Database\MigrationRunner->latest(null)
+ 9 SYSTEMPATH\CLI\SignalTrait.php(245): CodeIgniter\Commands\Database\Migrate::CodeIgniter\Commands\Database\{closure}()
+10 SYSTEMPATH\Commands\Database\Migrate.php(88): CodeIgniter\Commands\Database\Migrate->withSignalsBlocked(Object(Closure))
+11 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Migrate->run([...])
+12 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('migrate', [...])
+13 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+14 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+15 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 23:42:26 --> Can't create table `db_penilaian_praktikum`.`attendance_records` (errno: 150 "Foreign key constraint is incorrectly formed")
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('CREATE TABLE `attendance_records` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`attendance_session_id` INT UNSIGNED NOT NULL,
+	`student_id` INT UNSIGNED NOT NULL,
+	`attendance_status_id` INT UNSIGNED NOT NULL,
+	`notes` TEXT NULL,
+	`marked_by` CHAR(10) NULL,
+	`marked_at` DATETIME NULL,
+	`previous_attendance_status_id` INT UNSIGNED NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	CONSTRAINT `pk_attendance_records` PRIMARY KEY(`id`),
+	CONSTRAINT `attendance_records_attendance_session_id_foreign` FOREIGN KEY (`attendance_session_id`) REFERENCES `attendance_sessions`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `attendance_records_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `attendance_records_attendance_status_id_foreign` FOREIGN KEY (`attendance_status_id`) REFERENCES `attendance_statuses`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `attendance_records_previous_attendance_status_id_foreign` FOREIGN KEY (`previous_attendance_status_id`) REFERENCES `attendance_statuses`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `attendance_records_marked_by_foreign` FOREIGN KEY (`marked_by`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `attendance_session_id_student_id` (`attendance_session_id`, `student_id`),
+	KEY `attendance_session_id` (`attendance_session_id`),
+	KEY `student_id` (`student_id`),
+	KEY `attendance_status_id` (`attendance_status_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('CREATE TABLE `attendance_records` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`attendance_session_id` INT UNSIGNED NOT NULL,
+	`student_id` INT UNSIGNED NOT NULL,
+	`attendance_status_id` INT UNSIGNED NOT NULL,
+	`notes` TEXT NULL,
+	`marked_by` CHAR(10) NULL,
+	`marked_at` DATETIME NULL,
+	`previous_attendance_status_id` INT UNSIGNED NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	CONSTRAINT `pk_attendance_records` PRIMARY KEY(`id`),
+	CONSTRAINT `attendance_records_attendance_session_id_foreign` FOREIGN KEY (`attendance_session_id`) REFERENCES `attendance_sessions`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `attendance_records_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `attendance_records_attendance_status_id_foreign` FOREIGN KEY (`attendance_status_id`) REFERENCES `attendance_statuses`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `attendance_records_previous_attendance_status_id_foreign` FOREIGN KEY (`previous_attendance_status_id`) REFERENCES `attendance_statuses`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `attendance_records_marked_by_foreign` FOREIGN KEY (`marked_by`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `attendance_session_id_student_id` (`attendance_session_id`, `student_id`),
+	KEY `attendance_session_id` (`attendance_session_id`),
+	KEY `student_id` (`student_id`),
+	KEY `attendance_status_id` (`attendance_status_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('CREATE TABLE `attendance_records` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`attendance_session_id` INT UNSIGNED NOT NULL,
+	`student_id` INT UNSIGNED NOT NULL,
+	`attendance_status_id` INT UNSIGNED NOT NULL,
+	`notes` TEXT NULL,
+	`marked_by` CHAR(10) NULL,
+	`marked_at` DATETIME NULL,
+	`previous_attendance_status_id` INT UNSIGNED NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	CONSTRAINT `pk_attendance_records` PRIMARY KEY(`id`),
+	CONSTRAINT `attendance_records_attendance_session_id_foreign` FOREIGN KEY (`attendance_session_id`) REFERENCES `attendance_sessions`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `attendance_records_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `attendance_records_attendance_status_id_foreign` FOREIGN KEY (`attendance_status_id`) REFERENCES `attendance_statuses`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `attendance_records_previous_attendance_status_id_foreign` FOREIGN KEY (`previous_attendance_status_id`) REFERENCES `attendance_statuses`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `attendance_records_marked_by_foreign` FOREIGN KEY (`marked_by`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `attendance_session_id_student_id` (`attendance_session_id`, `student_id`),
+	KEY `attendance_session_id` (`attendance_session_id`),
+	KEY `student_id` (`student_id`),
+	KEY `attendance_status_id` (`attendance_status_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 4 SYSTEMPATH\Database\Forge.php(570): CodeIgniter\Database\BaseConnection->query('CREATE TABLE `attendance_records` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`attendance_session_id` INT UNSIGNED NOT NULL,
+	`student_id` INT UNSIGNED NOT NULL,
+	`attendance_status_id` INT UNSIGNED NOT NULL,
+	`notes` TEXT NULL,
+	`marked_by` CHAR(10) NULL,
+	`marked_at` DATETIME NULL,
+	`previous_attendance_status_id` INT UNSIGNED NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	CONSTRAINT `pk_attendance_records` PRIMARY KEY(`id`),
+	CONSTRAINT `attendance_records_attendance_session_id_foreign` FOREIGN KEY (`attendance_session_id`) REFERENCES `attendance_sessions`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `attendance_records_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `attendance_records_attendance_status_id_foreign` FOREIGN KEY (`attendance_status_id`) REFERENCES `attendance_statuses`(`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+	CONSTRAINT `attendance_records_previous_attendance_status_id_foreign` FOREIGN KEY (`previous_attendance_status_id`) REFERENCES `attendance_statuses`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `attendance_records_marked_by_foreign` FOREIGN KEY (`marked_by`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `attendance_session_id_student_id` (`attendance_session_id`, `student_id`),
+	KEY `attendance_session_id` (`attendance_session_id`),
+	KEY `student_id` (`student_id`),
+	KEY `attendance_status_id` (`attendance_status_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 5 APPPATH\Database\Migrations\2026-05-21-000006_create_attendance_tables.php(197): CodeIgniter\Database\Forge->createTable('attendance_records')
+ 6 SYSTEMPATH\Database\MigrationRunner.php(1014): App\Database\Migrations\CreateAttendanceTables->up()
+ 7 SYSTEMPATH\Database\MigrationRunner.php(202): CodeIgniter\Database\MigrationRunner->migrate('up', Object(stdClass))
+ 8 SYSTEMPATH\Commands\Database\Migrate.php(89): CodeIgniter\Database\MigrationRunner->latest(null)
+ 9 SYSTEMPATH\CLI\SignalTrait.php(245): CodeIgniter\Commands\Database\Migrate::CodeIgniter\Commands\Database\{closure}()
+10 SYSTEMPATH\Commands\Database\Migrate.php(88): CodeIgniter\Commands\Database\Migrate->withSignalsBlocked(Object(Closure))
+11 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Migrate->run([])
+12 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('migrate', [])
+13 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+14 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+15 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 23:43:13 --> Can't create table `db_penilaian_praktikum`.`score_entries` (errno: 150 "Foreign key constraint is incorrectly formed")
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('CREATE TABLE `score_entries` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`group_id` INT UNSIGNED NULL,
+	`student_id` INT UNSIGNED NOT NULL,
+	`component_id` INT UNSIGNED NOT NULL,
+	`subcomponent_id` INT UNSIGNED NULL,
+	`score_value` DECIMAL(6,2) NULL,
+	`max_score` DECIMAL(6,2) NULL,
+	`status_id` INT UNSIGNED NULL,
+	`submitted_by` CHAR(10) NULL,
+	`submitted_at` DATETIME NULL,
+	`validated_by` CHAR(10) NULL,
+	`validated_at` DATETIME NULL,
+	`locked_at` DATETIME NULL,
+	`notes` TEXT NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_score_entries` PRIMARY KEY(`id`),
+	CONSTRAINT `score_entries_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `score_entries_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `practicum_groups`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `score_entries_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `score_entries_component_id_foreign` FOREIGN KEY (`component_id`) REFERENCES `assessment_components`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `score_entries_subcomponent_id_foreign` FOREIGN KEY (`subcomponent_id`) REFERENCES `assessment_subcomponents`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `score_entries_status_id_foreign` FOREIGN KEY (`status_id`) REFERENCES `score_statuses`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `score_entries_submitted_by_foreign` FOREIGN KEY (`submitted_by`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `score_entries_validated_by_foreign` FOREIGN KEY (`validated_by`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `practicum_class_id_student_id_component_id_subcomponent_id` (`practicum_class_id`, `student_id`, `component_id`, `subcomponent_id`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `group_id` (`group_id`),
+	KEY `student_id` (`student_id`),
+	KEY `component_id` (`component_id`),
+	KEY `subcomponent_id` (`subcomponent_id`),
+	KEY `status_id` (`status_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('CREATE TABLE `score_entries` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`group_id` INT UNSIGNED NULL,
+	`student_id` INT UNSIGNED NOT NULL,
+	`component_id` INT UNSIGNED NOT NULL,
+	`subcomponent_id` INT UNSIGNED NULL,
+	`score_value` DECIMAL(6,2) NULL,
+	`max_score` DECIMAL(6,2) NULL,
+	`status_id` INT UNSIGNED NULL,
+	`submitted_by` CHAR(10) NULL,
+	`submitted_at` DATETIME NULL,
+	`validated_by` CHAR(10) NULL,
+	`validated_at` DATETIME NULL,
+	`locked_at` DATETIME NULL,
+	`notes` TEXT NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_score_entries` PRIMARY KEY(`id`),
+	CONSTRAINT `score_entries_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `score_entries_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `practicum_groups`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `score_entries_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `score_entries_component_id_foreign` FOREIGN KEY (`component_id`) REFERENCES `assessment_components`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `score_entries_subcomponent_id_foreign` FOREIGN KEY (`subcomponent_id`) REFERENCES `assessment_subcomponents`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `score_entries_status_id_foreign` FOREIGN KEY (`status_id`) REFERENCES `score_statuses`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `score_entries_submitted_by_foreign` FOREIGN KEY (`submitted_by`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `score_entries_validated_by_foreign` FOREIGN KEY (`validated_by`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `practicum_class_id_student_id_component_id_subcomponent_id` (`practicum_class_id`, `student_id`, `component_id`, `subcomponent_id`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `group_id` (`group_id`),
+	KEY `student_id` (`student_id`),
+	KEY `component_id` (`component_id`),
+	KEY `subcomponent_id` (`subcomponent_id`),
+	KEY `status_id` (`status_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('CREATE TABLE `score_entries` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`group_id` INT UNSIGNED NULL,
+	`student_id` INT UNSIGNED NOT NULL,
+	`component_id` INT UNSIGNED NOT NULL,
+	`subcomponent_id` INT UNSIGNED NULL,
+	`score_value` DECIMAL(6,2) NULL,
+	`max_score` DECIMAL(6,2) NULL,
+	`status_id` INT UNSIGNED NULL,
+	`submitted_by` CHAR(10) NULL,
+	`submitted_at` DATETIME NULL,
+	`validated_by` CHAR(10) NULL,
+	`validated_at` DATETIME NULL,
+	`locked_at` DATETIME NULL,
+	`notes` TEXT NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_score_entries` PRIMARY KEY(`id`),
+	CONSTRAINT `score_entries_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `score_entries_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `practicum_groups`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `score_entries_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `score_entries_component_id_foreign` FOREIGN KEY (`component_id`) REFERENCES `assessment_components`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `score_entries_subcomponent_id_foreign` FOREIGN KEY (`subcomponent_id`) REFERENCES `assessment_subcomponents`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `score_entries_status_id_foreign` FOREIGN KEY (`status_id`) REFERENCES `score_statuses`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `score_entries_submitted_by_foreign` FOREIGN KEY (`submitted_by`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `score_entries_validated_by_foreign` FOREIGN KEY (`validated_by`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `practicum_class_id_student_id_component_id_subcomponent_id` (`practicum_class_id`, `student_id`, `component_id`, `subcomponent_id`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `group_id` (`group_id`),
+	KEY `student_id` (`student_id`),
+	KEY `component_id` (`component_id`),
+	KEY `subcomponent_id` (`subcomponent_id`),
+	KEY `status_id` (`status_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 4 SYSTEMPATH\Database\Forge.php(570): CodeIgniter\Database\BaseConnection->query('CREATE TABLE `score_entries` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`group_id` INT UNSIGNED NULL,
+	`student_id` INT UNSIGNED NOT NULL,
+	`component_id` INT UNSIGNED NOT NULL,
+	`subcomponent_id` INT UNSIGNED NULL,
+	`score_value` DECIMAL(6,2) NULL,
+	`max_score` DECIMAL(6,2) NULL,
+	`status_id` INT UNSIGNED NULL,
+	`submitted_by` CHAR(10) NULL,
+	`submitted_at` DATETIME NULL,
+	`validated_by` CHAR(10) NULL,
+	`validated_at` DATETIME NULL,
+	`locked_at` DATETIME NULL,
+	`notes` TEXT NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_score_entries` PRIMARY KEY(`id`),
+	CONSTRAINT `score_entries_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `score_entries_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `practicum_groups`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `score_entries_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `score_entries_component_id_foreign` FOREIGN KEY (`component_id`) REFERENCES `assessment_components`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `score_entries_subcomponent_id_foreign` FOREIGN KEY (`subcomponent_id`) REFERENCES `assessment_subcomponents`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `score_entries_status_id_foreign` FOREIGN KEY (`status_id`) REFERENCES `score_statuses`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `score_entries_submitted_by_foreign` FOREIGN KEY (`submitted_by`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `score_entries_validated_by_foreign` FOREIGN KEY (`validated_by`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `practicum_class_id_student_id_component_id_subcomponent_id` (`practicum_class_id`, `student_id`, `component_id`, `subcomponent_id`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `group_id` (`group_id`),
+	KEY `student_id` (`student_id`),
+	KEY `component_id` (`component_id`),
+	KEY `subcomponent_id` (`subcomponent_id`),
+	KEY `status_id` (`status_id`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 5 APPPATH\Database\Migrations\2026-05-21-000007_create_score_tables.php(179): CodeIgniter\Database\Forge->createTable('score_entries')
+ 6 SYSTEMPATH\Database\MigrationRunner.php(1014): App\Database\Migrations\CreateScoreTables->up()
+ 7 SYSTEMPATH\Database\MigrationRunner.php(202): CodeIgniter\Database\MigrationRunner->migrate('up', Object(stdClass))
+ 8 SYSTEMPATH\Commands\Database\Migrate.php(89): CodeIgniter\Database\MigrationRunner->latest(null)
+ 9 SYSTEMPATH\CLI\SignalTrait.php(245): CodeIgniter\Commands\Database\Migrate::CodeIgniter\Commands\Database\{closure}()
+10 SYSTEMPATH\Commands\Database\Migrate.php(88): CodeIgniter\Commands\Database\Migrate->withSignalsBlocked(Object(Closure))
+11 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Migrate->run([])
+12 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('migrate', [])
+13 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+14 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+15 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 23:43:59 --> Can't create table `db_penilaian_praktikum`.`final_scores` (errno: 150 "Foreign key constraint is incorrectly formed")
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('CREATE TABLE `final_scores` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`group_id` INT UNSIGNED NULL,
+	`student_id` INT UNSIGNED NOT NULL,
+	`final_score` DECIMAL(6,2) NULL,
+	`grade_letter` VARCHAR(10) NULL,
+	`grade_point` DECIMAL(4,2) NULL,
+	`status` ENUM(\'draft\',\'submitted\',\'reviewed\',\'validated\',\'locked\',\'revision_requested\',\'revised\') NOT NULL DEFAULT \'draft\',
+	`validation_status` ENUM(\'pending\',\'approved\',\'rejected\') NOT NULL DEFAULT \'pending\',
+	`validated_by` CHAR(10) NULL,
+	`validated_at` DATETIME NULL,
+	`locked_at` DATETIME NULL,
+	`notes` TEXT NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_final_scores` PRIMARY KEY(`id`),
+	CONSTRAINT `final_scores_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `final_scores_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `practicum_groups`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `final_scores_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `final_scores_validated_by_foreign` FOREIGN KEY (`validated_by`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `practicum_class_id_student_id` (`practicum_class_id`, `student_id`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `group_id` (`group_id`),
+	KEY `student_id` (`student_id`),
+	KEY `status` (`status`),
+	KEY `validation_status` (`validation_status`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('CREATE TABLE `final_scores` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`group_id` INT UNSIGNED NULL,
+	`student_id` INT UNSIGNED NOT NULL,
+	`final_score` DECIMAL(6,2) NULL,
+	`grade_letter` VARCHAR(10) NULL,
+	`grade_point` DECIMAL(4,2) NULL,
+	`status` ENUM(\'draft\',\'submitted\',\'reviewed\',\'validated\',\'locked\',\'revision_requested\',\'revised\') NOT NULL DEFAULT \'draft\',
+	`validation_status` ENUM(\'pending\',\'approved\',\'rejected\') NOT NULL DEFAULT \'pending\',
+	`validated_by` CHAR(10) NULL,
+	`validated_at` DATETIME NULL,
+	`locked_at` DATETIME NULL,
+	`notes` TEXT NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_final_scores` PRIMARY KEY(`id`),
+	CONSTRAINT `final_scores_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `final_scores_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `practicum_groups`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `final_scores_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `final_scores_validated_by_foreign` FOREIGN KEY (`validated_by`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `practicum_class_id_student_id` (`practicum_class_id`, `student_id`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `group_id` (`group_id`),
+	KEY `student_id` (`student_id`),
+	KEY `status` (`status`),
+	KEY `validation_status` (`validation_status`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('CREATE TABLE `final_scores` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`group_id` INT UNSIGNED NULL,
+	`student_id` INT UNSIGNED NOT NULL,
+	`final_score` DECIMAL(6,2) NULL,
+	`grade_letter` VARCHAR(10) NULL,
+	`grade_point` DECIMAL(4,2) NULL,
+	`status` ENUM(\'draft\',\'submitted\',\'reviewed\',\'validated\',\'locked\',\'revision_requested\',\'revised\') NOT NULL DEFAULT \'draft\',
+	`validation_status` ENUM(\'pending\',\'approved\',\'rejected\') NOT NULL DEFAULT \'pending\',
+	`validated_by` CHAR(10) NULL,
+	`validated_at` DATETIME NULL,
+	`locked_at` DATETIME NULL,
+	`notes` TEXT NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_final_scores` PRIMARY KEY(`id`),
+	CONSTRAINT `final_scores_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `final_scores_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `practicum_groups`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `final_scores_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `final_scores_validated_by_foreign` FOREIGN KEY (`validated_by`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `practicum_class_id_student_id` (`practicum_class_id`, `student_id`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `group_id` (`group_id`),
+	KEY `student_id` (`student_id`),
+	KEY `status` (`status`),
+	KEY `validation_status` (`validation_status`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 4 SYSTEMPATH\Database\Forge.php(570): CodeIgniter\Database\BaseConnection->query('CREATE TABLE `final_scores` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`group_id` INT UNSIGNED NULL,
+	`student_id` INT UNSIGNED NOT NULL,
+	`final_score` DECIMAL(6,2) NULL,
+	`grade_letter` VARCHAR(10) NULL,
+	`grade_point` DECIMAL(4,2) NULL,
+	`status` ENUM(\'draft\',\'submitted\',\'reviewed\',\'validated\',\'locked\',\'revision_requested\',\'revised\') NOT NULL DEFAULT \'draft\',
+	`validation_status` ENUM(\'pending\',\'approved\',\'rejected\') NOT NULL DEFAULT \'pending\',
+	`validated_by` CHAR(10) NULL,
+	`validated_at` DATETIME NULL,
+	`locked_at` DATETIME NULL,
+	`notes` TEXT NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_final_scores` PRIMARY KEY(`id`),
+	CONSTRAINT `final_scores_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `final_scores_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `practicum_groups`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `final_scores_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `final_scores_validated_by_foreign` FOREIGN KEY (`validated_by`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `practicum_class_id_student_id` (`practicum_class_id`, `student_id`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `group_id` (`group_id`),
+	KEY `student_id` (`student_id`),
+	KEY `status` (`status`),
+	KEY `validation_status` (`validation_status`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 5 APPPATH\Database\Migrations\2026-05-21-000007_create_score_tables.php(319): CodeIgniter\Database\Forge->createTable('final_scores')
+ 6 SYSTEMPATH\Database\MigrationRunner.php(1014): App\Database\Migrations\CreateScoreTables->up()
+ 7 SYSTEMPATH\Database\MigrationRunner.php(202): CodeIgniter\Database\MigrationRunner->migrate('up', Object(stdClass))
+ 8 SYSTEMPATH\Commands\Database\Migrate.php(89): CodeIgniter\Database\MigrationRunner->latest(null)
+ 9 SYSTEMPATH\CLI\SignalTrait.php(245): CodeIgniter\Commands\Database\Migrate::CodeIgniter\Commands\Database\{closure}()
+10 SYSTEMPATH\Commands\Database\Migrate.php(88): CodeIgniter\Commands\Database\Migrate->withSignalsBlocked(Object(Closure))
+11 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Migrate->run([])
+12 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('migrate', [])
+13 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+14 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+15 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+ERROR - 2026-06-04 23:44:26 --> Can't create table `db_penilaian_praktikum`.`remedial_participants` (errno: 150 "Foreign key constraint is incorrectly formed")
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 300.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(300): mysqli->query('CREATE TABLE `remedial_participants` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`remedial_period_id` INT UNSIGNED NOT NULL,
+	`student_id` INT UNSIGNED NOT NULL,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`final_score_id` INT UNSIGNED NULL,
+	`status` ENUM(\'eligible\',\'terdaftar\',\'dijadwalkan\',\'sudah_dinilai\',\'validated\',\'tidak_mengikuti\',\'dibatalkan\') NOT NULL DEFAULT \'eligible\',
+	`reason` TEXT NULL,
+	`before_score` DECIMAL(6,2) NULL,
+	`after_score` DECIMAL(6,2) NULL,
+	`max_after_score` DECIMAL(6,2) NULL,
+	`validated_by` CHAR(10) NULL,
+	`validated_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_remedial_participants` PRIMARY KEY(`id`),
+	CONSTRAINT `remedial_participants_remedial_period_id_foreign` FOREIGN KEY (`remedial_period_id`) REFERENCES `remedial_periods`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `remedial_participants_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `remedial_participants_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `remedial_participants_final_score_id_foreign` FOREIGN KEY (`final_score_id`) REFERENCES `final_scores`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `remedial_participants_validated_by_foreign` FOREIGN KEY (`validated_by`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `remedial_period_id_student_id_practicum_class_id` (`remedial_period_id`, `student_id`, `practicum_class_id`),
+	KEY `remedial_period_id` (`remedial_period_id`),
+	KEY `student_id` (`student_id`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `final_score_id` (`final_score_id`),
+	KEY `status` (`status`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(910): CodeIgniter\Database\MySQLi\Connection->execute('CREATE TABLE `remedial_participants` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`remedial_period_id` INT UNSIGNED NOT NULL,
+	`student_id` INT UNSIGNED NOT NULL,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`final_score_id` INT UNSIGNED NULL,
+	`status` ENUM(\'eligible\',\'terdaftar\',\'dijadwalkan\',\'sudah_dinilai\',\'validated\',\'tidak_mengikuti\',\'dibatalkan\') NOT NULL DEFAULT \'eligible\',
+	`reason` TEXT NULL,
+	`before_score` DECIMAL(6,2) NULL,
+	`after_score` DECIMAL(6,2) NULL,
+	`max_after_score` DECIMAL(6,2) NULL,
+	`validated_by` CHAR(10) NULL,
+	`validated_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_remedial_participants` PRIMARY KEY(`id`),
+	CONSTRAINT `remedial_participants_remedial_period_id_foreign` FOREIGN KEY (`remedial_period_id`) REFERENCES `remedial_periods`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `remedial_participants_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `remedial_participants_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `remedial_participants_final_score_id_foreign` FOREIGN KEY (`final_score_id`) REFERENCES `final_scores`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `remedial_participants_validated_by_foreign` FOREIGN KEY (`validated_by`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `remedial_period_id_student_id_practicum_class_id` (`remedial_period_id`, `student_id`, `practicum_class_id`),
+	KEY `remedial_period_id` (`remedial_period_id`),
+	KEY `student_id` (`student_id`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `final_score_id` (`final_score_id`),
+	KEY `status` (`status`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 3 SYSTEMPATH\Database\BaseConnection.php(827): CodeIgniter\Database\BaseConnection->simpleQuery('CREATE TABLE `remedial_participants` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`remedial_period_id` INT UNSIGNED NOT NULL,
+	`student_id` INT UNSIGNED NOT NULL,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`final_score_id` INT UNSIGNED NULL,
+	`status` ENUM(\'eligible\',\'terdaftar\',\'dijadwalkan\',\'sudah_dinilai\',\'validated\',\'tidak_mengikuti\',\'dibatalkan\') NOT NULL DEFAULT \'eligible\',
+	`reason` TEXT NULL,
+	`before_score` DECIMAL(6,2) NULL,
+	`after_score` DECIMAL(6,2) NULL,
+	`max_after_score` DECIMAL(6,2) NULL,
+	`validated_by` CHAR(10) NULL,
+	`validated_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_remedial_participants` PRIMARY KEY(`id`),
+	CONSTRAINT `remedial_participants_remedial_period_id_foreign` FOREIGN KEY (`remedial_period_id`) REFERENCES `remedial_periods`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `remedial_participants_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `remedial_participants_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `remedial_participants_final_score_id_foreign` FOREIGN KEY (`final_score_id`) REFERENCES `final_scores`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `remedial_participants_validated_by_foreign` FOREIGN KEY (`validated_by`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `remedial_period_id_student_id_practicum_class_id` (`remedial_period_id`, `student_id`, `practicum_class_id`),
+	KEY `remedial_period_id` (`remedial_period_id`),
+	KEY `student_id` (`student_id`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `final_score_id` (`final_score_id`),
+	KEY `status` (`status`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 4 SYSTEMPATH\Database\Forge.php(570): CodeIgniter\Database\BaseConnection->query('CREATE TABLE `remedial_participants` (
+	`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+	`remedial_period_id` INT UNSIGNED NOT NULL,
+	`student_id` INT UNSIGNED NOT NULL,
+	`practicum_class_id` INT UNSIGNED NOT NULL,
+	`final_score_id` INT UNSIGNED NULL,
+	`status` ENUM(\'eligible\',\'terdaftar\',\'dijadwalkan\',\'sudah_dinilai\',\'validated\',\'tidak_mengikuti\',\'dibatalkan\') NOT NULL DEFAULT \'eligible\',
+	`reason` TEXT NULL,
+	`before_score` DECIMAL(6,2) NULL,
+	`after_score` DECIMAL(6,2) NULL,
+	`max_after_score` DECIMAL(6,2) NULL,
+	`validated_by` CHAR(10) NULL,
+	`validated_at` DATETIME NULL,
+	`created_at` DATETIME NULL,
+	`updated_at` DATETIME NULL,
+	`deleted_at` DATETIME NULL,
+	CONSTRAINT `pk_remedial_participants` PRIMARY KEY(`id`),
+	CONSTRAINT `remedial_participants_remedial_period_id_foreign` FOREIGN KEY (`remedial_period_id`) REFERENCES `remedial_periods`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `remedial_participants_student_id_foreign` FOREIGN KEY (`student_id`) REFERENCES `students`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `remedial_participants_practicum_class_id_foreign` FOREIGN KEY (`practicum_class_id`) REFERENCES `practicum_classes`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT `remedial_participants_final_score_id_foreign` FOREIGN KEY (`final_score_id`) REFERENCES `final_scores`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	CONSTRAINT `remedial_participants_validated_by_foreign` FOREIGN KEY (`validated_by`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE SET NULL,
+	UNIQUE KEY `remedial_period_id_student_id_practicum_class_id` (`remedial_period_id`, `student_id`, `practicum_class_id`),
+	KEY `remedial_period_id` (`remedial_period_id`),
+	KEY `student_id` (`student_id`),
+	KEY `practicum_class_id` (`practicum_class_id`),
+	KEY `final_score_id` (`final_score_id`),
+	KEY `status` (`status`)
+) DEFAULT CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci')
+ 5 APPPATH\Database\Migrations\2026-05-21-000009_create_remedial_tables.php(170): CodeIgniter\Database\Forge->createTable('remedial_participants')
+ 6 SYSTEMPATH\Database\MigrationRunner.php(1014): App\Database\Migrations\CreateRemedialTables->up()
+ 7 SYSTEMPATH\Database\MigrationRunner.php(202): CodeIgniter\Database\MigrationRunner->migrate('up', Object(stdClass))
+ 8 SYSTEMPATH\Commands\Database\Migrate.php(89): CodeIgniter\Database\MigrationRunner->latest(null)
+ 9 SYSTEMPATH\CLI\SignalTrait.php(245): CodeIgniter\Commands\Database\Migrate::CodeIgniter\Commands\Database\{closure}()
+10 SYSTEMPATH\Commands\Database\Migrate.php(88): CodeIgniter\Commands\Database\Migrate->withSignalsBlocked(Object(Closure))
+11 SYSTEMPATH\CLI\Commands.php(74): CodeIgniter\Commands\Database\Migrate->run([])
+12 SYSTEMPATH\CLI\Console.php(47): CodeIgniter\CLI\Commands->run('migrate', [])
+13 SYSTEMPATH\Boot.php(442): CodeIgniter\CLI\Console->run()
+14 SYSTEMPATH\Boot.php(166): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+15 ROOTPATH\spark(87): CodeIgniter\Boot::bootSpark(Object(Config\Paths))

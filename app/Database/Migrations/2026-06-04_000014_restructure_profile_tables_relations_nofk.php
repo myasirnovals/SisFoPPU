@@ -14,11 +14,23 @@ class RestructureProfileTablesRelationsNoFK extends Migration
     public function up()
     {
         // Drop existing profile tables (nama sama) agar struktur final konsisten.
-        $this->forge->dropTable('assistants', true);
-        $this->forge->dropTable('lecturers', true);
-        $this->forge->dropTable('students', true);
-        $this->forge->dropTable('coordinators', true);
-        $this->forge->dropTable('admins', true);
+        if ($this->db->tableExists('assistants')) {
+            $this->forge->dropTable('assistants', true);
+        }
+        if ($this->db->tableExists('lecturers')) {
+            $this->forge->dropTable('lecturers', true);
+        }
+        if ($this->db->tableExists('students')) {
+            $this->forge->dropTable('students', true);
+        }
+        if ($this->db->tableExists('coordinators')) {
+            $this->forge->dropTable('coordinators', true);
+        }
+        if ($this->db->tableExists('admins')) {
+            $this->forge->dropTable('admins', true);
+        }
+
+
 
 
         $this->forge->addField([
@@ -93,11 +105,21 @@ class RestructureProfileTablesRelationsNoFK extends Migration
 
     public function down()
     {
-        $this->forge->dropTable('admins', true);
-        $this->forge->dropTable('coordinators', true);
-        $this->forge->dropTable('lecturers', true);
-        $this->forge->dropTable('assistants', true);
-        $this->forge->dropTable('students', true);
+        if ($this->db->tableExists('admins')) {
+            $this->forge->dropTable('admins', true);
+        }
+        if ($this->db->tableExists('coordinators')) {
+            $this->forge->dropTable('coordinators', true);
+        }
+        if ($this->db->tableExists('lecturers')) {
+            $this->forge->dropTable('lecturers', true);
+        }
+        if ($this->db->tableExists('assistants')) {
+            $this->forge->dropTable('assistants', true);
+        }
+        if ($this->db->tableExists('students')) {
+            $this->forge->dropTable('students', true);
+        }
     }
 }
 

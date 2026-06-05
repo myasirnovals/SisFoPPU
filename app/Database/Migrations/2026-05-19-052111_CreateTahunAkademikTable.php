@@ -8,7 +8,12 @@ class CreateTahunAkademikTable extends Migration
 {
     public function up()
     {
+        if ($this->db->tableExists('tahun_akademik')) {
+            $this->forge->dropTable('tahun_akademik', true);
+        }
+
         $this->forge->addField([
+
             'id' => [
                 'type'           => 'INT',
                 'constraint'     => 11,
@@ -43,6 +48,8 @@ class CreateTahunAkademikTable extends Migration
 
     public function down()
     {
-        $this->forge->dropTable('tahun_akademik');
+        if ($this->db->tableExists('tahun_akademik')) {
+            $this->forge->dropTable('tahun_akademik', true);
+        }
     }
 }

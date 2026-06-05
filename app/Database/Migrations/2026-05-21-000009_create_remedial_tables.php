@@ -8,6 +8,25 @@ class CreateRemedialTables extends Migration
 {
     public function up()
     {
+        if ($this->db->tableExists('remedial_logs')) {
+            $this->forge->dropTable('remedial_logs', true);
+        }
+        if ($this->db->tableExists('remedial_results')) {
+            $this->forge->dropTable('remedial_results', true);
+        }
+        if ($this->db->tableExists('remedial_scores')) {
+            $this->forge->dropTable('remedial_scores', true);
+        }
+        if ($this->db->tableExists('remedial_components')) {
+            $this->forge->dropTable('remedial_components', true);
+        }
+        if ($this->db->tableExists('remedial_participants')) {
+            $this->forge->dropTable('remedial_participants', true);
+        }
+        if ($this->db->tableExists('remedial_periods')) {
+            $this->forge->dropTable('remedial_periods', true);
+        }
+
         $this->forge->addField([
             'id' => [
                 'type'           => 'INT',
@@ -143,11 +162,12 @@ class CreateRemedialTables extends Migration
         $this->forge->addKey('practicum_class_id');
         $this->forge->addKey('final_score_id');
         $this->forge->addKey('status');
-        $this->forge->addForeignKey('remedial_period_id', 'remedial_periods', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('student_id', 'students', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('practicum_class_id', 'practicum_classes', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('final_score_id', 'final_scores', 'id', 'SET NULL', 'CASCADE');
-        $this->forge->addForeignKey('validated_by', 'users', 'id', 'SET NULL', 'CASCADE');
+        // Foreign key ditunda
+        // $this->forge->addForeignKey('remedial_period_id', 'remedial_periods', 'id', 'CASCADE', 'CASCADE');
+        // $this->forge->addForeignKey('student_id', 'students', 'id', 'CASCADE', 'CASCADE');
+        // $this->forge->addForeignKey('practicum_class_id', 'practicum_classes', 'id', 'CASCADE', 'CASCADE');
+        // $this->forge->addForeignKey('final_score_id', 'final_scores', 'id', 'SET NULL', 'CASCADE');
+        // $this->forge->addForeignKey('validated_by', 'users', 'id', 'SET NULL', 'CASCADE');
         $this->forge->createTable('remedial_participants');
 
         $this->forge->addField([
@@ -362,11 +382,23 @@ class CreateRemedialTables extends Migration
 
     public function down()
     {
-        $this->forge->dropTable('remedial_logs', true);
-        $this->forge->dropTable('remedial_results', true);
-        $this->forge->dropTable('remedial_scores', true);
-        $this->forge->dropTable('remedial_components', true);
-        $this->forge->dropTable('remedial_participants', true);
-        $this->forge->dropTable('remedial_periods', true);
+        if ($this->db->tableExists('remedial_logs')) {
+            $this->forge->dropTable('remedial_logs', true);
+        }
+        if ($this->db->tableExists('remedial_results')) {
+            $this->forge->dropTable('remedial_results', true);
+        }
+        if ($this->db->tableExists('remedial_scores')) {
+            $this->forge->dropTable('remedial_scores', true);
+        }
+        if ($this->db->tableExists('remedial_components')) {
+            $this->forge->dropTable('remedial_components', true);
+        }
+        if ($this->db->tableExists('remedial_participants')) {
+            $this->forge->dropTable('remedial_participants', true);
+        }
+        if ($this->db->tableExists('remedial_periods')) {
+            $this->forge->dropTable('remedial_periods', true);
+        }
     }
 }

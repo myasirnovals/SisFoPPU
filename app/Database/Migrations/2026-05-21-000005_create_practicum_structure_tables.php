@@ -8,6 +8,23 @@ class CreatePracticumStructureTables extends Migration
 {
     public function up()
     {
+        // Drop child first (tables dengan FK ke lainnya)
+        if ($this->db->tableExists('class_assistants')) {
+            $this->forge->dropTable('class_assistants', true);
+        }
+        if ($this->db->tableExists('class_lecturers')) {
+            $this->forge->dropTable('class_lecturers', true);
+        }
+        if ($this->db->tableExists('class_students')) {
+            $this->forge->dropTable('class_students', true);
+        }
+        if ($this->db->tableExists('practicum_groups')) {
+            $this->forge->dropTable('practicum_groups', true);
+        }
+        if ($this->db->tableExists('practicum_classes')) {
+            $this->forge->dropTable('practicum_classes', true);
+        }
+
         $this->forge->addField([
             'id' => [
                 'type'           => 'INT',
@@ -77,11 +94,12 @@ class CreatePracticumStructureTables extends Migration
         $this->forge->addKey('semester_id');
         $this->forge->addKey('laboratory_id');
         $this->forge->addKey('template_id');
-        $this->forge->addForeignKey('course_id', 'courses', 'id', 'RESTRICT', 'CASCADE');
-        $this->forge->addForeignKey('academic_year_id', 'academic_years', 'id', 'RESTRICT', 'CASCADE');
-        $this->forge->addForeignKey('semester_id', 'semesters', 'id', 'RESTRICT', 'CASCADE');
-        $this->forge->addForeignKey('laboratory_id', 'laboratories', 'id', 'SET NULL', 'CASCADE');
-        $this->forge->addForeignKey('template_id', 'assessment_templates', 'id', 'SET NULL', 'CASCADE');
+        // Foreign key ditunda (MySQL constraint terkadang gagal terbentuk di environment tertentu)
+        // $this->forge->addForeignKey('course_id', 'courses', 'id', 'RESTRICT', 'CASCADE');
+        // $this->forge->addForeignKey('academic_year_id', 'academic_years', 'id', 'RESTRICT', 'CASCADE');
+        // $this->forge->addForeignKey('semester_id', 'semesters', 'id', 'RESTRICT', 'CASCADE');
+        // $this->forge->addForeignKey('laboratory_id', 'laboratories', 'id', 'SET NULL', 'CASCADE');
+        // $this->forge->addForeignKey('template_id', 'assessment_templates', 'id', 'SET NULL', 'CASCADE');
         $this->forge->createTable('practicum_classes');
 
         $this->forge->addField([
@@ -142,7 +160,7 @@ class CreatePracticumStructureTables extends Migration
                 'unsigned' => true,
             ],
             'student_nim' => [
-                'type' => 'CHAR',
+                'type'       => 'CHAR',
                 'constraint' => 10,
             ],
 
@@ -170,13 +188,14 @@ class CreatePracticumStructureTables extends Migration
             ],
         ]);
         $this->forge->addKey('id', true);
-        $this->forge->addUniqueKey(['practicum_class_id', 'student_id']);
+        $this->forge->addUniqueKey(['practicum_class_id', 'student_nim']);
         $this->forge->addKey('practicum_class_id');
-        $this->forge->addKey('student_id');
+        $this->forge->addKey('student_nim');
         $this->forge->addKey('group_id');
-        $this->forge->addForeignKey('practicum_class_id', 'practicum_classes', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('student_id', 'students', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('group_id', 'practicum_groups', 'id', 'SET NULL', 'CASCADE');
+        // Foreign key ditunda
+        // $this->forge->addForeignKey('practicum_class_id', 'practicum_classes', 'id', 'CASCADE', 'CASCADE');
+        // $this->forge->addForeignKey('student_nim', 'students', 'user_nim', 'CASCADE', 'CASCADE');
+        // $this->forge->addForeignKey('group_id', 'practicum_groups', 'id', 'SET NULL', 'CASCADE');
         $this->forge->createTable('class_students');
 
         $this->forge->addField([
@@ -207,8 +226,9 @@ class CreatePracticumStructureTables extends Migration
         $this->forge->addUniqueKey(['practicum_class_id', 'lecturer_id', 'role_type']);
         $this->forge->addKey('practicum_class_id');
         $this->forge->addKey('lecturer_id');
-        $this->forge->addForeignKey('practicum_class_id', 'practicum_classes', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('lecturer_id', 'lecturers', 'id', 'CASCADE', 'CASCADE');
+        // Foreign key ditunda
+        // $this->forge->addForeignKey('practicum_class_id', 'practicum_classes', 'id', 'CASCADE', 'CASCADE');
+        // $this->forge->addForeignKey('lecturer_id', 'lecturers', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('class_lecturers');
 
         $this->forge->addField([
@@ -249,18 +269,30 @@ class CreatePracticumStructureTables extends Migration
         $this->forge->addKey('practicum_class_id');
         $this->forge->addKey('assistant_id');
         $this->forge->addKey('group_id');
-        $this->forge->addForeignKey('practicum_class_id', 'practicum_classes', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('assistant_id', 'assistants', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('group_id', 'practicum_groups', 'id', 'SET NULL', 'CASCADE');
+        // Foreign key ditunda
+        // $this->forge->addForeignKey('practicum_class_id', 'practicum_classes', 'id', 'CASCADE', 'CASCADE');
+        // $this->forge->addForeignKey('assistant_id', 'assistants', 'id', 'CASCADE', 'CASCADE');
+        // $this->forge->addForeignKey('group_id', 'practicum_groups', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('class_assistants');
     }
 
     public function down()
     {
-        $this->forge->dropTable('class_assistants', true);
-        $this->forge->dropTable('class_lecturers', true);
-        $this->forge->dropTable('class_students', true);
-        $this->forge->dropTable('practicum_groups', true);
-        $this->forge->dropTable('practicum_classes', true);
+        if ($this->db->tableExists('class_assistants')) {
+            $this->forge->dropTable('class_assistants', true);
+        }
+        if ($this->db->tableExists('class_lecturers')) {
+            $this->forge->dropTable('class_lecturers', true);
+        }
+        if ($this->db->tableExists('class_students')) {
+            $this->forge->dropTable('class_students', true);
+        }
+        if ($this->db->tableExists('practicum_groups')) {
+            $this->forge->dropTable('practicum_groups', true);
+        }
+        if ($this->db->tableExists('practicum_classes')) {
+            $this->forge->dropTable('practicum_classes', true);
+        }
     }
 }
+

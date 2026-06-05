@@ -8,6 +8,23 @@ class CreateLogAndNotificationTables extends Migration
 {
     public function up()
     {
+        // Drop child tables dulu
+        if ($this->db->tableExists('notifications')) {
+            $this->forge->dropTable('notifications', true);
+        }
+        if ($this->db->tableExists('report_logs')) {
+            $this->forge->dropTable('report_logs', true);
+        }
+        if ($this->db->tableExists('export_logs')) {
+            $this->forge->dropTable('export_logs', true);
+        }
+        if ($this->db->tableExists('import_logs')) {
+            $this->forge->dropTable('import_logs', true);
+        }
+        if ($this->db->tableExists('activity_logs')) {
+            $this->forge->dropTable('activity_logs', true);
+        }
+
         $this->forge->addField([
             'id' => [
                 'type'           => 'BIGINT',
@@ -311,10 +328,20 @@ class CreateLogAndNotificationTables extends Migration
 
     public function down()
     {
-        $this->forge->dropTable('notifications', true);
-        $this->forge->dropTable('report_logs', true);
-        $this->forge->dropTable('export_logs', true);
-        $this->forge->dropTable('import_logs', true);
-        $this->forge->dropTable('activity_logs', true);
+        if ($this->db->tableExists('notifications')) {
+            $this->forge->dropTable('notifications', true);
+        }
+        if ($this->db->tableExists('report_logs')) {
+            $this->forge->dropTable('report_logs', true);
+        }
+        if ($this->db->tableExists('export_logs')) {
+            $this->forge->dropTable('export_logs', true);
+        }
+        if ($this->db->tableExists('import_logs')) {
+            $this->forge->dropTable('import_logs', true);
+        }
+        if ($this->db->tableExists('activity_logs')) {
+            $this->forge->dropTable('activity_logs', true);
+        }
     }
 }

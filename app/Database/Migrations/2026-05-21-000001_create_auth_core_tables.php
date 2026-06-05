@@ -8,6 +8,23 @@ class CreateAuthCoreTables extends Migration
 {
     public function up()
     {
+        // Drop child/junction tables dulu agar FK tidak menghalangi
+        if ($this->db->tableExists('role_permissions')) {
+            $this->forge->dropTable('role_permissions', true);
+        }
+        if ($this->db->tableExists('user_roles')) {
+            $this->forge->dropTable('user_roles', true);
+        }
+        if ($this->db->tableExists('permissions')) {
+            $this->forge->dropTable('permissions', true);
+        }
+        if ($this->db->tableExists('roles')) {
+            $this->forge->dropTable('roles', true);
+        }
+        if ($this->db->tableExists('users')) {
+            $this->forge->dropTable('users', true);
+        }
+
         $this->forge->addField([
             'id' => [
                 'type'       => 'CHAR',
@@ -196,10 +213,21 @@ class CreateAuthCoreTables extends Migration
 
     public function down()
     {
-        $this->forge->dropTable('role_permissions', true);
-        $this->forge->dropTable('user_roles', true);
-        $this->forge->dropTable('permissions', true);
-        $this->forge->dropTable('roles', true);
-        $this->forge->dropTable('users', true);
+        if ($this->db->tableExists('role_permissions')) {
+            $this->forge->dropTable('role_permissions', true);
+        }
+        if ($this->db->tableExists('user_roles')) {
+            $this->forge->dropTable('user_roles', true);
+        }
+        if ($this->db->tableExists('permissions')) {
+            $this->forge->dropTable('permissions', true);
+        }
+        if ($this->db->tableExists('roles')) {
+            $this->forge->dropTable('roles', true);
+        }
+        if ($this->db->tableExists('users')) {
+            $this->forge->dropTable('users', true);
+        }
     }
 }
+

@@ -8,6 +8,10 @@ class CreateTemplateNilaiTable extends Migration
 {
     public function up()
     {
+        if ($this->db->tableExists('template_nilai')) {
+            $this->forge->dropTable('template_nilai', true);
+        }
+
         $this->forge->addField([
             'id' => [
                 'type'           => 'INT',
@@ -60,6 +64,9 @@ class CreateTemplateNilaiTable extends Migration
 
     public function down()
     {
-        $this->forge->dropTable('template_nilai');
+        if ($this->db->tableExists('template_nilai')) {
+            $this->forge->dropTable('template_nilai', true);
+        }
     }
 }
+
