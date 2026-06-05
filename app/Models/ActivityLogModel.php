@@ -18,7 +18,7 @@ class ActivityLogModel extends Model
         'created_at',
     ];
 
-    public function logActivity(?int $userId, string $activity, ?string $description = null): bool
+    public function logActivity(?string $userId, string $activity, ?string $description = null): bool
     {
         $request = service('request');
 
