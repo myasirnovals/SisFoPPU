@@ -78,23 +78,47 @@ class AssistantDashboardModel extends Model
         $db = db_connect();
 
         if ($userId !== '' && $db->tableExists('assistants')) {
-            $assistant = $db->table('assistants')
-                ->select('id')
-                ->where('user_id', $userId)
-                ->where('is_active', 1)
-                ->get()
-                ->getRowArray();
+            // Skema tabel profile kemungkinan memakai kolom user_nim/user_nid/user_nip, bukan id atau user_id.
+            // Kita coba beberapa kemungkinan kolom yang merepresentasikan mapping ke user login.
+            $possibleColumns = ['user_id', 'id', 'user_nim', 'user_nid', 'user_nip', 'nim', 'nid', 'nip'];
+            $assistantId = null;
 
-            if (isset($assistant['id'])) {
-                $ids[] = (int) $assistant['id'];
+            foreach ($possibleColumns as $col) {
+                if (! $db->fieldExists($col, 'assistants')) {
+                    continue;
+                }
+
+                // Kalau kolom yang ditemukan adalah kolom identitas (nim/nid/nip), ambil kolom PK 'id'.
+                // Kalau PK tidak tersedia, kita fallback ke nilai kolom tersebut.
+                $selectCol = $db->fieldExists('id', 'assistants') ? 'id' : $col;
+
+                $builder = $db->table('assistants')
+                    ->select($selectCol)
+                    ->where($col, $userId);
+
+                if ($db->fieldExists('is_active', 'assistants')) {
+                    $builder->where('is_active', 1);
+                }
+
+                $row = $builder->get()->getRowArray();
+
+                if (is_array($row) && isset($row[$selectCol]) && (string) $row[$selectCol] !== '') {
+                    $assistantId = $row[$selectCol];
+                    break;
+                }
+            }
+
+            if ($assistantId !== null && $assistantId !== '') {
+                $ids[] = (int) $assistantId;
             }
         }
 
+        // Beberapa query dashboard memakai assistant_id, namun fallback tetap diperlukan jika userId sudah sesuai.
         if ($userId !== '') {
-            $ids[] = $userId;
+            $ids[] = (int) $userId;
         }
 
-        return array_values(array_unique(array_filter($ids, static fn ($value): bool => $value !== '' && $value !== null)));
+        return array_values(array_unique(array_filter($ids, static fn ($value): bool => $value !== '' && $value !== null && (int) $value > 0)));
     }
 
     private function loadClassRows(array $assistantIds, array $filters): array
@@ -106,9 +130,28 @@ class AssistantDashboardModel extends Model
         }
 
         $builder = $db->table('practicum_classes pc');
-        $builder->select('pc.id, pc.course_id, pc.class_code, pc.class_name, pc.status, pc.deadline_at, pc.assistant_id, c.course_code, c.course_name');
+
+        // Kolom assistant_id mungkin bernama lain tergantung skema DB.
+        $assistantIdCol = $db->fieldExists('assistant_id', 'practicum_classes') ? 'assistant_id' : null;
+        if ($assistantIdCol === null) {
+            // Fallback: jika skema menggunakan kolom lain (contoh: assistantId), gunakan kalau ada.
+            $assistantIdCandidates = ['assistantId', 'assistant_user_id', 'asisten_id'];
+            foreach ($assistantIdCandidates as $cand) {
+                if ($db->fieldExists($cand, 'practicum_classes')) {
+                    $assistantIdCol = $cand;
+                    break;
+                }
+            }
+        }
+
+        if ($assistantIdCol === null) {
+            return [];
+        }
+
+        $builder->select('pc.id, pc.course_id, pc.class_code, pc.class_name, pc.status, pc.deadline_at, pc.' . $assistantIdCol . ' AS assistant_id, c.course_code, c.course_name');
         $builder->join('courses c', 'c.id = pc.course_id', 'left');
-        $builder->whereIn('pc.assistant_id', $assistantIds);
+        $builder->whereIn('pc.' . $assistantIdCol, $assistantIds);
+
 
         if ($filters['course_id'] !== '') {
             $builder->where('pc.course_id', (int) $filters['course_id']);
@@ -189,10 +232,28 @@ class AssistantDashboardModel extends Model
         }
 
         $builder = $db->table('practicum_groups pg');
-        $builder->select('pg.id, pg.class_id, pg.group_code, pg.group_name, pg.status, c.course_code, c.course_name, pc.class_name');
-        $builder->join('practicum_classes pc', 'pc.id = pg.class_id', 'left');
+        $assistantIdCol = $db->fieldExists('assistant_id', 'practicum_groups') ? 'assistant_id' : null;
+
+        if ($assistantIdCol === null) {
+            foreach (['assistantId', 'assistant_user_id', 'asisten_id', 'assistant'] as $cand) {
+                if ($db->fieldExists($cand, 'practicum_groups')) {
+                    $assistantIdCol = $cand;
+                    break;
+                }
+            }
+        }
+
+        // pc.class_id tidak selalu ada; tetap pakai pg.class_id kalau memang ada, jika tidak return []
+        $classIdCol = $db->fieldExists('class_id', 'practicum_groups') ? 'class_id' : null;
+        if ($classIdCol === null || $assistantIdCol === null) {
+            return [];
+        }
+
+        $builder->select('pg.id, pg.' . $classIdCol . ' as class_id, pg.group_code, pg.group_name, pg.status, c.course_code, c.course_name');
+        $builder->join('practicum_classes pc', 'pc.id = pg.' . $classIdCol, 'left');
         $builder->join('courses c', 'c.id = pc.course_id', 'left');
-        $builder->whereIn('pg.assistant_id', $assistantIds);
+        $builder->whereIn('pg.' . $assistantIdCol, $assistantIds);
+
 
         if ($filters['group_id'] !== '') {
             $builder->where('pg.id', (int) $filters['group_id']);
@@ -267,11 +328,12 @@ class AssistantDashboardModel extends Model
         $groupIds = array_values(array_map(static fn (array $row): int => (int) ($row['id'] ?? 0), $groupRows));
 
         $builder = $db->table('class_students cs');
-        $builder->select('cs.class_id, cs.student_id, u.student_number, u.full_name');
-        $builder->join('users u', 'u.id = cs.student_id', 'left');
+// Skema terbaru: class_students: practicum_class_id, student_nim, group_id
+        $builder->select('cs.practicum_class_id AS class_id, cs.student_nim AS student_id, u.login_identifier AS student_number, u.full_name');
+$builder->join('users u', 'u.id = cs.student_nim', 'left');
 
         if ($classIds !== []) {
-            $builder->whereIn('cs.class_id', $classIds);
+            $builder->whereIn('cs.practicum_class_id', $classIds);
         }
 
         if ($groupIds !== [] && $db->fieldExists('group_id', 'class_students')) {
@@ -477,8 +539,8 @@ class AssistantDashboardModel extends Model
             return [];
         }
 
-        $rows = $db->table('activity_logs')
-            ->select('activity, description, created_at')
+$rows = $db->table('activity_logs')
+            ->select('action, module, description, created_at')
             ->where('user_id', $userId)
             ->orderBy('created_at', 'DESC')
             ->limit(8)

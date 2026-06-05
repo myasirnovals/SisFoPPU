@@ -55,7 +55,7 @@ class DashboardController extends BaseController
         $activeRole = strtolower(trim((string) ($session->get('role_active') ?: $session->get('role') ?: ($roles[0] ?? ''))));
 
         $academicContext = $this->resolveAcademicContext();
-        $lecturerContext = $this->resolveLecturerContext($userId, $displayName, $activeRole);
+$lecturerContext = $this->resolveLecturerContext($userId, $displayName, $activeRole);
 
         $classRows = $this->loadClassRows($lecturerContext, $academicContext);
 
@@ -141,7 +141,7 @@ class DashboardController extends BaseController
         $lecturer = null;
 
         if ($userId !== '') {
-            $lecturer = $lecturerModel->where('user_id', $userId)->first();
+$lecturer = $lecturerModel->where('user_nid', $userId)->first();
         }
 
         if ($lecturer === null && $displayName !== '') {

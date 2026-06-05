@@ -50,6 +50,26 @@ class AuthFilter implements FilterInterface
             return redirect()->to(site_url('login'))->with('error', 'Role pengguna tidak valid. Silakan login kembali.');
         }
 
+        // Enforce: authenticated user can only access routes that belong to their active role.
+        // Otherwise deny by redirecting to their own dashboard.
+        $currentPath = ltrim(trim($request->getUri()->getPath()), '/');
+        $currentPath = preg_replace('#^index\.php/#', '', (string) $currentPath);
+
+        if ($currentPath !== '' && str_contains($dashboard, '/')) {
+            $allowedPrefix = preg_replace('#/dashboard$#', '', (string) $dashboard); // e.g. "admin" from "admin/dashboard"
+
+            // Ignore login/logout/static assets.
+            $routeTarget = strtolower($currentPath);
+            if (! in_array($routeTarget, ['login', 'logout'], true)) {
+                $currentPrefix = explode('/', $currentPath)[0] ?? '';
+
+                if ($allowedPrefix !== '' && strtolower(trim((string) $currentPrefix)) !== strtolower(trim((string) $allowedPrefix))) {
+                    return redirect()->to(site_url($dashboard))->with('error', 'Anda tidak memiliki akses ke halaman ini.');
+                }
+            }
+        }
+
+
         return null;
     }
 
