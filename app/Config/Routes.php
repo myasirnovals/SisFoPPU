@@ -35,7 +35,17 @@ $routes->group('dosen', ['filter' => ['auth:protected', 'role:dosen,admin,koordi
 });
 
 $routes->group('assistant', ['filter' => ['auth:protected', 'role:asisten']], static function ($routes) {
+
+    // Dashboard Utama
     $routes->get('dashboard', 'Assistant\DashboardController::index');
+
+    // Menu Dashboard Asisten
+    $routes->get('kelas', 'Assistant\DashboardController::kelas');
+    $routes->get('absensi', 'Assistant\DashboardController::absensi');
+    $routes->get('nilai', 'Assistant\DashboardController::nilai');
+    $routes->get('remedial', 'Assistant\DashboardController::remedial');
+    $routes->get('aktivitas', 'Assistant\DashboardController::aktivitas');
+
 });
 
 $routes->group('mahasiswa', ['filter' => ['auth:protected', 'role:mahasiswa']], static function ($routes) {

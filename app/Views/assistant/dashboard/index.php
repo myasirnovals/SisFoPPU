@@ -242,41 +242,5 @@
             </div>
         </div>
     </div>
-
-    <div class="card soft-surface rounded-5 mb-4 section-anchor" id="kelas">
-        <div class="card-body p-0">
-            <?= $this->include('assistant/dashboard/partials/class_table') ?>
-        </div>
-    </div>
-
-    <div class="card soft-surface rounded-5 mb-4 section-anchor" id="absensi">
-        <div class="card-body p-0">
-            <?= $this->include('assistant/dashboard/partials/pending_attendance') ?>
-        </div>
-    </div>
-
-    <div class="card soft-surface rounded-5 mb-4 section-anchor" id="nilai">
-        <div class="card-body p-0">
-            <?= $this->include('assistant/dashboard/partials/incomplete_scores') ?>
-        </div>
-    </div>
-
-    <div class="card soft-surface rounded-5 mb-4 section-anchor" id="nilai-kosong">
-        <div class="card-body p-0">
-            <?= $this->include('assistant/dashboard/partials/missing_scores') ?>
-        </div>
-    </div>
-
-    <div class="card soft-surface rounded-5 mb-4 section-anchor" id="remedial">
-        <div class="card-body p-0">
-            <?= $this->include('assistant/dashboard/partials/remedial_widget') ?>
-        </div>
-    </div>
-
-    <div class="card soft-surface rounded-5 mb-4 section-anchor" id="aktivitas">
-        <div class="card-body p-0">
-            <?= $this->include('assistant/dashboard/partials/recent_activity') ?>
-        </div>
-    </div>
 </div>
 <?= $this->endSection() ?>

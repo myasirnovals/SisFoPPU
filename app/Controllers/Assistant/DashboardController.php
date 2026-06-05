@@ -11,16 +11,111 @@ class DashboardController extends BaseController
     public function index(): string
     {
         if (! $this->canAccessDashboard()) {
-            throw new PageForbiddenException('Anda tidak memiliki akses ke dashboard asisten praktikum.');
+            throw new PageForbiddenException(
+                'Anda tidak memiliki akses ke dashboard asisten praktikum.'
+            );
         }
 
+        return view(
+            'assistant/dashboard/index',
+            $this->getDashboardData()
+        );
+    }
+
+    public function kelas(): string
+    {
+        if (! $this->canAccessDashboard()) {
+            throw new PageForbiddenException(
+                'Anda tidak memiliki akses ke dashboard asisten praktikum.'
+            );
+        }
+
+        return view(
+            'assistant/kelas/index',
+            $this->getDashboardData()
+        );
+    }
+
+    public function absensi(): string
+    {
+        if (! $this->canAccessDashboard()) {
+            throw new PageForbiddenException(
+                'Anda tidak memiliki akses ke dashboard asisten praktikum.'
+            );
+        }
+
+        return view(
+            'assistant/absensi/index',
+            $this->getDashboardData()
+        );
+    }
+
+    public function nilai(): string
+    {
+        if (! $this->canAccessDashboard()) {
+            throw new PageForbiddenException(
+                'Anda tidak memiliki akses ke dashboard asisten praktikum.'
+            );
+        }
+
+        return view(
+            'assistant/nilai/index',
+            $this->getDashboardData()
+        );
+    }
+
+    public function remedial(): string
+    {
+        if (! $this->canAccessDashboard()) {
+            throw new PageForbiddenException(
+                'Anda tidak memiliki akses ke dashboard asisten praktikum.'
+            );
+        }
+
+        return view(
+            'assistant/remedial/index',
+            $this->getDashboardData()
+        );
+    }
+
+    public function aktivitas(): string
+    {
+        if (! $this->canAccessDashboard()) {
+            throw new PageForbiddenException(
+                'Anda tidak memiliki akses ke dashboard asisten praktikum.'
+            );
+        }
+
+        return view(
+            'assistant/aktivitas/index',
+            $this->getDashboardData()
+        );
+    }
+
+    private function getDashboardData(): array
+    {
         $session = session();
         $dashboardModel = new AssistantDashboardModel();
-        $displayName = (string) ($session->get('full_name') ?: $session->get('name') ?: $session->get('username') ?: 'Asisten');
-        $userId = (string) ($session->get('user_id') ?? '');
-        $permissions = is_array($session->get('permissions')) ? $session->get('permissions') : [];
 
-        return view('assistant/dashboard/index', $dashboardModel->buildDashboardData($userId, $displayName, $this->collectFilters(), $permissions));
+        $displayName = (string) (
+            $session->get('full_name')
+            ?: $session->get('name')
+            ?: $session->get('username')
+            ?: 'Asisten'
+        );
+
+        $userId = (string) ($session->get('user_id') ?? '');
+
+        $permissions = is_array($session->get('permissions'))
+            ? $session->get('permissions')
+            : [];
+
+        return $dashboardModel->buildDashboardData(
+            $userId,
+            $displayName,
+            $this->collectFilters(),
+            $permissions
+        );
     }
 
     private function collectFilters(): array
@@ -28,8 +123,14 @@ class DashboardController extends BaseController
         $month = (int) date('n');
 
         return [
-            'academic_year' => trim((string) ($this->request->getGet('academic_year') ?? '')) ?: ($month >= 7 ? date('Y') . '/' . (date('Y') + 1) : (date('Y') - 1) . '/' . date('Y')),
-            'semester' => trim((string) ($this->request->getGet('semester') ?? '')) ?: ($month >= 7 ? 'ganjil' : 'genap'),
+            'academic_year' => trim((string) ($this->request->getGet('academic_year') ?? ''))
+                ?: ($month >= 7
+                    ? date('Y') . '/' . (date('Y') + 1)
+                    : (date('Y') - 1) . '/' . date('Y')),
+
+            'semester' => trim((string) ($this->request->getGet('semester') ?? ''))
+                ?: ($month >= 7 ? 'ganjil' : 'genap'),
+
             'course_id' => trim((string) ($this->request->getGet('course_id') ?? '')),
             'class_id' => trim((string) ($this->request->getGet('class_id') ?? '')),
             'group_id' => trim((string) ($this->request->getGet('group_id') ?? '')),
@@ -47,7 +148,14 @@ class DashboardController extends BaseController
             return false;
         }
 
-        $role = strtolower(trim((string) ($session->get('role_active') ?: $session->get('role'))));
+        $role = strtolower(
+            trim(
+                (string) (
+                    $session->get('role_active')
+                    ?: $session->get('role')
+                )
+            )
+        );
 
         if ($role !== '') {
             return in_array($role, ['asisten', 'admin'], true);
@@ -55,8 +163,13 @@ class DashboardController extends BaseController
 
         $roles = $session->get('roles');
         $roles = is_array($roles) ? $roles : [];
-        $roles = array_map(static fn ($item): string => strtolower(trim((string) $item)), $roles);
 
-        return in_array('asisten', $roles, true) || in_array('admin', $roles, true);
+        $roles = array_map(
+            static fn($item): string => strtolower(trim((string) $item)),
+            $roles
+        );
+
+        return in_array('asisten', $roles, true)
+            || in_array('admin', $roles, true);
     }
 }
