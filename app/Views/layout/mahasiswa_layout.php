@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,11 +38,20 @@
 
         .navbar-student .nav-link {
             color: rgba(255, 255, 255, 0.78);
+            border-radius: 999px;
+            padding: 0.45rem 0.9rem;
+            transition: background 0.15s ease, color 0.15s ease;
         }
 
-        .navbar-student .nav-link:hover,
+        .navbar-student .nav-link:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
         .navbar-student .nav-link.active {
             color: #fff;
+            background: rgba(255, 255, 255, 0.16);
+            font-weight: 600;
         }
 
         .page-shell {
@@ -57,6 +67,7 @@
     </style>
     <?= $this->renderSection('styles') ?>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark navbar-student sticky-top">
         <div class="container-fluid page-shell px-3 px-lg-4 py-2">
@@ -71,12 +82,24 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarMahasiswa">
                 <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
-                    <li class="nav-item"><a class="nav-link" href="#ringkasan">Ringkasan</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#praktikum">Praktikum</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#kehadiran">Kehadiran</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#nilai">Nilai</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#remedial">Remedial</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#notifikasi">Notifikasi</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link <?= ($activeMenu ?? '') === 'ringkasan' ? 'active' : '' ?>" href="<?= site_url('mahasiswa/dashboard') ?>">Ringkasan</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?= ($activeMenu ?? '') === 'praktikum' ? 'active' : '' ?>" href="<?= site_url('mahasiswa/dashboard/praktikum') ?>">Praktikum</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?= ($activeMenu ?? '') === 'kehadiran' ? 'active' : '' ?>" href="<?= site_url('mahasiswa/dashboard/kehadiran') ?>">Kehadiran</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?= ($activeMenu ?? '') === 'nilai' ? 'active' : '' ?>" href="<?= site_url('mahasiswa/dashboard/nilai') ?>">Nilai</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?= ($activeMenu ?? '') === 'remedial' ? 'active' : '' ?>" href="<?= site_url('mahasiswa/dashboard/remedial') ?>">Remedial</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?= ($activeMenu ?? '') === 'notifikasi' ? 'active' : '' ?>" href="<?= site_url('mahasiswa/dashboard/notifikasi') ?>">Notifikasi</a>
+                    </li>
                     <li class="nav-item ms-lg-2">
                         <a class="btn btn-outline-light btn-sm nav-quick" href="<?= site_url('logout') ?>"><i class="bi bi-box-arrow-right me-1"></i>Logout</a>
                     </li>
@@ -84,12 +107,11 @@
             </div>
         </div>
     </nav>
-
     <main class="page-shell px-3 px-lg-4 py-4 py-lg-5">
         <?= $this->renderSection('content') ?>
     </main>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <?= $this->renderSection('scripts') ?>
 </body>
+
 </html>
