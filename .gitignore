@@ -15,6 +15,15 @@ user_guide_src/cilexer/build/*
 user_guide_src/cilexer/dist/*
 user_guide_src/cilexer/pycilexer.egg-info/*
 
+# Mengabaikan semua log, session, dan debugbar di folder writable
+writable/debugbar/*
+writable/logs/*
+writable/session/*
+
+# Atau jika Anda ingin mengabaikan seluruh isi folder writable kecuali folder itu sendiri
+writable/*
+!.gitignore
+
 #codeigniter 3
 application/logs/*
 !application/logs/index.html

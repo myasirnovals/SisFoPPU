@@ -106,6 +106,65 @@ class StudentDashboardModel extends Model
         return $this->loadStudentClassIds($student);
     }
 
+    private array $dashboardDataCache = [];
+
+    public function getBaseData($userId, string $displayName = ''): array
+    {
+        $data = $this->dashboardData($userId, $displayName);
+
+        return [
+            'studentProfile' => $data['studentProfile'],
+            'academicYear'   => $data['academicYear'],
+            'semesterLabel'  => $data['semesterLabel'],
+        ];
+    }
+
+    public function getSummaryCards($userId): array
+    {
+        return $this->dashboardData($userId)['summaryCards'];
+    }
+
+    public function getSummaryMeta($userId): array
+    {
+        return $this->dashboardData($userId)['summaryMeta'];
+    }
+
+    public function getClassRows($userId): array
+    {
+        return $this->dashboardData($userId)['classRows'];
+    }
+
+    public function getAttendanceRows($userId): array
+    {
+        return $this->dashboardData($userId)['attendanceRows'];
+    }
+
+    public function getScoreRows($userId): array
+    {
+        return $this->dashboardData($userId)['scoreRows'];
+    }
+
+    public function getRemedialRows($userId): array
+    {
+        return $this->dashboardData($userId)['remedialRows'];
+    }
+
+    public function getNotifications($userId): array
+    {
+        return $this->dashboardData($userId)['notifications'];
+    }
+
+    private function dashboardData($userId, string $displayName = ''): array
+    {
+        $key = (string) $userId;
+
+        if (! isset($this->dashboardDataCache[$key])) {
+            $this->dashboardDataCache[$key] = $this->buildDashboardData((string) $userId, $displayName);
+        }
+
+        return $this->dashboardDataCache[$key];
+    }
+
     private function resolveAcademicContext(): array
     {
         $month = (int) date('n');
@@ -266,7 +325,7 @@ class StudentDashboardModel extends Model
                     ->get()
                     ->getResultArray();
 
-                $classIds = array_merge($classIds, array_map(static fn (array $row): int => (int) ($row[$classIdField] ?? 0), $rows));
+                $classIds = array_merge($classIds, array_map(static fn(array $row): int => (int) ($row[$classIdField] ?? 0), $rows));
             }
         }
 
@@ -284,7 +343,7 @@ class StudentDashboardModel extends Model
                     ->get()
                     ->getResultArray();
 
-                $classIds = array_merge($classIds, array_map(static fn (array $row): int => (int) ($row[$classIdField] ?? 0), $rows));
+                $classIds = array_merge($classIds, array_map(static fn(array $row): int => (int) ($row[$classIdField] ?? 0), $rows));
             }
         }
 
@@ -302,7 +361,7 @@ class StudentDashboardModel extends Model
                     ->get()
                     ->getResultArray();
 
-                $classIds = array_merge($classIds, array_map(static fn (array $row): int => (int) ($row[$classIdField] ?? 0), $rows));
+                $classIds = array_merge($classIds, array_map(static fn(array $row): int => (int) ($row[$classIdField] ?? 0), $rows));
             }
         }
 
@@ -317,7 +376,7 @@ class StudentDashboardModel extends Model
         $classIds = $this->loadStudentClassIds($student);
 
         if ($onlyClassId !== null) {
-            $classIds = array_values(array_filter($classIds, static fn (int $id): bool => $id === $onlyClassId));
+            $classIds = array_values(array_filter($classIds, static fn(int $id): bool => $id === $onlyClassId));
         }
 
         if ($classIds === [] || ! $db->tableExists('practicum_classes') || ! $db->tableExists('courses')) {
@@ -615,7 +674,7 @@ class StudentDashboardModel extends Model
             return [];
         }
 
-        $classIds = array_values(array_map(static fn (array $row): int => (int) ($row['id'] ?? 0), $classRows));
+        $classIds = array_values(array_map(static fn(array $row): int => (int) ($row['id'] ?? 0), $classRows));
         $scoreStats = $this->loadScoreStats($classIds, $student);
         $finalScores = $this->loadFinalScores($classIds, $student);
         $remedialMap = $this->loadRemedialMap($classIds, $student);
@@ -834,7 +893,7 @@ class StudentDashboardModel extends Model
             return [];
         }
 
-        $classIds = array_values(array_map(static fn (array $row): int => (int) ($row['id'] ?? 0), $classRows));
+        $classIds = array_values(array_map(static fn(array $row): int => (int) ($row['id'] ?? 0), $classRows));
         $studentField = $this->resolveStudentField('remedial_participants');
         $studentId = $this->resolveStudentIdentifier($student, $studentField);
         if ($this->isEmptyIdentifier($studentId, $studentField)) {
@@ -1089,11 +1148,11 @@ class StudentDashboardModel extends Model
         $attendanceAverage = $this->averagePercent($attendanceRows, 'attendance_percentage');
         $scoreAverage = $this->averagePercent($scoreRows, 'score_progress');
 
-        $passedCount = count(array_filter($scoreRows, static fn (array $row): bool => ($row['academic_status'] ?? '') === 'Lulus'));
-        $remedialCount = count(array_filter($scoreRows, static fn (array $row): bool => ($row['academic_status'] ?? '') === 'Remedial'));
-        $notFinalCount = count(array_filter($scoreRows, static fn (array $row): bool => ! in_array($row['score_status'] ?? '', ['Locked', 'Validated'], true)));
-        $incompleteScores = count(array_filter($scoreRows, static fn (array $row): bool => (float) ($row['score_progress'] ?? 0) < 100));
-        $missingEntries = array_sum(array_map(static fn (array $row): int => (int) ($row['missing_count'] ?? 0), $scoreRows));
+        $passedCount = count(array_filter($scoreRows, static fn(array $row): bool => ($row['academic_status'] ?? '') === 'Lulus'));
+        $remedialCount = count(array_filter($scoreRows, static fn(array $row): bool => ($row['academic_status'] ?? '') === 'Remedial'));
+        $notFinalCount = count(array_filter($scoreRows, static fn(array $row): bool => ! in_array($row['score_status'] ?? '', ['Locked', 'Validated'], true)));
+        $incompleteScores = count(array_filter($scoreRows, static fn(array $row): bool => (float) ($row['score_progress'] ?? 0) < 100));
+        $missingEntries = array_sum(array_map(static fn(array $row): int => (int) ($row['missing_count'] ?? 0), $scoreRows));
 
         return [
             'cards' => [
