@@ -43,4 +43,11 @@ class MataKuliahModel extends Model
     ];
 
     protected $skipValidation = false;
+
+    public function getForDropdown(): array
+    {
+        return $this->select('id, nama_mk as course_name, kode_mk as course_code, sks as credits')
+            ->orderBy('nama_mk', 'ASC')
+            ->findAll();
+    }
 }

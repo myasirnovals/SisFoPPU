@@ -8,6 +8,7 @@ class AssessmentComponentModel extends Model
 {
     protected $table            = 'assessment_components';
     protected $primaryKey       = 'id';
+    protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $allowedFields    = [
         'template_id',

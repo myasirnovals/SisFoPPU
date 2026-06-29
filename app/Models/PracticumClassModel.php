@@ -42,14 +42,14 @@ class PracticumClassModel extends Model
             'pc.class_name',
             'pc.status',
             'pc.created_at',
-            'c.course_name',
-            'c.course_code',
+            'mk.nama_mk as course_name',
+            'mk.kode_mk as course_code',
             'ay.year_code as academic_year',
             's.semester_name',
             'l.room_name',
             'at.template_name',
         ]);
-        $builder->join('courses c', 'c.id = pc.course_id', 'left');
+        $builder->join('mata_kuliah mk', 'mk.id = pc.course_id', 'left');
         $builder->join('academic_years ay', 'ay.id = pc.academic_year_id', 'left');
         $builder->join('semesters s', 's.id = pc.semester_id', 'left');
         $builder->join('laboratories l', 'l.id = pc.laboratory_id', 'left');
@@ -68,9 +68,9 @@ class PracticumClassModel extends Model
         $builder = $this->db->table('practicum_classes pc');
         $builder->select([
             'pc.*',
-            'c.course_name',
-            'c.course_code',
-            'c.credits',
+            'mk.nama_mk as course_name',
+            'mk.kode_mk as course_code',
+            'mk.sks as credits',
             'ay.year_code',
             's.semester_name',
             's.semester_number',
@@ -80,7 +80,7 @@ class PracticumClassModel extends Model
             'at.template_name',
             'at.template_code',
         ]);
-        $builder->join('courses c', 'c.id = pc.course_id', 'left');
+        $builder->join('mata_kuliah mk', 'mk.id = pc.course_id', 'left');
         $builder->join('academic_years ay', 'ay.id = pc.academic_year_id', 'left');
         $builder->join('semesters s', 's.id = pc.semester_id', 'left');
         $builder->join('laboratories l', 'l.id = pc.laboratory_id', 'left');
@@ -148,16 +148,13 @@ class PracticumClassModel extends Model
             ->getResultArray();
 
         return [
-            'lecturers' => $lecturers,
-            'assistants' => $assistants,
-            'students' => $students,
+            'lecturers'      => $lecturers,
+            'assistants'     => $assistants,
+            'students'       => $students,
             'total_students' => count($students),
         ];
     }
 
-    /**
-     * Count students in class
-     */
     public function countStudents(int $classId): int
     {
         return $this->db->table('class_students')
@@ -180,10 +177,10 @@ class PracticumClassModel extends Model
             'pc.class_name',
             'pc.class_code',
             'pc.status',
-            'c.course_name',
-            'c.course_code',
+            'mk.nama_mk as course_name',
+            'mk.kode_mk as course_code',
         ]);
-        $builder->join('courses c', 'c.id = pc.course_id', 'left');
+        $builder->join('mata_kuliah mk', 'mk.id = pc.course_id', 'left');
         $builder->where('pc.deleted_at', null);
         $builder->whereIn('pc.status', ['aktif', 'selesai', 'draft']);
         $builder->orderBy('pc.created_at', 'DESC');
@@ -219,11 +216,11 @@ class PracticumClassModel extends Model
                 $scoreProgress = 0;
             }
 
-            $class['total_students'] = $totalStudents;
+            $class['total_students']     = $totalStudents;
             $class['students_with_scores'] = $studentsWithScores;
-            $class['validated_scores'] = $validatedScores;
-            $class['progress'] = $scoreProgress;
-            $class['progress_display'] = $scoreProgress . '%';
+            $class['validated_scores']   = $validatedScores;
+            $class['progress']           = $scoreProgress;
+            $class['progress_display']   = $scoreProgress . '%';
 
             // Determine status label
             if ($scoreProgress >= 100) {
