@@ -6,10 +6,10 @@ use CodeIgniter\Model;
 
 class PracticumClassModel extends Model
 {
-    protected $table = 'practicum_classes';
-    protected $primaryKey = 'id';
-    protected $returnType = 'array';
-    protected $allowedFields = [
+    protected $table            = 'practicum_classes';
+    protected $primaryKey       = 'id';
+    protected $returnType       = 'array';
+    protected $allowedFields    = [
         'course_id',
         'academic_year_id',
         'semester_id',
@@ -24,14 +24,16 @@ class PracticumClassModel extends Model
         'updated_at',
         'deleted_at',
     ];
-    protected $useTimestamps = true;
-    protected $createdField = 'created_at';
-    protected $updatedField = 'updated_at';
-    protected $deletedField = 'deleted_at';
-    protected $useSoftDeletes = true;
+
+    // AKTIFKAN timestamps karena tabel punya kolom lengkap
+    protected $useTimestamps    = true;
+    protected $createdField     = 'created_at';
+    protected $updatedField     = 'updated_at';
+    protected $deletedField     = 'deleted_at';
+    protected $useSoftDeletes   = true;
 
     /**
-     * Get all practicum classes with details
+     * Get all practicum classes with details + lecturer + assistant names
      */
     public function getClassesWithDetails(): array
     {
@@ -57,7 +59,47 @@ class PracticumClassModel extends Model
         $builder->where('pc.deleted_at', null);
         $builder->orderBy('pc.created_at', 'DESC');
 
-        return $builder->get()->getResultArray();
+        $classes = $builder->get()->getResultArray();
+
+        // Ambil dosen & asisten untuk setiap kelas
+        foreach ($classes as &$class) {
+            $class['lecturer_name']  = $this->getMainLecturerName($class['id']);
+            $class['assistant_name'] = $this->getMainAssistantName($class['id']);
+        }
+
+        return $classes;
+    }
+
+    /**
+     * Get main lecturer name for a class
+     */
+    public function getMainLecturerName(int $classId): string
+    {
+        $builder = $this->db->table('class_lecturers cl');
+        $builder->select('u.full_name');
+        $builder->join('users u', 'u.id = cl.lecturer_id', 'left');
+        $builder->where('cl.practicum_class_id', $classId);
+        $builder->where('cl.role_type', 'pengampu');
+        $builder->orderBy('cl.id', 'DESC');
+        $result = $builder->get()->getRowArray();
+
+        return $result['full_name'] ?? '-';
+    }
+
+    /**
+     * Get main assistant name for a class
+     */
+    public function getMainAssistantName(int $classId): string
+    {
+        $builder = $this->db->table('class_assistants ca');
+        $builder->select('u.full_name');
+        $builder->join('users u', 'u.id = ca.assistant_id', 'left');
+        $builder->where('ca.practicum_class_id', $classId);
+        $builder->where('ca.is_main', 1);
+        $builder->orderBy('ca.id', 'DESC');
+        $result = $builder->get()->getRowArray();
+
+        return $result['full_name'] ?? '-';
     }
 
     /**
@@ -93,43 +135,42 @@ class PracticumClassModel extends Model
 
     /**
      * Get class members (lecturers, assistants, students)
+     * FIXED: Gunakan LEFT JOIN agar tidak hilang kalau user tidak ditemukan
      */
     public function getClassMembers(int $classId): array
     {
         $db = $this->db;
 
-        // Get lecturers
+        // Get lecturers — LEFT JOIN agar aman
         $lecturers = $db->table('class_lecturers cl')
             ->select([
                 'cl.id',
                 'cl.role_type',
+                'cl.lecturer_id as user_nid',
                 'u.full_name',
                 'u.email',
-                'l.user_nid',
             ])
-            ->join('lecturers l', 'l.user_nid = cl.lecturer_id', 'inner')
-            ->join('users u', 'u.id = l.user_nid', 'inner')
+            ->join('users u', 'u.id = cl.lecturer_id', 'left')  // LEFT JOIN!
             ->where('cl.practicum_class_id', $classId)
             ->get()
             ->getResultArray();
 
-        // Get assistants
+        // Get assistants — LEFT JOIN agar aman
         $assistants = $db->table('class_assistants ca')
             ->select([
                 'ca.id',
                 'ca.is_main',
                 'ca.duty_note',
+                'ca.assistant_id as user_nim',
                 'u.full_name',
                 'u.email',
-                'a.user_nim',
             ])
-            ->join('assistants a', 'a.user_nim = ca.assistant_id', 'inner')
-            ->join('users u', 'u.id = a.user_nim', 'inner')
+            ->join('users u', 'u.id = ca.assistant_id', 'left')  // LEFT JOIN!
             ->where('ca.practicum_class_id', $classId)
             ->get()
             ->getResultArray();
 
-        // Get students
+        // Get students — LEFT JOIN agar aman
         $students = $db->table('class_students cs')
             ->select([
                 'cs.id',
@@ -141,7 +182,7 @@ class PracticumClassModel extends Model
                 'pg.group_name',
                 'pg.group_code',
             ])
-            ->join('users u', 'u.id = cs.student_nim', 'inner')
+            ->join('users u', 'u.id = cs.student_nim', 'left')  // LEFT JOIN!
             ->join('practicum_groups pg', 'pg.id = cs.group_id', 'left')
             ->where('cs.practicum_class_id', $classId)
             ->get()
@@ -191,23 +232,19 @@ class PracticumClassModel extends Model
         foreach ($classes as &$class) {
             $classId = $class['id'];
 
-            // Count total students in class
             $totalStudents = $this->db->table('class_students')
                 ->where('practicum_class_id', $classId)
                 ->countAllResults();
 
-            // Count students with final scores
             $studentsWithScores = $this->db->table('final_scores')
                 ->where('practicum_class_id', $classId)
                 ->countAllResults();
 
-            // Count validated final scores
             $validatedScores = $this->db->table('final_scores')
                 ->where('practicum_class_id', $classId)
                 ->whereIn('validation_status', ['approved', 'validated'])
                 ->countAllResults();
 
-            // Calculate progress
             if ($totalStudents > 0) {
                 $scoreProgress = $studentsWithScores > 0
                     ? (int) round(($validatedScores / $totalStudents) * 100)
@@ -216,13 +253,12 @@ class PracticumClassModel extends Model
                 $scoreProgress = 0;
             }
 
-            $class['total_students']     = $totalStudents;
+            $class['total_students']       = $totalStudents;
             $class['students_with_scores'] = $studentsWithScores;
-            $class['validated_scores']   = $validatedScores;
-            $class['progress']           = $scoreProgress;
-            $class['progress_display']   = $scoreProgress . '%';
+            $class['validated_scores']     = $validatedScores;
+            $class['progress']             = $scoreProgress;
+            $class['progress_display']     = $scoreProgress . '%';
 
-            // Determine status label
             if ($scoreProgress >= 100) {
                 $class['status_label'] = 'Selesai';
                 $class['status_badge'] = 'bg-success';

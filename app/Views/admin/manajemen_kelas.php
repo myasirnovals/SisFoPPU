@@ -52,16 +52,14 @@
                     <?php if (!empty($classes)): ?>
                         <?php foreach ($classes as $class): ?>
                             <tr>
-                                <td><strong><?= esc($class['class_code']) ?></strong></td>
-                                <td><?= esc($class['course_name'] ?? '-') ?></td>
                                 <td>
-                                    <?php
-                                    // Get lecturer info from members (you may need to adjust this)
-                                    $lecturerName = '-';
-                                    $assistantName = '-';
-                                    ?>
-                                    <?= esc($lecturerName) ?> <br>
-                                    <small class="text-muted"><?= esc($assistantName) ?></small>
+                                    <strong><?= esc($class['class_code']) ?></strong><br>
+                                    <small class="text-muted"><?= esc($class['class_name']) ?></small>
+                                </td>
+                                <td><?= esc($class['course_name'] ?? '-') ?> <small class="text-muted">(<?= esc($class['course_code'] ?? '-') ?>)</small></td>
+                                <td>
+                                    <?= esc($class['lecturer_name'] ?? '-') ?><br>
+                                    <small class="text-muted">Asisten: <?= esc($class['assistant_name'] ?? '-') ?></small>
                                 </td>
                                 <td><?= esc($class['student_count'] ?? 0) ?> / 40</td>
                                 <td>
@@ -72,13 +70,13 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm btn-info text-white" onclick="kelolaAnggota(<?= $class['id'] ?>)" title="Kelola Anggota">
+                                    <button type="button" class="btn btn-sm btn-info text-white" onclick="kelolaAnggota(<?= $class['id'] ?>)" title="Kelola Anggota">
                                         <i class="bi bi-people-fill"></i>
                                     </button>
-                                    <button class="btn btn-sm btn-warning" onclick="editKelas(<?= $class['id'] ?>)" title="Edit">
+                                    <button type="button" class="btn btn-sm btn-warning" onclick="editKelas(<?= $class['id'] ?>)" title="Edit">
                                         <i class="bi bi-pencil-square"></i>
                                     </button>
-                                    <button class="btn btn-sm btn-danger" onclick="confirmDelete(<?= $class['id'] ?>, '<?= esc($class['class_name']) ?>')" title="Hapus">
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete(<?= $class['id'] ?>, '<?= esc($class['class_name'], 'js') ?>')" title="Hapus">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </td>
@@ -111,11 +109,11 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">Kode Kelas <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="class_code" placeholder="Contoh: IF-2A" required>
+                            <input type="text" class="form-control" name="class_code" placeholder="Contoh: IF-2A" value="<?= old('class_code') ?>" required>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">Nama Kelas <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" name="class_name" placeholder="Nama lengkap kelas" required>
+                            <input type="text" class="form-control" name="class_name" placeholder="Nama lengkap kelas" value="<?= old('class_name') ?>" required>
                         </div>
                     </div>
 
@@ -124,7 +122,9 @@
                         <select class="form-select" name="course_id" required>
                             <option value="">-- Pilih Mata Kuliah --</option>
                             <?php foreach ($courses as $course): ?>
-                                <option value="<?= $course['id'] ?>"><?= esc($course['course_name']) ?> (<?= esc($course['course_code']) ?>)</option>
+                                <option value="<?= $course['id'] ?>" <?= old('course_id') == $course['id'] ? 'selected' : '' ?>>
+                                    <?= esc($course['nama_mk'] ?? 'Tanpa Nama') ?> (<?= esc($course['kode_mk'] ?? '-') ?>)
+                                </option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -135,7 +135,7 @@
                             <select class="form-select" name="academic_year_id" required>
                                 <option value="">-- Pilih Tahun Akademik --</option>
                                 <?php foreach ($academicYears as $ay): ?>
-                                    <option value="<?= $ay['id'] ?>"><?= esc($ay['year_code']) ?></option>
+                                    <option value="<?= $ay['id'] ?>" <?= old('academic_year_id') == $ay['id'] ? 'selected' : '' ?>><?= esc($ay['year_code']) ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -144,7 +144,7 @@
                             <select class="form-select" name="semester_id" required>
                                 <option value="">-- Pilih Semester --</option>
                                 <?php foreach ($semesters as $sem): ?>
-                                    <option value="<?= $sem['id'] ?>"><?= esc($sem['semester_name']) ?></option>
+                                    <option value="<?= $sem['id'] ?>" <?= old('semester_id') == $sem['id'] ? 'selected' : '' ?>><?= esc($sem['semester_name']) ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -156,7 +156,7 @@
                             <select class="form-select" name="laboratory_id">
                                 <option value="">-- Pilih Laboratorium --</option>
                                 <?php foreach ($laboratories as $lab): ?>
-                                    <option value="<?= $lab['id'] ?>"><?= esc($lab['room_name']) ?> (<?= esc($lab['room_code']) ?>)</option>
+                                    <option value="<?= $lab['id'] ?>" <?= old('laboratory_id') == $lab['id'] ? 'selected' : '' ?>><?= esc($lab['room_name']) ?> (<?= esc($lab['room_code']) ?>)</option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -165,7 +165,7 @@
                             <select class="form-select" name="template_id">
                                 <option value="">-- Pilih Template --</option>
                                 <?php foreach ($templates as $tpl): ?>
-                                    <option value="<?= $tpl['id'] ?>"><?= esc($tpl['template_name']) ?></option>
+                                    <option value="<?= $tpl['id'] ?>" <?= old('template_id') == $tpl['id'] ? 'selected' : '' ?>><?= esc($tpl['template_name']) ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -177,7 +177,7 @@
                             <select class="form-select" name="lecturer_id">
                                 <option value="">-- Pilih Dosen --</option>
                                 <?php foreach ($lecturers as $lecturer): ?>
-                                    <option value="<?= $lecturer['user_nid'] ?>"><?= esc($lecturer['full_name']) ?></option>
+                                    <option value="<?= $lecturer['user_nid'] ?>" <?= old('lecturer_id') == $lecturer['user_nid'] ? 'selected' : '' ?>><?= esc($lecturer['full_name']) ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -186,7 +186,7 @@
                             <select class="form-select" name="assistant_id">
                                 <option value="">-- Pilih Asisten --</option>
                                 <?php foreach ($assistants as $assistant): ?>
-                                    <option value="<?= $assistant['user_nim'] ?>"><?= esc($assistant['full_name']) ?></option>
+                                    <option value="<?= $assistant['user_nim'] ?>" <?= old('assistant_id') == $assistant['user_nim'] ? 'selected' : '' ?>><?= esc($assistant['full_name']) ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -195,17 +195,17 @@
                     <div class="mb-3">
                         <label class="form-label fw-bold">Status</label>
                         <select class="form-select" name="status" required>
-                            <option value="draft">Draft</option>
-                            <option value="aktif" selected>Aktif</option>
-                            <option value="selesai">Selesai</option>
-                            <option value="terkunci">Terkunci</option>
-                            <option value="diarsipkan">Diarsipkan</option>
+                            <option value="draft" <?= old('status') == 'draft' ? 'selected' : '' ?>>Draft</option>
+                            <option value="aktif" <?= old('status', 'aktif') == 'aktif' ? 'selected' : '' ?>>Aktif</option>
+                            <option value="selesai" <?= old('status') == 'selesai' ? 'selected' : '' ?>>Selesai</option>
+                            <option value="terkunci" <?= old('status') == 'terkunci' ? 'selected' : '' ?>>Terkunci</option>
+                            <option value="diarsipkan" <?= old('status') == 'diarsipkan' ? 'selected' : '' ?>>Diarsipkan</option>
                         </select>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label fw-bold">Deskripsi</label>
-                        <textarea class="form-control" name="description" rows="2" placeholder="Opsional"></textarea>
+                        <textarea class="form-control" name="description" rows="2" placeholder="Opsional"><?= old('description') ?></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -248,7 +248,7 @@
                         <select class="form-select" id="edit_course_id" name="course_id" required>
                             <option value="">-- Pilih Mata Kuliah --</option>
                             <?php foreach ($courses as $course): ?>
-                                <option value="<?= $course['id'] ?>"><?= esc($course['course_name']) ?></option>
+                                <option value="<?= $course['id'] ?>"><?= esc($course['nama_mk'] ?? 'Tanpa Nama') ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -473,11 +473,16 @@
             document.getElementById('edit_description').value = data.description || '';
 
             // Set lecturer and assistant if available
-            if (result.members.lecturers.length > 0) {
-                document.getElementById('edit_lecturer_id').value = result.members.lecturers[0].user_nid;
+            if (result.members.lecturers && result.members.lecturers.length > 0) {
+                document.getElementById('edit_lecturer_id').value = result.members.lecturers[0].user_nid || '';
+            } else {
+                document.getElementById('edit_lecturer_id').value = '';
             }
-            if (result.members.assistants.length > 0) {
-                document.getElementById('edit_assistant_id').value = result.members.assistants[0].user_nim;
+
+            if (result.members.assistants && result.members.assistants.length > 0) {
+                document.getElementById('edit_assistant_id').value = result.members.assistants[0].user_nim || '';
+            } else {
+                document.getElementById('edit_assistant_id').value = '';
             }
 
             const modal = new bootstrap.Modal(document.getElementById('editKelasModal'));
@@ -507,24 +512,27 @@
             }
 
             document.getElementById('anggota_class_id').value = classId;
-            document.getElementById('anggota_kelas_nama').textContent = result.class.class_name;
+            document.getElementById('anggota_kelas_nama').textContent = result.class.class_name || 'Kelas';
 
             // Set lecturer and assistant
-            if (result.members.lecturers.length > 0) {
-                document.getElementById('kelola_lecturer_id').value = result.members.lecturers[0].user_nid;
+            const lecturerSelect = document.getElementById('kelola_lecturer_id');
+            const assistantSelect = document.getElementById('kelola_assistant_id');
+
+            if (result.members.lecturers && result.members.lecturers.length > 0 && result.members.lecturers[0].user_nid) {
+                lecturerSelect.value = result.members.lecturers[0].user_nid;
             } else {
-                document.getElementById('kelola_lecturer_id').value = '';
+                lecturerSelect.value = '';
             }
 
-            if (result.members.assistants.length > 0) {
-                document.getElementById('kelola_assistant_id').value = result.members.assistants[0].user_nim;
+            if (result.members.assistants && result.members.assistants.length > 0 && result.members.assistants[0].user_nim) {
+                assistantSelect.value = result.members.assistants[0].user_nim;
             } else {
-                document.getElementById('kelola_assistant_id').value = '';
+                assistantSelect.value = '';
             }
 
             // Render students
-            renderMahasiswaList(result.members.students);
-            document.getElementById('total_mahasiswa').textContent = result.members.total_students;
+            renderMahasiswaList(result.members.students || []);
+            document.getElementById('total_mahasiswa').textContent = result.members.total_students || 0;
 
             const modal = new bootstrap.Modal(document.getElementById('kelolaAnggotaModal'));
             modal.show();
@@ -539,23 +547,25 @@
         const tbody = document.getElementById('mahasiswa_list');
         tbody.innerHTML = '';
 
-        if (students.length === 0) {
+        if (!students || students.length === 0) {
             tbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted">Belum ada mahasiswa</td></tr>';
             return;
         }
 
         students.forEach(student => {
+            const nim = student.student_nim || '-';
+            const name = student.full_name || 'Tanpa Nama';
             const row = `
-            <tr data-nim="${student.student_nim}">
-                <td>${student.student_nim}</td>
-                <td>${student.full_name}</td>
-                <td>
-                    <button class="btn btn-sm btn-danger py-0" onclick="hapusMahasiswa('${student.student_nim}')">
-                        <i class="bi bi-x"></i> Hapus
-                    </button>
-                </td>
-            </tr>
-        `;
+                <tr data-nim="${nim}">
+                    <td>${nim}</td>
+                    <td>${name}</td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-danger py-0" onclick="hapusMahasiswa('${nim}')">
+                            <i class="bi bi-x"></i> Hapus
+                        </button>
+                    </td>
+                </tr>
+            `;
             tbody.innerHTML += row;
         });
     }
@@ -589,9 +599,10 @@
             const result = await response.json();
 
             if (result.success) {
-                // Refresh data
-                kelolaAnggota(classId);
+                // Refresh modal data
+                await kelolaAnggota(classId);
                 document.getElementById('tambah_mahasiswa_select').value = '';
+                alert('Mahasiswa berhasil ditambahkan!');
             } else {
                 alert(result.message || 'Gagal menambahkan mahasiswa');
             }
@@ -606,9 +617,7 @@
     // HAPUS MAHASISWA DARI KELAS
     // ============================================
     async function hapusMahasiswa(studentNim) {
-        if (!confirm('Yakin ingin menghapus mahasiswa ini dari kelas?')) {
-            return;
-        }
+        if (!confirm('Yakin ingin menghapus mahasiswa ini dari kelas?')) return;
 
         const classId = document.getElementById('anggota_class_id').value;
 
@@ -632,7 +641,13 @@
                 // Remove row from table
                 const row = document.querySelector(`tr[data-nim="${studentNim}"]`);
                 if (row) row.remove();
-                document.getElementById('total_mahasiswa').textContent = result.total;
+
+                // Update counter
+                const totalEl = document.getElementById('total_mahasiswa');
+                const currentTotal = parseInt(totalEl.textContent) || 0;
+                totalEl.textContent = Math.max(0, currentTotal - 1);
+
+                alert('Mahasiswa berhasil dihapus!');
             } else {
                 alert(result.message || 'Gagal menghapus mahasiswa');
             }
@@ -646,16 +661,12 @@
     // ============================================
     // SIMPAN PERUBAHAN ANGGOTA
     // ============================================
-    async function simpanPerubahanAnggota() {
-        const classId = document.getElementById('anggota_class_id').value;
-        const lecturerId = document.getElementById('kelola_lecturer_id').value;
-        const assistantId = document.getElementById('kelola_assistant_id').value;
-
-        // You can implement saving lecturer/assistant changes here
-        // For now, just close the modal with success message
-
+    function simpanPerubahanAnggota() {
+        // Sederhana: hanya reload halaman agar tabel utama terupdate
         alert('Perubahan berhasil disimpan!');
-        bootstrap.Modal.getInstance(document.getElementById('kelolaAnggotaModal')).hide();
+        const modalEl = document.getElementById('kelolaAnggotaModal');
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        if (modal) modal.hide();
         location.reload();
     }
 

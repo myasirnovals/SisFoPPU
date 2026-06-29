@@ -6,17 +6,18 @@ use CodeIgniter\Model;
 
 class ClassLecturerModel extends Model
 {
-    protected $table = 'class_lecturers';
-    protected $primaryKey = 'id';
-    protected $returnType = 'array';
-    protected $allowedFields = [
+    protected $table            = 'class_lecturers';
+    protected $primaryKey       = 'id';
+    protected $returnType       = 'array';
+    protected $allowedFields    = [
         'practicum_class_id',
         'lecturer_id',
         'role_type',
         'created_at',
     ];
-    protected $useTimestamps = true;
-    protected $createdField = 'created_at';
+
+    // MATIKAN timestamps otomatis — kita handle manual
+    protected $useTimestamps = false;
 
     /**
      * Get lecturers for a class
@@ -29,18 +30,23 @@ class ClassLecturerModel extends Model
     /**
      * Assign lecturer to class
      */
-    public function assignLecturer(int $classId, string $lecturerId, string $roleType = 'pengampu'): bool
+    public function assignLecturer(int $classId, ?string $lecturerId, string $roleType = 'pengampu'): bool
     {
-        // Remove existing lecturer with same role
+        // Hapus dosen dengan role sama di kelas ini
         $this->where('practicum_class_id', $classId)
             ->where('role_type', $roleType)
             ->delete();
 
-        return $this->insert([
+        // Jika tidak ada dosen yang dipilih, cukup hapus (return true)
+        if (empty($lecturerId)) {
+            return true;
+        }
+
+        return (bool) $this->insert([
             'practicum_class_id' => $classId,
-            'lecturer_id' => $lecturerId,
-            'role_type' => $roleType,
-            'created_at' => date('Y-m-d H:i:s'),
-        ]) !== false;
+            'lecturer_id'        => $lecturerId,
+            'role_type'          => $roleType,
+            'created_at'         => date('Y-m-d H:i:s'),
+        ]);
     }
 }
