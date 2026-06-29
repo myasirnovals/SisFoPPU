@@ -59,34 +59,39 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach (($status_nilai ?? []) as $row): ?>
-                        <tr>
-                            <td><strong><?= esc($row['kelas'] ?? '-') ?></strong></td>
-                            <td><?= esc($row['mk'] ?? '-') ?></td>
-                            <td style="width: 30%;">
-                                <div class="progress" style="height: 20px;">
-                                    <div class="progress-bar <?= ($row['progress'] ?? '') === '100%' ? 'bg-success' : 'bg-primary' ?>"
-                                        role="progressbar"
-                                        style="width: <?= esc($row['progress'] ?? '0%') ?>;"
-                                        aria-valuenow="<?= intval((string) ($row['progress'] ?? '0')) ?>"
-                                        aria-valuemin="0" aria-valuemax="100">
-                                        <?= esc($row['progress'] ?? '0%') ?>
+                    <?php if (!empty($status_nilai)): ?>
+                        <?php foreach ($status_nilai as $row): ?>
+                            <tr>
+                                <td><strong><?= esc($row['class_code'] ?? $row['class_name'] ?? '-') ?></strong></td>
+                                <td><?= esc($row['course_name'] ?? '-') ?></td>
+                                <td style="width: 30%;">
+                                    <div class="progress" style="height: 20px;">
+                                        <div class="progress-bar <?= $row['progress'] >= 100 ? 'bg-success' : 'bg-primary' ?>"
+                                            role="progressbar"
+                                            style="width: <?= esc($row['progress_display'] ?? '0%') ?>;"
+                                            aria-valuenow="<?= esc($row['progress'] ?? 0) ?>"
+                                            aria-valuemin="0" aria-valuemax="100">
+                                            <?= esc($row['progress_display'] ?? '0%') ?>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                            <td>
-                                <?php
-                                $badgeClass = 'bg-danger';
-                                if (($row['status'] ?? '') === 'Selesai') $badgeClass = 'bg-success';
-                                if (($row['status'] ?? '') === 'In Progress') $badgeClass = 'bg-warning text-dark';
-                                ?>
-                                <span class="badge <?= esc($badgeClass) ?>"><?= esc($row['status'] ?? '-') ?></span>
-                            </td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-primary">Lihat Detail</button>
-                            </td>
+                                </td>
+                                <td>
+                                    <span class="badge <?= esc($row['status_badge'] ?? 'bg-secondary') ?>">
+                                        <?= esc($row['status_label'] ?? '-') ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="<?= base_url('admin/kelas') ?>" class="btn btn-sm btn-outline-primary">
+                                        Lihat Detail
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">Belum ada data kelas praktikum</td>
                         </tr>
-                    <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>

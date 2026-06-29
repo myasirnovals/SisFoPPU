@@ -164,4 +164,80 @@ class PracticumClassModel extends Model
             ->where('practicum_class_id', $classId)
             ->countAllResults();
     }
+
+    public function countActive(): int
+    {
+        return $this->where('status', 'aktif')
+            ->where('deleted_at', null)
+            ->countAllResults();
+    }
+
+    public function getClassesWithScoreProgress(int $limit = 5): array
+    {
+        $builder = $this->db->table('practicum_classes pc');
+        $builder->select([
+            'pc.id',
+            'pc.class_name',
+            'pc.class_code',
+            'pc.status',
+            'c.course_name',
+            'c.course_code',
+        ]);
+        $builder->join('courses c', 'c.id = pc.course_id', 'left');
+        $builder->where('pc.deleted_at', null);
+        $builder->whereIn('pc.status', ['aktif', 'selesai', 'draft']);
+        $builder->orderBy('pc.created_at', 'DESC');
+        $builder->limit($limit);
+
+        $classes = $builder->get()->getResultArray();
+
+        foreach ($classes as &$class) {
+            $classId = $class['id'];
+
+            // Count total students in class
+            $totalStudents = $this->db->table('class_students')
+                ->where('practicum_class_id', $classId)
+                ->countAllResults();
+
+            // Count students with final scores
+            $studentsWithScores = $this->db->table('final_scores')
+                ->where('practicum_class_id', $classId)
+                ->countAllResults();
+
+            // Count validated final scores
+            $validatedScores = $this->db->table('final_scores')
+                ->where('practicum_class_id', $classId)
+                ->whereIn('validation_status', ['approved', 'validated'])
+                ->countAllResults();
+
+            // Calculate progress
+            if ($totalStudents > 0) {
+                $scoreProgress = $studentsWithScores > 0
+                    ? (int) round(($validatedScores / $totalStudents) * 100)
+                    : 0;
+            } else {
+                $scoreProgress = 0;
+            }
+
+            $class['total_students'] = $totalStudents;
+            $class['students_with_scores'] = $studentsWithScores;
+            $class['validated_scores'] = $validatedScores;
+            $class['progress'] = $scoreProgress;
+            $class['progress_display'] = $scoreProgress . '%';
+
+            // Determine status label
+            if ($scoreProgress >= 100) {
+                $class['status_label'] = 'Selesai';
+                $class['status_badge'] = 'bg-success';
+            } elseif ($scoreProgress >= 50) {
+                $class['status_label'] = 'In Progress';
+                $class['status_badge'] = 'bg-warning text-dark';
+            } else {
+                $class['status_label'] = 'Menunggu';
+                $class['status_badge'] = 'bg-danger';
+            }
+        }
+
+        return $classes;
+    }
 }

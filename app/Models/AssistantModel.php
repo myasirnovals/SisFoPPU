@@ -56,4 +56,11 @@ class AssistantModel extends Model
 
         return $builder->get()->getResultArray();
     }
+
+    public function countActive(): int
+    {
+        return $this->where('status', 'aktif')
+            ->where('deleted_at', null)
+            ->countAllResults();
+    }
 }
