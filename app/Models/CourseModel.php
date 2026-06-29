@@ -10,7 +10,27 @@ class CourseModel extends Model
     protected $primaryKey = 'id';
     protected $returnType = 'array';
     protected $allowedFields = [
-        'study_program_id', 'course_code', 'course_name', 'credits', 'is_active', 'created_at', 'updated_at',
+        'study_program_id',
+        'course_code',
+        'course_name',
+        'credits',
+        'is_practicum',
+        'status',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
     protected $useTimestamps = true;
+    protected $useSoftDeletes = true;
+
+    /**
+     * Get active courses for dropdown
+     */
+    public function getActiveCourses(): array
+    {
+        return $this->where('status', 'aktif')
+            ->where('is_practicum', 1)
+            ->where('deleted_at', null)
+            ->findAll();
+    }
 }
