@@ -47,6 +47,9 @@ $routes->group('admin', ['filter' => ['auth:protected', 'role:admin']], static f
     $routes->post('kelas/removeStudent', 'Admin\Kelas::removeStudent');
 
     $routes->get('hurufmutu',  'Admin\HurufMutu::index');
+    $routes->post('hurufmutu/store', 'Admin\HurufMutu::store');
+    $routes->post('hurufmutu/update/(:num)', 'Admin\HurufMutu::update/$1');
+    $routes->post('hurufmutu/delete/(:num)', 'Admin\HurufMutu::delete/$1');
 
     $routes->get('akademik',   'Admin\Akademik::index');
     $routes->post('akademik/prodi/store', 'Admin\Akademik::storeProdi');
