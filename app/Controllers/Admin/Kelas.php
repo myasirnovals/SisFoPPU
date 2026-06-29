@@ -4,7 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\PracticumClassModel;
-use App\Models\CourseModel;
+use App\Models\MataKuliahModel;
 use App\Models\LecturerModel;
 use App\Models\AssistantModel;
 use App\Models\StudentModel;
@@ -19,7 +19,7 @@ use App\Models\AssessmentTemplateModel;
 class Kelas extends BaseController
 {
     protected $practicumClassModel;
-    protected $courseModel;
+    protected $mataKuliahModel;
     protected $lecturerModel;
     protected $assistantModel;
     protected $studentModel;
@@ -39,7 +39,7 @@ class Kelas extends BaseController
         parent::initController($request, $response, $logger);
 
         $this->practicumClassModel = new PracticumClassModel();
-        $this->courseModel = new CourseModel();
+        $this->mataKuliahModel = new MataKuliahModel();
         $this->lecturerModel = new LecturerModel();
         $this->assistantModel = new AssistantModel();
         $this->studentModel = new StudentModel();
@@ -56,7 +56,6 @@ class Kelas extends BaseController
     {
         $classes = $this->practicumClassModel->getClassesWithDetails();
 
-        // Add student count to each class
         foreach ($classes as &$class) {
             $class['student_count'] = $this->practicumClassModel->countStudents($class['id']);
         }
@@ -64,7 +63,7 @@ class Kelas extends BaseController
         $data = [
             'title' => 'Manajemen Kelas - Sisfo Praktikum',
             'classes' => $classes,
-            'courses' => $this->courseModel->getActiveCourses(),
+            'courses' => $this->mataKuliahModel->getForDropdown(),
             'lecturers' => $this->lecturerModel->getLecturersWithUserInfo(),
             'assistants' => $this->assistantModel->getAssistantsWithUserInfo(),
             'students' => $this->studentModel->getStudentsWithUserInfo(),

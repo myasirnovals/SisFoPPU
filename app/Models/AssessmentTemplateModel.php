@@ -27,9 +27,11 @@ class AssessmentTemplateModel extends Model
     protected $deletedField     = 'deleted_at';
     protected $useSoftDeletes   = true;
 
-    /**
-     * Get active templates with course info
-     */
+    // MATIKAN VALIDASI BAWAAN
+    protected $validationRules    = [];
+    protected $validationMessages = [];
+    protected $skipValidation     = true;
+
     public function getActive(): array
     {
         $builder = $this->db->table('assessment_templates at');
@@ -40,11 +42,11 @@ class AssessmentTemplateModel extends Model
             'at.description',
             'at.is_default',
             'at.is_active',
-            'c.course_name',
-            'c.course_code',
+            'mk.nama_mk as course_name',
+            'mk.kode_mk as course_code',
             'sp.program_name',
         ]);
-        $builder->join('courses c', 'c.id = at.course_id', 'left');
+        $builder->join('mata_kuliah mk', 'mk.id = at.course_id', 'left');
         $builder->join('study_programs sp', 'sp.id = at.study_program_id', 'left');
         $builder->where('at.is_active', 1);
         $builder->where('at.deleted_at', null);
@@ -53,18 +55,13 @@ class AssessmentTemplateModel extends Model
         return $builder->get()->getResultArray();
     }
 
-    /**
-     * Get template with all components
-     */
     public function getWithComponents(int $templateId): ?array
     {
         $template = $this->find($templateId);
-
         if (!$template) {
             return null;
         }
 
-        // Get components
         $components = $this->db->table('assessment_components')
             ->where('template_id', $templateId)
             ->where('deleted_at', null)
@@ -73,100 +70,108 @@ class AssessmentTemplateModel extends Model
             ->get()
             ->getResultArray();
 
-        $template['components'] = $components;
+        $template['components']   = $components;
         $template['total_weight'] = array_sum(array_column($components, 'weight'));
 
         return $template;
     }
 
-    /**
-     * Get courses without template (for dropdown)
-     */
     public function getCoursesWithoutTemplate(): array
     {
-        $builder = $this->db->table('courses c');
+        $builder = $this->db->table('mata_kuliah mk');
         $builder->select([
-            'c.id',
-            'c.course_code',
-            'c.course_name',
-            'c.credits',
+            'mk.id',
+            'mk.kode_mk as course_code',
+            'mk.nama_mk as course_name',
+            'mk.sks as credits',
         ]);
-        $builder->where('c.is_practicum', 1);
-        $builder->where('c.status', 'aktif');
-        $builder->where('c.deleted_at', null);
-        $builder->whereNotIn('c.id', function ($query) {
+        $builder->whereNotIn('mk.id', function ($query) {
             $query->select('course_id')
                 ->from('assessment_templates')
                 ->where('deleted_at', null);
         });
-        $builder->orderBy('c.course_name', 'ASC');
+        $builder->orderBy('mk.nama_mk', 'ASC');
 
         return $builder->get()->getResultArray();
     }
 
-    /**
-     * Save template with components (transaction)
-     */
     public function saveTemplateWithComponents(array $templateData, array $components): int
     {
         $db = \Config\Database::connect();
-        $db->transStart();
+
+        $db->transBegin();
 
         try {
             $now = date('Y-m-d H:i:s');
 
-            // Insert template
             $templateData['created_at'] = $now;
             $templateData['updated_at'] = $now;
+
+            // DEBUG
+            log_message('debug', 'Inserting template: ' . json_encode($templateData));
 
             $templateId = $this->insert($templateData);
 
             if (!$templateId) {
-                throw new \Exception('Gagal menyimpan template');
+                $errors = $this->errors();
+                $errorMsg = is_array($errors) ? implode(', ', $errors) : 'Unknown validation error';
+                throw new \Exception('Gagal insert template: ' . $errorMsg);
             }
 
-            // Insert components
             $componentModel = new AssessmentComponentModel();
             $sortOrder = 0;
+            $usedCodes = [];
 
             foreach ($components as $component) {
+                $baseCode = $this->generateComponentCode($component['name'], $sortOrder);
+                $componentCode = $baseCode;
+                $suffix = 1;
+
+                while (in_array($componentCode, $usedCodes)) {
+                    $componentCode = $baseCode . '_' . $suffix;
+                    $suffix++;
+                }
+                $usedCodes[] = $componentCode;
+
                 $componentData = [
-                    'template_id' => $templateId,
-                    'component_code' => $this->generateComponentCode($component['name'], $sortOrder),
-                    'component_type' => $component['type'] ?? 'custom',
-                    'component_name' => $component['name'],
-                    'weight' => $component['weight'],
-                    'max_score' => $component['max_score'] ?? 100.00,
-                    'sort_order' => $sortOrder,
-                    'is_active' => 1,
+                    'template_id'         => $templateId,
+                    'component_code'      => $componentCode,
+                    'component_type'      => $component['type'] ?? 'custom',
+                    'component_name'      => $component['name'],
+                    'weight'              => $component['weight'],
+                    'max_score'           => $component['max_score'] ?? 100.00,
+                    'sort_order'          => $sortOrder,
+                    'is_active'           => 1,
                     'allow_subcomponents' => 0,
-                    'created_at' => $now,
-                    'updated_at' => $now,
+                    'created_at'          => $now,
+                    'updated_at'          => $now,
                 ];
 
-                $componentModel->insert($componentData);
+                $componentId = $componentModel->insert($componentData);
+
+                if (!$componentId) {
+                    $errors = $componentModel->errors();
+                    $errorMsg = is_array($errors) ? implode(', ', $errors) : 'Unknown validation error';
+                    throw new \Exception('Gagal insert komponen "' . $component['name'] . '": ' . $errorMsg);
+                }
+
                 $sortOrder++;
             }
 
-            $db->transComplete();
+            $db->transCommit();
 
-            if ($db->transStatus() === false) {
-                throw new \Exception('Transaction failed');
-            }
-
-            return $templateId;
+            return (int) $templateId;
         } catch (\Exception $e) {
             $db->transRollback();
+            log_message('error', 'saveTemplateWithComponents: ' . $e->getMessage());
             throw $e;
         }
     }
 
-    /**
-     * Generate component code
-     */
     private function generateComponentCode(string $name, int $index): string
     {
-        $prefix = strtoupper(substr(preg_replace('/[^a-zA-Z]/', '', $name), 0, 3)) ?: 'CMP';
+        $clean = preg_replace('/[^a-zA-Z]/', '', $name);
+        $prefix = strtoupper(substr($clean, 0, 3)) ?: 'CMP';
         return $prefix . '_' . str_pad((string)($index + 1), 2, '0', STR_PAD_LEFT);
     }
 }
