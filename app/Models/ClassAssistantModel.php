@@ -20,17 +20,11 @@ class ClassAssistantModel extends Model
     protected $useTimestamps = true;
     protected $createdField = 'created_at';
 
-    /**
-     * Get assistants for a class
-     */
     public function getByClassId(int $classId): array
     {
         return $this->where('practicum_class_id', $classId)->findAll();
     }
 
-    /**
-     * Assign assistant to class
-     */
     public function assignAssistant(int $classId, string $assistantId, bool $isMain = true, ?string $dutyNote = null): bool
     {
         // Remove existing main assistant
