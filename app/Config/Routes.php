@@ -36,6 +36,13 @@ $routes->group('admin', ['filter' => ['auth:protected', 'role:admin']], static f
     $routes->post('pengguna/update', 'Admin\Pengguna::update');
 
     $routes->get('kelas',      'Admin\Kelas::index');
+    $routes->post('kelas/store', 'Admin\Kelas::store');
+    $routes->post('kelas/update', 'Admin\Kelas::update');
+    $routes->get('kelas/delete/(:num)', 'Admin\Kelas::delete/$1');
+    $routes->get('kelas/getClassInfo/(:num)', 'Admin\Kelas::getClassInfo/$1');
+    $routes->post('kelas/addStudent', 'Admin\Kelas::addStudent');
+    $routes->post('kelas/removeStudent', 'Admin\Kelas::removeStudent');
+
     $routes->get('hurufmutu',  'Admin\HurufMutu::index');
 
     $routes->get('akademik',   'Admin\Akademik::index');
