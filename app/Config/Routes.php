@@ -26,7 +26,14 @@ $routes->group('admin', ['filter' => ['auth:protected', 'role:admin']], static f
     $routes->get('pengguna',   'Admin\Pengguna::index');
     $routes->get('kelas',      'Admin\Kelas::index');
     $routes->get('hurufmutu',  'Admin\HurufMutu::index');
+
     $routes->get('akademik',   'Admin\Akademik::index');
+    $routes->post('akademik/prodi/store', 'Admin\Akademik::storeProdi');
+    $routes->post('akademik/prodi/update', 'Admin\Akademik::updateProdi');
+    $routes->post('akademik/prodi/delete/(:num)', 'Admin\Akademik::deleteProdi/$1');
+    $routes->post('akademik/tahun/store', 'Admin\Akademik::storeTahun');
+    $routes->post('akademik/tahun/set-active/(:num)', 'Admin\Akademik::setActiveTahun/$1');
+    $routes->post('akademik/tahun/delete/(:num)', 'Admin\Akademik::deleteTahun/$1');
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
