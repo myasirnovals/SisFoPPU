@@ -33,4 +33,9 @@ class CourseModel extends Model
             ->where('deleted_at', null)
             ->findAll();
     }
+
+    public function countAll(): int
+    {
+        return $this->where('deleted_at', null)->countAllResults();
+    }
 }
