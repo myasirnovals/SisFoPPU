@@ -28,6 +28,9 @@ $routes->group('admin', ['filter' => ['auth:protected', 'role:admin']], static f
     $routes->get('matakuliah/delete/(:num)', 'Admin\MataKuliah::delete/$1');
 
     $routes->get('template',   'Admin\Template::index');
+    $routes->post('template/store', 'Admin\Template::store');
+    $routes->get('template/getTemplateDetail/(:num)', 'Admin\Template::getTemplateDetail/$1');
+    $routes->get('template/delete/(:num)', 'Admin\Template::delete/$1');
 
     $routes->get('pengguna',   'Admin\Pengguna::index');
     $routes->get('pengguna', 'Admin\Pengguna::index');
