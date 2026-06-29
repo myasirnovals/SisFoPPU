@@ -46,7 +46,7 @@ class MataKuliahModel extends Model
 
     public function getForDropdown(): array
     {
-        return $this->select('id, nama_mk as course_name, kode_mk as course_code, sks as credits')
+        return $this->select('id, kode_mk, nama_mk, sks, prodi_id')
             ->orderBy('nama_mk', 'ASC')
             ->findAll();
     }

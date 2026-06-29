@@ -45,6 +45,7 @@ $routes->group('admin', ['filter' => ['auth:protected', 'role:admin']], static f
     $routes->get('kelas/getClassInfo/(:num)', 'Admin\Kelas::getClassInfo/$1');
     $routes->post('kelas/addStudent', 'Admin\Kelas::addStudent');
     $routes->post('kelas/removeStudent', 'Admin\Kelas::removeStudent');
+    $routes->post('kelas/updateMembers', 'Admin\Kelas::updateMembers');
 
     $routes->get('hurufmutu',  'Admin\HurufMutu::index');
     $routes->post('hurufmutu/store', 'Admin\HurufMutu::store');

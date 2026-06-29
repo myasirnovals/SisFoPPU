@@ -6,10 +6,10 @@ use CodeIgniter\Model;
 
 class ClassStudentModel extends Model
 {
-    protected $table = 'class_students';
-    protected $primaryKey = 'id';
-    protected $returnType = 'array';
-    protected $allowedFields = [
+    protected $table            = 'class_students';
+    protected $primaryKey       = 'id';
+    protected $returnType       = 'array';
+    protected $allowedFields    = [
         'practicum_class_id',
         'student_nim',
         'group_id',
@@ -18,10 +18,12 @@ class ClassStudentModel extends Model
         'created_at',
         'updated_at',
     ];
-    protected $useTimestamps = true;
+
+    // MATIKAN timestamps otomatis — kita handle manual di method
+    protected $useTimestamps = false;
 
     /**
-     * Get students in a class
+     * Get students in a class with user info
      */
     public function getByClassId(int $classId): array
     {
@@ -36,7 +38,7 @@ class ClassStudentModel extends Model
             'pg.group_name',
             'pg.group_code',
         ]);
-        $builder->join('users u', 'u.id = cs.student_nim', 'inner');
+        $builder->join('users u', 'u.id = cs.student_nim', 'left');  // LEFT JOIN agar aman
         $builder->join('practicum_groups pg', 'pg.id = cs.group_id', 'left');
         $builder->where('cs.practicum_class_id', $classId);
         $builder->orderBy('u.full_name', 'ASC');
@@ -58,19 +60,21 @@ class ClassStudentModel extends Model
             return false; // Already enrolled
         }
 
+        $now = date('Y-m-d H:i:s');
+
         return $this->insert([
             'practicum_class_id' => $classId,
-            'student_nim' => $studentNim,
-            'group_id' => $groupId,
-            'enrollment_status' => 'aktif',
-            'enrolled_at' => date('Y-m-d H:i:s'),
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s'),
+            'student_nim'        => $studentNim,
+            'group_id'           => $groupId,
+            'enrollment_status'  => 'aktif',
+            'enrolled_at'        => $now,
+            'created_at'         => $now,
+            'updated_at'         => $now,
         ]) !== false;
     }
 
     /**
-     * Remove student from class
+     * Remove student from class (hard delete)
      */
     public function removeStudent(int $classId, string $studentNim): bool
     {
