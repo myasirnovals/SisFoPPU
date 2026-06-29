@@ -28,7 +28,13 @@ $routes->group('admin', ['filter' => ['auth:protected', 'role:admin']], static f
     $routes->get('matakuliah/delete/(:num)', 'Admin\MataKuliah::delete/$1');
 
     $routes->get('template',   'Admin\Template::index');
+
     $routes->get('pengguna',   'Admin\Pengguna::index');
+    $routes->get('pengguna', 'Admin\Pengguna::index');
+    $routes->post('pengguna/store', 'Admin\Pengguna::store');
+    $routes->get('pengguna/getUserData/(:any)/(:any)', 'Admin\Pengguna::getUserData/$1/$2');
+    $routes->post('pengguna/update', 'Admin\Pengguna::update');
+
     $routes->get('kelas',      'Admin\Kelas::index');
     $routes->get('hurufmutu',  'Admin\HurufMutu::index');
 

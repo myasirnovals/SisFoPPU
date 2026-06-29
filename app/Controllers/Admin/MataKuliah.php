@@ -75,6 +75,9 @@ class MataKuliah extends BaseController
                 ->with('error', 'Data tidak ditemukan.');
         }
 
+        // Ambil semua POST data dulu — debug friendly
+        $postData = $this->request->getPost();
+
         $rules = [
             'kode_mk'  => "required|max_length[20]|is_unique[mata_kuliah.kode_mk,id,{$id}]",
             'nama_mk'  => 'required|max_length[100]',
@@ -90,12 +93,16 @@ class MataKuliah extends BaseController
                 ->with('edit_id', $id);
         }
 
-        $this->model->update($id, [
-            'kode_mk'  => strtoupper($this->request->getPost('kode_mk')),
-            'nama_mk'  => $this->request->getPost('nama_mk'),
-            'sks'      => $this->request->getPost('sks'),
+        // Eksplisit ambil satu per satu — hindari ambiguitas
+        $updateData = [
+            'kode_mk'  => strtoupper(trim($this->request->getPost('kode_mk'))),
+            'nama_mk'  => trim($this->request->getPost('nama_mk')),
+            'sks'      => (int) $this->request->getPost('sks'),
             'semester' => $this->request->getPost('semester'),
-        ]);
+        ];
+
+        // Gunakan where + set secara eksplisit — lebih aman dari model->update()
+        $this->model->where('id', $id)->set($updateData)->update();
 
         return redirect()->to('/admin/matakuliah')
             ->with('success', 'Mata kuliah berhasil diperbarui.');

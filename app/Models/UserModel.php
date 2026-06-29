@@ -84,11 +84,25 @@ class UserModel extends Model
 
         $rows = $builder->get()->getResultArray();
 
-        return array_values(array_filter(array_map(static fn (array $row): string => (string) ($row['code'] ?? ''), $rows)));
+        return array_values(array_filter(array_map(static fn(array $row): string => (string) ($row['code'] ?? ''), $rows)));
     }
 
     public function touchLastLogin(string $userId): bool
     {
         return $this->update($userId, ['last_login_at' => date('Y-m-d H:i:s')]) !== false;
+    }
+
+    public function generateUserId(): string
+    {
+        $lastId = $this->db->query("
+            SELECT MAX(CAST(id AS UNSIGNED)) as max_id FROM {$this->table}
+        ")->getRow()->max_id ?? 0;
+
+        return str_pad((string)((int)$lastId + 1), 10, '0', STR_PAD_LEFT);
+    }
+
+    public function identifierExists(string $identifier): bool
+    {
+        return $this->where('login_identifier', $identifier)->where('deleted_at', null)->countAllResults() > 0;
     }
 }
