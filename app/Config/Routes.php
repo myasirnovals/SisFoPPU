@@ -22,6 +22,11 @@ $routes->get('logout', 'AuthController::logout',       ['filter' => 'auth:protec
 $routes->group('admin', ['filter' => ['auth:protected', 'role:admin']], static function ($routes) {
     $routes->get('dashboard',  'Admin\Dashboard::index');
     $routes->get('matakuliah', 'Admin\MataKuliah::index');
+    $routes->post('matakuliah/store',   'Admin\MataKuliah::store');
+    $routes->get('matakuliah/edit/(:num)',    'Admin\MataKuliah::edit/$1');
+    $routes->post('matakuliah/update/(:num)', 'Admin\MataKuliah::update/$1');
+    $routes->get('matakuliah/delete/(:num)', 'Admin\MataKuliah::delete/$1');
+
     $routes->get('template',   'Admin\Template::index');
     $routes->get('pengguna',   'Admin\Pengguna::index');
     $routes->get('kelas',      'Admin\Kelas::index');
