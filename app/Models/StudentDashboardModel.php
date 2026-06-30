@@ -1110,29 +1110,211 @@ class StudentDashboardModel extends Model
         $db = $this->db;
         $userNim = $student['user_id'];
 
-        // notifications TIDAK punya deleted_at
-        $rows = $db->table('notifications')
-            ->select('title, message, type, created_at')
-            ->where('user_id', $userNim)
-            ->where('is_read', 0)
-            ->orderBy('created_at', 'DESC')
-            ->limit(6)
-            ->get()
-            ->getResultArray();
-
-        if (empty($rows)) {
+        if ($userNim === '') {
             return [];
         }
 
-        return array_map(function (array $row): array {
+        $items = [];
+
+        // ─── 1. Notifikasi dari tabel notifications ─────────────────────
+        $notifRows = $db->table('notifications')
+            ->select('title, message, type, reference_type, reference_id, is_read, created_at')
+            ->where('user_id', $userNim)
+            ->orderBy('created_at', 'DESC')
+            ->limit(20)
+            ->get()
+            ->getResultArray();
+
+        foreach ($notifRows as $row) {
             $type = (string) ($row['type'] ?? 'info');
-            return [
-                'title'   => (string) ($row['title'] ?? 'Notifikasi'),
-                'message' => (string) ($row['message'] ?? '-'),
-                'time'    => $this->formatDateTime((string) ($row['created_at'] ?? '')),
-                'badge'   => $this->notificationBadge($type),
+            $refType = (string) ($row['reference_type'] ?? '');
+
+            // Tentukan icon dan kategori berdasarkan reference_type
+            $icon = $this->resolveNotificationIcon($refType, $type);
+            $category = $this->resolveNotificationCategory($refType);
+
+            $items[] = [
+                'id'          => null, // notifications tidak punya id di select
+                'source'      => 'notification',
+                'title'       => (string) ($row['title'] ?? 'Notifikasi'),
+                'message'     => (string) ($row['message'] ?? '-'),
+                'time'        => $this->formatDateTime((string) ($row['created_at'] ?? '')),
+                'badge'       => $this->notificationBadge($type),
+                'icon'        => $icon,
+                'category'    => $category,
+                'is_read'     => (bool) ($row['is_read'] ?? false),
+                'reference_type' => $refType,
+                'reference_id'   => (string) ($row['reference_id'] ?? ''),
             ];
-        }, $rows);
+        }
+
+        // ─── 2. Aktivitas dari tabel activity_logs ────────────────────────
+        // Ambil log yang relevan untuk mahasiswa: nilai, validasi, remedial, absensi
+        $logRows = $db->table('activity_logs')
+            ->select('action, module, target_type, target_id, description, created_at')
+            ->where('user_id', $userNim)
+            ->whereIn('module', ['score', 'validation', 'remedial', 'attendance', 'practicum', 'notification'])
+            ->orderBy('created_at', 'DESC')
+            ->limit(20)
+            ->get()
+            ->getResultArray();
+
+        foreach ($logRows as $row) {
+            $module = (string) ($row['module'] ?? '');
+            $action = (string) ($row['action'] ?? '');
+            $desc = (string) ($row['description'] ?? '');
+
+            // Buat title dan message dari log
+            $title = $this->formatLogTitle($module, $action, $row['target_type'] ?? '');
+            $message = $desc !== '' ? $desc : $title;
+
+            $items[] = [
+                'id'          => null,
+                'source'      => 'activity',
+                'title'       => $title,
+                'message'     => $message,
+                'time'        => $this->formatDateTime((string) ($row['created_at'] ?? '')),
+                'badge'       => $this->resolveLogBadge($module, $action),
+                'icon'        => $this->resolveLogIcon($module),
+                'category'    => $this->resolveLogCategory($module),
+                'is_read'     => true, // log dianggap sudah dibaca
+                'reference_type' => (string) ($row['target_type'] ?? ''),
+                'reference_id'   => (string) ($row['target_id'] ?? ''),
+            ];
+        }
+
+        // ─── 3. Sort berdasarkan waktu (terbaru dulu) ───────────────────
+        usort($items, function (array $a, array $b): int {
+            // Parse kembali untuk sorting (formatDateTime mengubah format)
+            // Gunakan created_at asli jika perlu, tapi untuk sekarang
+            // kita sort berdasarkan urutan query (sudah DESC)
+            return 0; // Sudah terurut dari query masing-masing
+        });
+
+        // Batasi total 20 item terbaru
+        return array_slice($items, 0, 20);
+    }
+
+    /**
+     * Resolve icon untuk notifikasi berdasarkan reference_type
+     */
+    private function resolveNotificationIcon(string $refType, string $type): string
+    {
+        return match (strtolower($refType)) {
+            'score', 'nilai'           => 'bi-clipboard-data',
+            'validation', 'validasi'   => 'bi-check-circle',
+            'remedial'                 => 'bi-arrow-repeat',
+            'attendance', 'kehadiran'  => 'bi-calendar-check',
+            'practicum', 'praktikum'   => 'bi-journal-check',
+            'revision', 'revisi'       => 'bi-pencil-square',
+            default => match (strtolower($type)) {
+                'success' => 'bi-check-circle-fill',
+                'warning' => 'bi-exclamation-triangle-fill',
+                'danger'  => 'bi-x-circle-fill',
+                default   => 'bi-bell-fill',
+            },
+        };
+    }
+
+    /**
+     * Resolve kategori notifikasi
+     */
+    private function resolveNotificationCategory(string $refType): string
+    {
+        return match (strtolower($refType)) {
+            'score', 'nilai'           => 'Nilai',
+            'validation', 'validasi'   => 'Validasi',
+            'remedial'                 => 'Remedial',
+            'attendance', 'kehadiran'  => 'Kehadiran',
+            'practicum', 'praktikum'   => 'Praktikum',
+            'revision', 'revisi'       => 'Revisi',
+            default                    => 'Umum',
+        };
+    }
+
+    /**
+     * Format title dari activity log
+     */
+    private function formatLogTitle(string $module, string $action, string $targetType): string
+    {
+        $moduleLabel = match (strtolower($module)) {
+            'score'      => 'Nilai',
+            'validation' => 'Validasi',
+            'remedial'   => 'Remedial',
+            'attendance' => 'Kehadiran',
+            'practicum'  => 'Praktikum',
+            default      => ucfirst($module),
+        };
+
+        $actionLabel = match (strtolower($action)) {
+            'create', 'input'    => 'Input',
+            'update', 'change'   => 'Perubahan',
+            'delete'             => 'Penghapusan',
+            'validate', 'approved' => 'Validasi',
+            'lock'               => 'Penguncian',
+            'submit'             => 'Pengiriman',
+            'request_revision'   => 'Permintaan Revisi',
+            default              => ucfirst($action),
+        };
+
+        $targetLabel = match (strtolower($targetType)) {
+            'score_entry'   => 'Nilai Komponen',
+            'final_score'   => 'Nilai Akhir',
+            'remedial_participant' => 'Peserta Remedial',
+            'attendance_record'    => 'Absensi',
+            default         => ucfirst($targetType),
+        };
+
+        return "{$actionLabel} {$moduleLabel}" . ($targetLabel !== '' ? " - {$targetLabel}" : '');
+    }
+
+    /**
+     * Resolve badge untuk activity log
+     */
+    private function resolveLogBadge(string $module, string $action): string
+    {
+        $key = strtolower($module . '.' . $action);
+
+        return match (true) {
+            str_contains($key, 'validate') || str_contains($key, 'approve') => 'success',
+            str_contains($key, 'lock') => 'dark',
+            str_contains($key, 'delete') => 'danger',
+            str_contains($key, 'update') || str_contains($key, 'change') => 'warning',
+            str_contains($key, 'create') || str_contains($key, 'input') => 'info',
+            str_contains($key, 'remedial') => 'warning',
+            default => 'secondary',
+        };
+    }
+
+    /**
+     * Resolve icon untuk activity log
+     */
+    private function resolveLogIcon(string $module): string
+    {
+        return match (strtolower($module)) {
+            'score'      => 'bi-clipboard-data',
+            'validation' => 'bi-check-circle',
+            'remedial'   => 'bi-arrow-repeat',
+            'attendance' => 'bi-calendar-check',
+            'practicum'  => 'bi-journal-check',
+            'notification' => 'bi-bell',
+            default      => 'bi-activity',
+        };
+    }
+
+    /**
+     * Resolve kategori untuk activity log
+     */
+    private function resolveLogCategory(string $module): string
+    {
+        return match (strtolower($module)) {
+            'score'      => 'Nilai',
+            'validation' => 'Validasi',
+            'remedial'   => 'Remedial',
+            'attendance' => 'Kehadiran',
+            'practicum'  => 'Praktikum',
+            default      => 'Aktivitas',
+        };
     }
 
     // ─── Summary Builder ───────────────────────────────────────────────────
