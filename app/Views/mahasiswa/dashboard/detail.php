@@ -36,6 +36,17 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
+
+<?php
+// ✅ PERBAIKAN: Extract detail array untuk kemudahan akses
+$classInfo      = $detail['classInfo']      ?? [];
+$finalScore     = $detail['finalScore']     ?? [];
+$componentRows  = $detail['componentRows']  ?? [];
+$attendanceRows = $detail['attendanceRows'] ?? [];
+$remedialRows   = $detail['remedialRows']   ?? [];
+$backUrl        = $detail['backUrl']        ?? site_url('mahasiswa/dashboard');
+?>
+
 <div class="card detail-hero rounded-5 mb-4">
     <div class="card-body p-4 p-lg-5">
         <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
@@ -48,7 +59,7 @@
                     <span class="badge bg-light text-dark rounded-pill px-3 py-2"><?= esc($classInfo['semester_label'] ?? '-') ?> / <?= esc($classInfo['academic_year'] ?? '-') ?></span>
                 </div>
             </div>
-            <a href="<?= esc($backUrl ?? site_url('mahasiswa/dashboard')) ?>" class="btn btn-outline-light">Kembali ke Dashboard</a>
+            <a href="<?= esc($backUrl) ?>" class="btn btn-outline-light">Kembali ke Dashboard</a>
         </div>
         <div class="row g-3">
             <div class="col-12 col-lg-4">
@@ -108,7 +119,7 @@
         <div class="card soft-card rounded-5 h-100">
             <div class="card-body p-4">
                 <h2 class="h5 section-title mb-3">Catatan Remedial (Jika Ada)</h2>
-                <?php if (($remedialRows ?? []) === []): ?>
+                <?php if (empty($remedialRows)): ?>
                     <div class="text-center py-4 empty-state">
                         <i class="bi bi-shield-check fs-1 d-block mb-2"></i>
                         Tidak ada remedial aktif untuk praktikum ini.
@@ -128,11 +139,11 @@
                             <tbody>
                                 <?php foreach ($remedialRows as $row): ?>
                                     <tr>
-                                        <td><?= esc($row['reason']) ?></td>
-                                        <td><?= esc($row['schedule']) ?></td>
-                                        <td><span class="badge bg-<?= esc($row['status_badge']) ?>"><?= esc($row['status']) ?></span></td>
-                                        <td><?= $row['score_before'] === null ? '-' : esc(number_format((float) $row['score_before'], 2)) ?></td>
-                                        <td><?= $row['score_after'] === null ? '-' : esc(number_format((float) $row['score_after'], 2)) ?></td>
+                                        <td><?= esc($row['reason'] ?? '-') ?></td>
+                                        <td><?= esc($row['schedule'] ?? '-') ?></td>
+                                        <td><span class="badge bg-<?= esc($row['status_badge'] ?? 'secondary') ?>"><?= esc($row['status'] ?? '-') ?></span></td>
+                                        <td><?= ($row['score_before'] ?? null) === null ? '-' : esc(number_format((float) $row['score_before'], 2)) ?></td>
+                                        <td><?= ($row['score_after'] ?? null) === null ? '-' : esc(number_format((float) $row['score_after'], 2)) ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -163,7 +174,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (($componentRows ?? []) === []): ?>
+                    <?php if (empty($componentRows)): ?>
                         <tr>
                             <td colspan="6">
                                 <div class="text-center py-5 empty-state">
@@ -175,18 +186,18 @@
                     <?php else: ?>
                         <?php foreach ($componentRows as $row): ?>
                             <tr>
-                                <td class="fw-semibold"><?= esc($row['component_name']) ?></td>
-                                <td><?= esc($row['subcomponent_name']) ?></td>
-                                <td><?= $row['weight'] === null ? '-' : esc(number_format((float) $row['weight'], 2)) ?>%</td>
+                                <td class="fw-semibold"><?= esc($row['component_name'] ?? '-') ?></td>
+                                <td><?= esc($row['subcomponent_name'] ?? '-') ?></td>
+                                <td><?= ($row['weight'] ?? null) === null ? '-' : esc(number_format((float) $row['weight'], 2)) ?>%</td>
                                 <td>
-                                    <?php if ($row['score_value'] === null): ?>
+                                    <?php if (($row['score_value'] ?? null) === null): ?>
                                         <span class="badge bg-warning-subtle text-warning-emphasis">Belum Dinilai</span>
                                     <?php else: ?>
                                         <?= esc(number_format((float) $row['score_value'], 2)) ?>
                                     <?php endif; ?>
                                 </td>
-                                <td><?= $row['weighted_score'] === null ? '-' : esc(number_format((float) $row['weighted_score'], 2)) ?></td>
-                                <td><?= esc($row['notes']) ?></td>
+                                <td><?= ($row['weighted_score'] ?? null) === null ? '-' : esc(number_format((float) $row['weighted_score'], 2)) ?></td>
+                                <td><?= esc($row['notes'] ?? '-') ?></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
@@ -213,7 +224,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (($attendanceRows ?? []) === []): ?>
+                    <?php if (empty($attendanceRows)): ?>
                         <tr>
                             <td colspan="4">
                                 <div class="text-center py-5 empty-state">
@@ -225,10 +236,10 @@
                     <?php else: ?>
                         <?php foreach ($attendanceRows as $row): ?>
                             <tr>
-                                <td><?= esc($row['meeting_no']) ?></td>
-                                <td><?= esc($row['session_date']) ?></td>
-                                <td><?= esc($row['status']) ?></td>
-                                <td><?= esc($row['notes']) ?></td>
+                                <td><?= esc($row['meeting_no'] ?? '-') ?></td>
+                                <td><?= esc($row['session_date'] ?? '-') ?></td>
+                                <td><?= esc($row['status'] ?? 'Belum Diabsen') ?></td>
+                                <td><?= esc($row['notes'] ?? '-') ?></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
