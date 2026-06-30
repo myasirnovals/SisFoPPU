@@ -644,6 +644,18 @@ class StudentDashboardModel extends Model
             return [];
         }
 
+        $csRows = $db->table('class_students')
+            ->select('id, practicum_class_id')
+            ->whereIn('practicum_class_id', $classIds)
+            ->where('student_nim', $userNim)
+            ->get()
+            ->getResultArray();
+
+        $csIds = array_column($csRows, 'id');
+        if (empty($csIds)) {
+            return [];
+        }
+
         // score_entries PUNYA deleted_at
         $rows = $db->table('score_entries')
             ->select('practicum_class_id as class_id')
@@ -651,7 +663,7 @@ class StudentDashboardModel extends Model
             ->select('SUM(CASE WHEN score_value IS NULL THEN 1 ELSE 0 END) AS missing_count', false)
             ->select('COUNT(*) AS total_count', false)
             ->whereIn('practicum_class_id', $classIds)
-            ->where('student_id', $userNim)
+            ->where('student_id', $csIds)
             ->where('deleted_at', null)
             ->groupBy('practicum_class_id')
             ->get()
@@ -679,11 +691,23 @@ class StudentDashboardModel extends Model
             return [];
         }
 
+        $csRows = $db->table('class_students')
+            ->select('id, practicum_class_id')
+            ->whereIn('practicum_class_id', $classIds)
+            ->where('student_nim', $userNim)
+            ->get()
+            ->getResultArray();
+
+        $csIds = array_column($csRows, 'id');
+        if (empty($csIds)) {
+            return [];
+        }
+
         // final_scores PUNYA deleted_at
         $rows = $db->table('final_scores')
             ->select('practicum_class_id as class_id, final_score, grade_letter, status, validation_status, notes')
             ->whereIn('practicum_class_id', $classIds)
-            ->where('student_id', $userNim)
+            ->where('student_id', $csIds)
             ->where('deleted_at', null)
             ->get()
             ->getResultArray();
@@ -701,11 +725,20 @@ class StudentDashboardModel extends Model
         $db = $this->db;
         $userNim = $student['user_id'];
 
+        $csRow = $db->table('class_students')
+            ->select('id')
+            ->where('practicum_class_id', $classId)
+            ->where('student_nim', $userNim)
+            ->get()
+            ->getRow();
+
+        $studentRecordId = $csRow ? (int)$csRow->id : 0;
+
         // final_scores PUNYA deleted_at
         $row = $db->table('final_scores')
             ->select('final_score, grade_letter, status, validation_status, notes')
             ->where('practicum_class_id', $classId)
-            ->where('student_id', $userNim)
+            ->where('student_id', $studentRecordId)
             ->where('deleted_at', null)
             ->get()
             ->getRowArray();
@@ -737,11 +770,24 @@ class StudentDashboardModel extends Model
         $db = $this->db;
         $userNim = $student['user_id'];
 
+        $csRow = $db->table('class_students')
+            ->select('id')
+            ->where('practicum_class_id', $classId)
+            ->where('student_nim', $userNim)
+            ->get()
+            ->getRow();
+
+        $studentRecordId = $csRow ? (int)$csRow->id : 0;
+
+        if ($studentRecordId === 0) {
+            return [];
+        }
+
         // score_entries PUNYA deleted_at
         $builder = $db->table('score_entries se');
         $builder->select('se.component_id, se.subcomponent_id, se.score_value, se.max_score, se.notes');
         $builder->where('se.practicum_class_id', $classId);
-        $builder->where('se.student_id', $userNim);
+        $builder->where('se.student_id', $studentRecordId);
         $builder->where('se.deleted_at', null);
 
         // assessment_components PUNYA deleted_at
@@ -802,11 +848,23 @@ class StudentDashboardModel extends Model
         // $classIds sudah berupa array of int, tidak perlu array_map lagi!
         $classIdList = array_values(array_filter($classIds));
 
+        $csRows = $db->table('class_students')
+            ->select('id, practicum_class_id')
+            ->whereIn('practicum_class_id', $classIdList)
+            ->where('student_nim', $userNim)
+            ->get()
+            ->getResultArray();
+
+        $csIds = array_column($csRows, 'id');
+        if (empty($csIds)) {
+            return [];
+        }
+
         // remedial_participants PUNYA deleted_at
         $rows = $db->table('remedial_participants')
             ->select('practicum_class_id as class_id, status, reason')
             ->whereIn('practicum_class_id', $classIdList)
-            ->where('student_id', $userNim)
+            ->where('student_id', $csIds)
             ->where('deleted_at', null)
             ->get()
             ->getResultArray();
