@@ -66,12 +66,25 @@
     .progress-label {
         min-width: 3rem;
     }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: #64748b;
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: #cbd5e1;
+    }
 </style>
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
 <div class="student-dashboard">
 
+    <!-- ═══ HERO CARD ═══ -->
     <div class="hero-card rounded-5 mb-4">
         <div class="card-body p-4 p-lg-5 position-relative">
             <div class="row align-items-center g-4 position-relative">
@@ -96,9 +109,18 @@
                             </div>
                         </div>
                         <div class="d-grid gap-2">
-                            <div class="d-flex justify-content-between"><span class="text-white-50">Program Studi</span><strong><?= esc($studentProfile['study_program'] ?? '-') ?></strong></div>
-                            <div class="d-flex justify-content-between"><span class="text-white-50">Semester Aktif</span><strong><?= esc($studentProfile['semester_active'] ?? $semesterLabel ?? '-') ?></strong></div>
-                            <div class="d-flex justify-content-between"><span class="text-white-50">Tahun Akademik</span><strong><?= esc($studentProfile['academic_year_active'] ?? $academicYear ?? '-') ?></strong></div>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-white-50">Program Studi</span>
+                                <strong><?= esc($studentProfile['study_program'] ?? '-') ?></strong>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-white-50">Angkatan</span>
+                                <strong><?= esc($studentProfile['class_year'] ?? '-') ?></strong>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-white-50">Tahun Akademik</span>
+                                <strong><?= esc($academicYear ?? '-') ?></strong>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -106,72 +128,122 @@
         </div>
     </div>
 
-    <div class="row g-3 mb-4">
-        <?php foreach (($summaryCards ?? []) as $card): ?>
-            <div class="col-12 col-sm-6 col-xl-4 col-xxl-2">
-                <div class="card stat-card h-100">
-                    <div class="card-body p-4">
-                        <div class="d-flex align-items-start justify-content-between mb-3">
-                            <div>
-                                <div class="text-muted small mb-1"><?= esc($card['title']) ?></div>
-                                <div class="h2 fw-bold mb-0"><?= esc($card['value']) ?></div>
+    <!-- ═══ STAT CARDS ═══ -->
+    <?php if (!empty($summaryCards)): ?>
+        <div class="row g-3 mb-4">
+            <?php foreach ($summaryCards as $card): ?>
+                <div class="col-12 col-sm-6 col-xl-4 col-xxl-2">
+                    <div class="card stat-card h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-start justify-content-between mb-3">
+                                <div>
+                                    <div class="text-muted small mb-1"><?= esc($card['title']) ?></div>
+                                    <div class="h2 fw-bold mb-0"><?= esc($card['value']) ?></div>
+                                </div>
+                                <div class="rounded-4 bg-<?= esc($card['color']) ?> bg-opacity-10 text-<?= esc($card['color']) ?> d-flex align-items-center justify-content-center" style="width: 3rem; height: 3rem;">
+                                    <i class="bi <?= esc($card['icon']) ?> fs-4"></i>
+                                </div>
                             </div>
-                            <div class="rounded-4 bg-<?= esc($card['color']) ?> bg-opacity-10 text-<?= esc($card['color']) ?> d-flex align-items-center justify-content-center" style="width: 3rem; height: 3rem;">
-                                <i class="bi <?= esc($card['icon']) ?> fs-4"></i>
-                            </div>
+                            <div class="text-muted small"><?= esc($card['description'] ?? '') ?></div>
                         </div>
-                        <div class="text-muted small"><?= esc($card['description'] ?? '') ?></div>
                     </div>
                 </div>
+            <?php endforeach; ?>
+        </div>
+    <?php else: ?>
+        <div class="card rounded-5 mb-4">
+            <div class="card-body empty-state">
+                <i class="bi bi-inbox"></i>
+                <h5 class="mb-2">Belum Ada Data</h5>
+                <p class="mb-0">Anda belum terdaftar di kelas praktikum manapun.</p>
             </div>
-        <?php endforeach; ?>
-    </div>
+        </div>
+    <?php endif; ?>
 
-    <div class="card soft-card rounded-5 mb-4">
-        <div class="card-body p-4 p-lg-5">
-            <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
-                <div>
-                    <h2 class="h4 section-title mb-1">Ringkasan Progress Praktikum</h2>
-                    <p class="text-muted mb-0">Gambaran cepat progres kehadiran, kelengkapan nilai, dan finalisasi kelas.</p>
+    <!-- ═══ PROGRESS SECTION ═══ -->
+    <?php if (!empty($summaryCards)): ?>
+        <div class="card soft-card rounded-5 mb-4">
+            <div class="card-body p-4 p-lg-5">
+                <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
+                    <div>
+                        <h2 class="h4 section-title mb-1">Ringkasan Progress Praktikum</h2>
+                        <p class="text-muted mb-0">Gambaran cepat progres kehadiran, kelengkapan nilai, dan finalisasi kelas.</p>
+                    </div>
+                    <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill px-3 py-2">
+                        <?= esc($summaryMeta['total_classes'] ?? 0) ?> kelas
+                    </span>
                 </div>
-                <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill px-3 py-2"><?= esc($summaryMeta['total_classes'] ?? 0) ?> kelas</span>
-            </div>
-            <div class="row g-3">
-                <div class="col-12 col-lg-4">
-                    <div class="p-3 rounded-4 border bg-light-subtle h-100">
-                        <div class="text-muted small mb-2">Rata-rata Kehadiran</div>
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="progress flex-grow-1" style="height: 18px;">
-                                <div class="progress-bar bg-success" role="progressbar" style="width: <?= esc($summaryMeta['attendance_average'] ?? 0) ?>%;" aria-valuenow="<?= esc($summaryMeta['attendance_average'] ?? 0) ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="row g-3">
+                    <!-- Rata-rata Kehadiran -->
+                    <div class="col-12 col-lg-4">
+                        <div class="p-3 rounded-4 border bg-light-subtle h-100">
+                            <div class="text-muted small mb-2">Rata-rata Kehadiran</div>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="progress flex-grow-1" style="height: 18px;">
+                                    <div class="progress-bar bg-success" role="progressbar"
+                                        style="width: <?= esc($summaryMeta['attendance_average'] ?? 0) ?>%;"
+                                        aria-valuenow="<?= esc($summaryMeta['attendance_average'] ?? 0) ?>"
+                                        aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <span class="fw-semibold progress-label"><?= esc($summaryMeta['attendance_average'] ?? 0) ?>%</span>
                             </div>
-                            <span class="fw-semibold progress-label"><?= esc($summaryMeta['attendance_average'] ?? 0) ?>%</span>
                         </div>
                     </div>
-                </div>
-                <div class="col-12 col-lg-4">
-                    <div class="p-3 rounded-4 border bg-light-subtle h-100">
-                        <div class="text-muted small mb-2">Kelengkapan Nilai</div>
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="progress flex-grow-1" style="height: 18px;">
-                                <div class="progress-bar bg-info" role="progressbar" style="width: <?= esc($summaryMeta['score_average'] ?? 0) ?>%;" aria-valuenow="<?= esc($summaryMeta['score_average'] ?? 0) ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                    <!-- Kelengkapan Nilai -->
+                    <div class="col-12 col-lg-4">
+                        <div class="p-3 rounded-4 border bg-light-subtle h-100">
+                            <div class="text-muted small mb-2">Kelengkapan Nilai</div>
+                            <div class="d-flex align-items-center gap-3">
+                                <div class="progress flex-grow-1" style="height: 18px;">
+                                    <div class="progress-bar bg-info" role="progressbar"
+                                        style="width: <?= esc($summaryMeta['score_average'] ?? 0) ?>%;"
+                                        aria-valuenow="<?= esc($summaryMeta['score_average'] ?? 0) ?>"
+                                        aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <span class="fw-semibold progress-label"><?= esc($summaryMeta['score_average'] ?? 0) ?>%</span>
                             </div>
-                            <span class="fw-semibold progress-label"><?= esc($summaryMeta['score_average'] ?? 0) ?>%</span>
                         </div>
                     </div>
-                </div>
-                <div class="col-12 col-lg-4">
-                    <div class="p-3 rounded-4 border bg-light-subtle h-100">
-                        <div class="text-muted small mb-2">Kelas Final</div>
-                        <div class="d-flex align-items-center justify-content-between">
-                            <div class="fw-semibold fs-4"><?= esc($summaryMeta['finalized'] ?? 0) ?></div>
-                            <span class="text-muted">dari <?= esc($summaryMeta['total_classes'] ?? 0) ?> kelas</span>
+                    <!-- Kelas Final -->
+                    <div class="col-12 col-lg-4">
+                        <div class="p-3 rounded-4 border bg-light-subtle h-100">
+                            <div class="text-muted small mb-2">Kelas Final</div>
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="fw-semibold fs-4"><?= esc($summaryMeta['finalized'] ?? 0) ?></div>
+                                <span class="text-muted">dari <?= esc($summaryMeta['total_classes'] ?? 0) ?> kelas</span>
+                            </div>
+                            <div class="mt-2 text-muted small">Kelas dengan nilai terkunci/tervalidasi</div>
                         </div>
-                        <div class="mt-2 text-muted small">Kelas dengan nilai terkunci/tervalidasi</div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    <?php endif; ?>
+
+    <!-- ═══ QUICK LINKS / NOTIFICATIONS PREVIEW ═══ -->
+    <?php if (!empty($notifications)): ?>
+        <div class="card soft-card rounded-5">
+            <div class="card-body p-4">
+                <h5 class="section-title mb-3">Notifikasi Terbaru</h5>
+                <div class="list-group list-group-flush">
+                    <?php foreach (array_slice($notifications, 0, 3) as $notif): ?>
+                        <div class="list-group-item d-flex align-items-center gap-3 px-0">
+                            <span class="badge bg-<?= esc($notif['badge']) ?>-subtle text-<?= esc($notif['badge']) ?>-emphasis rounded-pill">
+                                <?= esc($notif['title']) ?>
+                            </span>
+                            <div class="flex-grow-1 text-truncate"><?= esc($notif['message']) ?></div>
+                            <small class="text-muted"><?= esc($notif['time']) ?></small>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+                <div class="mt-3 text-end">
+                    <a href="<?= site_url('mahasiswa/notifikasi') ?>" class="btn btn-sm btn-outline-primary rounded-pill">
+                        Lihat Semua <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
 
 </div>
 <?= $this->endSection() ?>
