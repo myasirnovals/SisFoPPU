@@ -663,7 +663,7 @@ class StudentDashboardModel extends Model
             ->select('SUM(CASE WHEN score_value IS NULL THEN 1 ELSE 0 END) AS missing_count', false)
             ->select('COUNT(*) AS total_count', false)
             ->whereIn('practicum_class_id', $classIds)
-            ->where('student_id', $csIds)
+            ->whereIn('student_id', $csIds)
             ->where('deleted_at', null)
             ->groupBy('practicum_class_id')
             ->get()
@@ -707,7 +707,7 @@ class StudentDashboardModel extends Model
         $rows = $db->table('final_scores')
             ->select('practicum_class_id as class_id, final_score, grade_letter, status, validation_status, notes')
             ->whereIn('practicum_class_id', $classIds)
-            ->where('student_id', $csIds)
+            ->whereIn('student_id', $csIds)
             ->where('deleted_at', null)
             ->get()
             ->getResultArray();
@@ -864,7 +864,7 @@ class StudentDashboardModel extends Model
         $rows = $db->table('remedial_participants')
             ->select('practicum_class_id as class_id, status, reason')
             ->whereIn('practicum_class_id', $classIdList)
-            ->where('student_id', $csIds)
+            ->whereIn('student_id', $csIds)
             ->where('deleted_at', null)
             ->get()
             ->getResultArray();
@@ -885,6 +885,7 @@ class StudentDashboardModel extends Model
         if (empty($classRows)) {
             return [];
         }
+
         $classIdList = [];
         foreach ($classRows as $row) {
             if (is_array($row)) {
@@ -899,8 +900,209 @@ class StudentDashboardModel extends Model
             return [];
         }
 
-        // ✅ PERBAIKAN: Tambahkan return []
-        return [];
+        // Ambil class_students.id untuk mapping ke student_id di remedial_participants
+        $csRows = $db->table('class_students')
+            ->select('id, practicum_class_id')
+            ->whereIn('practicum_class_id', $classIdList)
+            ->where('student_nim', $userNim)
+            ->get()
+            ->getResultArray();
+
+        $csMap = [];
+        foreach ($csRows as $csRow) {
+            $csMap[(int)$csRow['practicum_class_id']] = (int)$csRow['id'];
+        }
+
+        if (empty($csMap)) {
+            return [];
+        }
+
+        $csIds = array_values($csMap);
+
+        // Query remedial_participants dengan join ke remedial_periods
+        $builder = $db->table('remedial_participants rp');
+        $builder->select([
+            'rp.id as participant_id',
+            'rp.remedial_period_id',
+            'rp.student_id',
+            'rp.practicum_class_id',
+            'rp.status',
+            'rp.reason',
+            'rp.before_score',
+            'rp.after_score',
+            'rp.max_after_score',
+            'rp.validated_by',
+            'rp.validated_at',
+        ]);
+
+        // Join remedial_periods
+        $builder->select('rpd.remedial_code, rpd.title as period_title, rpd.start_date, rpd.end_date, rpd.registration_deadline, rpd.status as period_status');
+        $builder->join('remedial_periods rpd', 'rpd.id = rp.remedial_period_id AND rpd.deleted_at IS NULL', 'left');
+
+        // Join practicum_classes untuk info kelas
+        $builder->select('pc.class_code, pc.class_name, pc.course_id');
+        $builder->join('practicum_classes pc', 'pc.id = rp.practicum_class_id AND pc.deleted_at IS NULL', 'left');
+
+        // Join mata_kuliah (bukan coursemodel!)
+        $builder->select('mk.kode_mk as course_code, mk.nama_mk as course_name');
+        $builder->join('mata_kuliah mk', 'mk.id = pc.course_id', 'left');
+
+        // Join remedial_results untuk hasil akhir
+        $builder->select('rr.final_score_before, rr.final_score_after, rr.grade_letter_before, rr.grade_letter_after, rr.is_passed, rr.validation_status as result_validation_status, rr.notes as result_notes');
+        $builder->join('remedial_results rr', 'rr.remedial_participant_id = rp.id', 'left');
+
+        $builder->whereIn('rp.practicum_class_id', $classIdList);
+        $builder->whereIn('rp.student_id', $csIds);
+        $builder->where('rp.deleted_at', null);
+        $builder->orderBy('rpd.start_date', 'DESC');
+        $builder->orderBy('rp.created_at', 'DESC');
+
+        $rows = $builder->get()->getResultArray();
+
+        $prepared = [];
+        foreach ($rows as $row) {
+            $status = $this->normalizeRemedialStatus((string) ($row['status'] ?? ''));
+            $periodStatus = strtolower((string) ($row['period_status'] ?? ''));
+
+            // Tentukan jenis remedial berdasarkan data
+            $remedialType = $this->resolveRemedialType($row);
+
+            // Format jadwal
+            $schedule = $this->formatRemedialSchedule(
+                (string) ($row['start_date'] ?? ''),
+                (string) ($row['end_date'] ?? ''),
+                (string) ($row['registration_deadline'] ?? '')
+            );
+
+            // Tentukan komponen yang diremedial
+            $componentLabel = $this->loadRemedialComponentsLabel((int) ($row['remedial_period_id'] ?? 0));
+
+            $prepared[] = [
+                'participant_id'      => (int) ($row['participant_id'] ?? 0),
+                'period_id'           => (int) ($row['remedial_period_id'] ?? 0),
+                'class_id'            => (int) ($row['practicum_class_id'] ?? 0),
+                'course_name'         => (string) ($row['course_name'] ?? '-'),
+                'course_code'         => (string) ($row['course_code'] ?? '-'),
+                'class_name'          => (string) ($row['class_name'] ?? $row['class_code'] ?? '-'),
+                'reason'              => (string) ($row['reason'] ?? '-'),
+                'remedial_type'       => $remedialType,
+                'component_label'     => $componentLabel,
+                'schedule'            => $schedule,
+                'status'              => $this->formatRemedialStatusLabel($status),
+                'status_badge'        => self::REMEDIAL_STATUS_BADGES[$status] ?? 'secondary',
+                'score_before'        => isset($row['before_score']) ? (float) $row['before_score'] : null,
+                'score_after'         => isset($row['after_score']) ? (float) $row['after_score'] : null,
+                'max_after_score'     => isset($row['max_after_score']) ? (float) $row['max_after_score'] : null,
+                'final_score_before'  => isset($row['final_score_before']) ? (float) $row['final_score_before'] : null,
+                'final_score_after'   => isset($row['final_score_after']) ? (float) $row['final_score_after'] : null,
+                'grade_before'        => (string) ($row['grade_letter_before'] ?? '-'),
+                'grade_after'         => (string) ($row['grade_letter_after'] ?? '-'),
+                'is_passed'           => (bool) ($row['is_passed'] ?? false),
+                'period_status'       => $periodStatus,
+                'period_title'        => (string) ($row['period_title'] ?? $row['remedial_code'] ?? '-'),
+                'notes'               => (string) ($row['result_notes'] ?? $row['reason'] ?? '-'),
+                'validated_at'        => (string) ($row['validated_at'] ?? '-'),
+            ];
+        }
+
+        return $prepared;
+    }
+
+    /**
+     * Resolve jenis remedial berdasarkan data
+     */
+    private function resolveRemedialType(array $row): string
+    {
+        $beforeScore = $row['before_score'] ?? null;
+        $afterScore = $row['after_score'] ?? null;
+
+        if ($beforeScore !== null && $afterScore !== null) {
+            return 'Nilai Akhir';
+        }
+
+        // Cek apakah ada komponen spesifik
+        $db = $this->db;
+        $hasComponents = $db->table('remedial_scores')
+            ->where('remedial_participant_id', (int) ($row['participant_id'] ?? 0))
+            ->countAllResults() > 0;
+
+        return $hasComponents ? 'Komponen Tertentu' : 'Nilai Akhir';
+    }
+
+    /**
+     * Load label komponen remedial
+     */
+    private function loadRemedialComponentsLabel(int $periodId): string
+    {
+        if ($periodId <= 0) {
+            return 'Semua Komponen';
+        }
+
+        $db = $this->db;
+
+        $rows = $db->table('remedial_components rc')
+            ->select('ac.component_name')
+            ->join('assessment_components ac', 'ac.id = rc.component_id AND ac.deleted_at IS NULL', 'left')
+            ->where('rc.remedial_period_id', $periodId)
+            ->get()
+            ->getResultArray();
+
+        if (empty($rows)) {
+            return 'Semua Komponen';
+        }
+
+        $names = array_filter(array_column($rows, 'component_name'));
+
+        if (empty($names)) {
+            return 'Semua Komponen';
+        }
+
+        return implode(', ', array_slice($names, 0, 3)) . (count($names) > 3 ? '...' : '');
+    }
+
+    /**
+     * Format jadwal remedial
+     */
+    private function formatRemedialSchedule(string $startDate, string $endDate, string $deadline): string
+    {
+        $parts = [];
+
+        if ($startDate !== '' && $startDate !== '0000-00-00') {
+            $parts[] = $this->formatDateOnly($startDate) . ' s.d. ' . ($endDate !== '' && $endDate !== '0000-00-00' ? $this->formatDateOnly($endDate) : '?');
+        }
+
+        if ($deadline !== '' && $deadline !== '0000-00-00') {
+            $parts[] = 'Daftar: ' . $this->formatDateOnly($deadline);
+        }
+
+        return empty($parts) ? '-' : implode(' | ', $parts);
+    }
+
+    /**
+     * Format tanggal saja
+     */
+    private function formatDateOnly(string $value): string
+    {
+        if ($value === '' || $value === '0000-00-00') return '-';
+        $time = strtotime($value);
+        return $time !== false ? date('d M Y', $time) : $value;
+    }
+
+    /**
+     * Format label status remedial untuk tampilan
+     */
+    private function formatRemedialStatusLabel(string $status): string
+    {
+        return match ($status) {
+            'eligible'        => 'Eligible',
+            'terdaftar'       => 'Terdaftar',
+            'dijadwalkan'     => 'Dijadwalkan',
+            'sudah_dinilai'   => 'Sudah Dinilai',
+            'validated'       => 'Tervalidasi',
+            'tidak_mengikuti' => 'Tidak Mengikuti',
+            'dibatalkan'      => 'Dibatalkan',
+            default           => ucfirst($status),
+        };
     }
 
     private function loadNotifications(array $student): array
