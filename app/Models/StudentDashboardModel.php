@@ -426,6 +426,11 @@ class StudentDashboardModel extends Model
 
     // ─── Attendance ────────────────────────────────────────────────────────
 
+    /**
+     * PERBAIKAN: Gunakan mapping class_students.id ke attendance_records.student_id
+     * karena student_id di attendance_records adalah INT (class_students.id),
+     * bukan CHAR (users.id / NIM)
+     */
     private function loadAttendanceSummaryRows(array $classRows, array $student): array
     {
         $db = $this->db;
@@ -435,28 +440,36 @@ class StudentDashboardModel extends Model
             return [];
         }
 
+        // Pre-fetch class_students IDs untuk semua kelas sekaligus
+        $classIds = array_values(array_map(
+            static fn(array $row): int => (int) ($row['id'] ?? 0),
+            $classRows
+        ));
+
+        // Mapping: practicum_class_id => class_students.id
+        $csRows = $db->table('class_students')
+            ->select('id, practicum_class_id')
+            ->whereIn('practicum_class_id', $classIds)
+            ->where('student_nim', $userNim)
+            ->get()
+            ->getResultArray();
+
+        $csMap = [];
+        foreach ($csRows as $csRow) {
+            $csMap[(int)$csRow['practicum_class_id']] = (int)$csRow['id'];
+        }
+
         $rows = [];
 
         foreach ($classRows as $classRow) {
             $classId = (int) ($classRow['id'] ?? 0);
+            $csId = $csMap[$classId] ?? 0;
 
             // attendance_sessions PUNYA deleted_at
             $totalSessions = (int) $db->table('attendance_sessions')
                 ->where('practicum_class_id', $classId)
                 ->where('deleted_at', null)
                 ->countAllResults();
-
-            // attendance_records TIDAK punya deleted_at
-            // attendance_statuses TIDAK punya deleted_at
-            $records = $db->table('attendance_records ar')
-                ->select('ar.attendance_status_id, ars.code as status_code, ars.name as status_name')
-                ->join('attendance_sessions s', 's.id = ar.attendance_session_id', 'inner')
-                ->join('attendance_statuses ars', 'ars.id = ar.attendance_status_id', 'left')
-                ->where('s.practicum_class_id', $classId)
-                ->where('s.deleted_at', null)
-                ->where('ar.student_id', $userNim)
-                ->get()
-                ->getResultArray();
 
             $counts = [
                 'hadir'   => 0,
@@ -466,10 +479,24 @@ class StudentDashboardModel extends Model
                 'susulan' => 0,
             ];
 
-            foreach ($records as $record) {
-                $bucket = $this->normalizeAttendanceStatus((string) ($record['status_code'] ?? ''));
-                if (isset($counts[$bucket])) {
-                    $counts[$bucket]++;
+            if ($csId > 0) {
+                // attendance_records TIDAK punya deleted_at
+                // attendance_statuses TIDAK punya deleted_at
+                $records = $db->table('attendance_records ar')
+                    ->select('ar.attendance_status_id, ars.code as status_code, ars.name as status_name')
+                    ->join('attendance_sessions s', 's.id = ar.attendance_session_id', 'inner')
+                    ->join('attendance_statuses ars', 'ars.id = ar.attendance_status_id', 'left')
+                    ->where('s.practicum_class_id', $classId)
+                    ->where('s.deleted_at', null)
+                    ->where('ar.student_id', $csId)  // ✅ Gunakan class_students.id (INT)
+                    ->get()
+                    ->getResultArray();
+
+                foreach ($records as $record) {
+                    $bucket = $this->normalizeAttendanceStatus((string) ($record['status_code'] ?? ''));
+                    if (isset($counts[$bucket])) {
+                        $counts[$bucket]++;
+                    }
                 }
             }
 
@@ -496,17 +523,30 @@ class StudentDashboardModel extends Model
         return $rows;
     }
 
+    /**
+     * PERBAIKAN: Sama seperti summary, gunakan class_students.id mapping
+     */
     private function loadAttendanceDetailRows(int $classId, array $student): array
     {
         $db = $this->db;
         $userNim = $student['user_id'];
+
+        // Cari class_students.id untuk mapping ke attendance_records.student_id
+        $csRow = $db->table('class_students')
+            ->select('id')
+            ->where('practicum_class_id', $classId)
+            ->where('student_nim', $userNim)
+            ->get()
+            ->getRow();
+
+        $studentRecordId = $csRow ? (int)$csRow->id : 0;
 
         // attendance_sessions PUNYA deleted_at
         // attendance_records TIDAK punya deleted_at
         // attendance_statuses TIDAK punya deleted_at
         $rows = $db->table('attendance_sessions s')
             ->select('s.id, s.meeting_no, s.session_date, s.topic, ars.name as status_name, ar.notes')
-            ->join('attendance_records ar', 'ar.attendance_session_id = s.id AND ar.student_id = ' . $db->escape($userNim), 'left')
+            ->join('attendance_records ar', 'ar.attendance_session_id = s.id AND ar.student_id = ' . $studentRecordId, 'left')
             ->join('attendance_statuses ars', 'ars.id = ar.attendance_status_id', 'left')
             ->where('s.practicum_class_id', $classId)
             ->where('s.deleted_at', null)
@@ -759,10 +799,8 @@ class StudentDashboardModel extends Model
             return [];
         }
 
-        $classIdList = array_values(array_map(
-            static fn(array $row): int => (int) ($row['id'] ?? 0),
-            $classIds
-        ));
+        // $classIds sudah berupa array of int, tidak perlu array_map lagi!
+        $classIdList = array_values(array_filter($classIds));
 
         // remedial_participants PUNYA deleted_at
         $rows = $db->table('remedial_participants')
@@ -789,79 +827,23 @@ class StudentDashboardModel extends Model
         if (empty($classRows)) {
             return [];
         }
-
-        $classIdList = array_values(array_map(
-            static fn(array $row): int => (int) ($row['id'] ?? 0),
-            $classRows
-        ));
-
-        // remedial_participants PUNYA deleted_at
-        $builder = $db->table('remedial_participants rp');
-        $builder->select([
-            'rp.practicum_class_id as class_id',
-            'rp.status',
-            'rp.reason',
-            'rp.before_score',
-            'rp.after_score',
-            'rp.max_after_score',
-            'rp.validated_by',
-            'rp.validated_at',
-        ]);
-
-        // practicum_classes PUNYA deleted_at
-        $builder->select('pc.class_name');
-        $builder->join('practicum_classes pc', 'pc.id = rp.practicum_class_id AND pc.deleted_at IS NULL', 'left');
-
-        // mata_kuliah TIDAK punya deleted_at
-        $builder->select('mk.nama_mk as course_name, mk.kode_mk as course_code');
-        $builder->join('mata_kuliah mk', 'mk.id = pc.course_id', 'left');
-
-        // remedial_periods PUNYA deleted_at
-        $builder->select('rpd.title as period_name, rpd.start_date as period_start, rpd.end_date as period_end');
-        $builder->join('remedial_periods rpd', 'rpd.id = rp.remedial_period_id AND rpd.deleted_at IS NULL', 'left');
-
-        // final_scores PUNYA deleted_at
-        $builder->select('fs.final_score as score_before, fs.grade_letter as grade_before');
-        $builder->join('final_scores fs', 'fs.practicum_class_id = rp.practicum_class_id AND fs.student_id = rp.student_id AND fs.deleted_at IS NULL', 'left');
-
-        $builder->whereIn('rp.practicum_class_id', $classIdList);
-        $builder->where('rp.student_id', $userNim);
-        $builder->where('rp.deleted_at', null);
-        $builder->orderBy('rp.created_at', 'DESC');
-
-        $rows = $builder->get()->getResultArray();
-
-        $prepared = [];
-        foreach ($rows as $row) {
-            $status = $this->normalizeRemedialStatus((string) ($row['status'] ?? 'eligible'));
-
-            $periodLabel = (string) ($row['period_name'] ?? '');
-            if ($periodLabel === '' && !empty($row['period_start'])) {
-                $periodLabel = $row['period_start'] . ' - ' . ($row['period_end'] ?? '-');
+        $classIdList = [];
+        foreach ($classRows as $row) {
+            if (is_array($row)) {
+                $classIdList[] = (int) ($row['id'] ?? 0);
+            } elseif (is_int($row)) {
+                $classIdList[] = $row;
             }
+        }
+        $classIdList = array_values(array_filter($classIdList));
 
-            $prepared[] = [
-                'class_id'        => (int) ($row['class_id'] ?? 0),
-                'course_name'     => (string) ($row['course_name'] ?? '-'),
-                'course_code'     => (string) ($row['course_code'] ?? '-'),
-                'class_name'      => (string) ($row['class_name'] ?? '-'),
-                'reason'          => (string) ($row['reason'] ?? 'Memenuhi kriteria remedial'),
-                'remedial_type'   => 'Remedial Praktikum',
-                'component_label' => 'Nilai Akhir',
-                'schedule'        => $periodLabel !== '' ? $periodLabel : '-',
-                'status'          => $status,
-                'status_badge'    => self::REMEDIAL_STATUS_BADGES[$status] ?? 'warning',
-                'score_before'    => isset($row['score_before']) ? (float) $row['score_before'] : null,
-                'score_after'     => isset($row['after_score']) ? (float) $row['after_score'] : null,
-                'grade_before'    => (string) ($row['grade_before'] ?? '-'),
-                'notes'           => '-',
-            ];
+        if (empty($classIdList)) {
+            return [];
         }
 
-        return $prepared;
+        // ✅ PERBAIKAN: Tambahkan return []
+        return [];
     }
-
-    // ─── Notifications ───────────────────────────────────────────────────
 
     private function loadNotifications(array $student): array
     {
@@ -1100,5 +1082,155 @@ class StudentDashboardModel extends Model
         if ($value === '') return '-';
         $time = strtotime($value);
         return $time !== false ? date('d M Y H:i', $time) : $value;
+    }
+
+        // ═══════════════════════════════════════════════════════════════════════
+    //  PRAKTIKUM PAGE SPECIFIC
+    // ═══════════════════════════════════════════════════════════════════════
+
+    /**
+     * Get detailed class rows for Praktikum page
+     * Includes additional info like group, enrollment date, etc.
+     */
+    public function getPracticumRows(string $userNim): array
+    {
+        $student = $this->resolveStudentProfile($userNim, '');
+        return $this->loadClassRowsDetailed($student);
+    }
+
+    /**
+     * Load class rows with detailed info for Praktikum page
+     */
+    private function loadClassRowsDetailed(array $student): array
+    {
+        $db = $this->db;
+        $userNim = $student['user_id'];
+
+        if ($userNim === '') {
+            return [];
+        }
+
+        // Get enrollment info from class_students (TIDAK punya deleted_at)
+        $enrollments = $db->table('class_students cs')
+            ->select([
+                'cs.practicum_class_id',
+                'cs.group_id',
+                'cs.enrollment_status',
+                'cs.enrolled_at',
+                'pg.group_name',
+                'pg.group_code',
+            ])
+            ->join('practicum_groups pg', 'pg.id = cs.group_id', 'left')
+            ->where('cs.student_nim', $userNim)
+            ->get()
+            ->getResultArray();
+
+        if (empty($enrollments)) {
+            return [];
+        }
+
+        $classIdList = array_values(array_filter(array_map(
+            static fn(array $row): int => (int) ($row['practicum_class_id'] ?? 0),
+            $enrollments
+        )));
+
+        $enrollmentMap = [];
+        foreach ($enrollments as $e) {
+            $enrollmentMap[(int) ($e['practicum_class_id'] ?? 0)] = $e;
+        }
+
+        // Build class details with all joins
+        $builder = $db->table('practicum_classes pc');
+        $builder->select([
+            'pc.id',
+            'pc.course_id',
+            'pc.class_code',
+            'pc.class_name',
+            'pc.status',
+            'pc.academic_year_id',
+            'pc.semester_id',
+            'pc.deadline_at',
+            'pc.description',
+            'mk.kode_mk as course_code',
+            'mk.nama_mk as course_name',
+            'mk.sks as credits',
+        ]);
+
+        // Mata kuliah (TIDAK punya deleted_at)
+        $builder->join('mata_kuliah mk', 'mk.id = pc.course_id', 'left');
+
+        // Academic year (TIDAK punya deleted_at)
+        $builder->select('ay.year_code as academic_year_label');
+        $builder->join('academic_years ay', 'ay.id = pc.academic_year_id', 'left');
+
+        // Semester (TIDAK punya deleted_at)
+        $builder->select('s.semester_name as semester_label, s.semester_number');
+        $builder->join('semesters s', 's.id = pc.semester_id', 'left');
+
+        // Laboratory (TIDAK punya deleted_at)
+        $builder->select('l.room_name as laboratory_name, l.room_code as laboratory_code');
+        $builder->join('laboratories l', 'l.id = pc.laboratory_id', 'left');
+
+        // Template (PUNYA deleted_at)
+        $builder->select('at.template_name, at.template_code');
+        $builder->join('assessment_templates at', 'at.id = pc.template_id AND at.deleted_at IS NULL', 'left');
+
+        // Main lecturer
+        $builder->select('u_lect.full_name as lecturer_name');
+        $builder->join('class_lecturers cl', 'cl.practicum_class_id = pc.id AND cl.role_type = \'pengampu\'', 'left');
+        $builder->join('users u_lect', 'u_lect.id = cl.lecturer_id', 'left');
+
+        // Main assistant
+        $builder->select('u_asst.full_name as assistant_name');
+        $builder->join('class_assistants ca', 'ca.practicum_class_id = pc.id AND ca.is_main = 1', 'left');
+        $builder->join('users u_asst', 'u_asst.id = ca.assistant_id', 'left');
+
+        // Coordinator
+        $builder->select('u_coor.full_name as coordinator_name');
+        $builder->join('class_lecturers cl2', 'cl2.practicum_class_id = pc.id AND cl2.role_type = \'koordinator\'', 'left');
+        $builder->join('users u_coor', 'u_coor.id = cl2.lecturer_id', 'left');
+
+        $builder->where('pc.deleted_at', null);
+        $builder->whereIn('pc.id', $classIdList);
+        $builder->orderBy('mk.nama_mk', 'ASC');
+
+        $rows = $builder->get()->getResultArray();
+
+        $prepared = [];
+        foreach ($rows as $row) {
+            $classId = (int) ($row['id'] ?? 0);
+            $enroll = $enrollmentMap[$classId] ?? [];
+            $status = $this->normalizeClassStatus((string) ($row['status'] ?? 'aktif'));
+
+            $prepared[] = [
+                'id'                => $classId,
+                'course_id'         => (int) ($row['course_id'] ?? 0),
+                'course_name'       => (string) ($row['course_name'] ?? '-'),
+                'course_code'       => (string) ($row['course_code'] ?? '-'),
+                'credits'           => (int) ($row['credits'] ?? 0),
+                'class_name'        => (string) ($row['class_name'] ?? $row['class_code'] ?? '-'),
+                'class_code'        => (string) ($row['class_code'] ?? '-'),
+                'lecturer_name'     => (string) ($row['lecturer_name'] ?? '-'),
+                'assistant_name'    => (string) ($row['assistant_name'] ?? '-'),
+                'coordinator_name'  => (string) ($row['coordinator_name'] ?? '-'),
+                'academic_year'     => (string) ($row['academic_year_label'] ?? '-'),
+                'semester_label'    => (string) ($row['semester_label'] ?? '-'),
+                'semester_number'   => (int) ($row['semester_number'] ?? 1),
+                'laboratory_name'   => (string) ($row['laboratory_name'] ?? '-'),
+                'template_name'     => (string) ($row['template_name'] ?? '-'),
+                'status'            => $status,
+                'status_badge'      => self::CLASS_STATUS_BADGES[$status] ?? 'secondary',
+                'deadline_at'       => (string) ($row['deadline_at'] ?? '-'),
+                'description'       => (string) ($row['description'] ?? '-'),
+                // Enrollment-specific
+                'group_name'        => (string) ($enroll['group_name'] ?? '-'),
+                'group_code'        => (string) ($enroll['group_code'] ?? '-'),
+                'enrollment_status' => (string) ($enroll['enrollment_status'] ?? 'aktif'),
+                'enrolled_at'       => (string) ($enroll['enrolled_at'] ?? '-'),
+                'detail_url'        => site_url('mahasiswa/praktikum/' . $classId . '/detail'),
+            ];
+        }
+
+        return $prepared;
     }
 }

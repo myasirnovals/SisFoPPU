@@ -67,7 +67,7 @@ class Dashboard extends BaseController
     public function praktikum(): string
     {
         $data = array_merge($this->base(), [
-            'classRows'  => $this->dash->getClassRows($this->userNim),
+            'classRows'  => $this->dash->getPracticumRows($this->userNim),
             'activeMenu' => 'praktikum',
         ]);
 

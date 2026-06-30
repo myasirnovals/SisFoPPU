@@ -25,6 +25,15 @@
     .empty-state {
         color: #64748b;
     }
+
+    .progress {
+        background-color: #e2e8f0;
+        border-radius: 0.5rem;
+    }
+
+    .progress-bar {
+        border-radius: 0.5rem;
+    }
 </style>
 <?= $this->endSection() ?>
 
@@ -54,43 +63,50 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php
-                    $hasAttendanceSessions = false;
-                    foreach (($attendanceRows ?? []) as $row) {
-                        if (($row['total_sessions'] ?? 0) > 0) {
-                            $hasAttendanceSessions = true;
-                            break;
-                        }
-                    }
-                    ?>
-                    <?php if (($attendanceRows ?? []) === [] || ! $hasAttendanceSessions): ?>
+                    <?php if (($attendanceRows ?? []) === []): ?>
                         <tr>
                             <td colspan="9">
                                 <div class="text-center py-5 empty-state">
                                     <i class="bi bi-calendar-x fs-1 d-block mb-2"></i>
-                                    Data kehadiran belum tersedia.
+                                    Anda belum terdaftar di kelas praktikum manapun.
                                 </div>
                             </td>
                         </tr>
                     <?php else: ?>
                         <?php foreach ($attendanceRows as $row): ?>
                             <tr>
-                                <td class="fw-semibold"><?= esc($row['course_name']) ?></td>
-                                <td><?= esc($row['total_sessions']) ?></td>
-                                <td><?= esc($row['hadir']) ?></td>
-                                <td><?= esc($row['izin']) ?></td>
-                                <td><?= esc($row['sakit']) ?></td>
-                                <td><?= esc($row['alfa']) ?></td>
-                                <td><?= esc($row['susulan']) ?></td>
+                                <td class="fw-semibold"><?= esc($row['course_name'] ?? '-') ?></td>
+                                <td><?= esc($row['total_sessions'] ?? 0) ?></td>
+                                <td><?= esc($row['hadir'] ?? 0) ?></td>
+                                <td><?= esc($row['izin'] ?? 0) ?></td>
+                                <td><?= esc($row['sakit'] ?? 0) ?></td>
+                                <td><?= esc($row['alfa'] ?? 0) ?></td>
+                                <td><?= esc($row['susulan'] ?? 0) ?></td>
                                 <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <div class="progress flex-grow-1" style="height: 14px;">
-                                            <div class="progress-bar bg-success" role="progressbar" style="width: <?= esc($row['attendance_percentage']) ?>%;" aria-valuenow="<?= esc($row['attendance_percentage']) ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <?php if (($row['total_sessions'] ?? 0) > 0): ?>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="progress flex-grow-1" style="height: 14px;">
+                                                <div class="progress-bar bg-success"
+                                                    role="progressbar"
+                                                    style="width: <?= esc($row['attendance_percentage'] ?? 0) ?>%;"
+                                                    aria-valuenow="<?= esc($row['attendance_percentage'] ?? 0) ?>"
+                                                    aria-valuemin="0"
+                                                    aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <span class="small fw-semibold" style="min-width: 45px;">
+                                                <?= esc($row['attendance_percentage'] ?? 0) ?>%
+                                            </span>
                                         </div>
-                                        <span class="small fw-semibold"><?= esc($row['attendance_percentage']) ?>%</span>
-                                    </div>
+                                    <?php else: ?>
+                                        <span class="text-muted small">-</span>
+                                    <?php endif; ?>
                                 </td>
-                                <td><span class="badge bg-<?= esc($row['status_badge']) ?>"><?= esc($row['status']) ?></span></td>
+                                <td>
+                                    <span class="badge bg-<?= esc($row['status_badge'] ?? 'secondary') ?>">
+                                        <?= esc($row['status'] ?? 'Belum Ada Pertemuan') ?>
+                                    </span>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php endif; ?>
