@@ -6,12 +6,14 @@ use App\Controllers\BaseController;
 use App\Models\LecturerModel;
 use App\Models\ClassLecturerModel;
 use App\Models\MataKuliahModel;
+use App\Models\ScoreModel;
 
 class Dashboard extends BaseController
 {
     private LecturerModel $lecturerModel;
     private ClassLecturerModel $classLecturerModel;
     private MataKuliahModel $mataKuliahModel;
+    private ScoreModel $scoreModel;
     private string $userId;
     private ?string $lecturerNid = null;
     protected $db;
@@ -27,6 +29,7 @@ class Dashboard extends BaseController
         $this->lecturerModel = new LecturerModel();
         $this->classLecturerModel = new ClassLecturerModel();
         $this->mataKuliahModel = new MataKuliahModel();
+        $this->scoreModel = new ScoreModel();
 
         $session = session();
         $this->userId = (string) ($session->get('user_id') ?? $session->get('nid') ?? $session->get('id') ?? '');
@@ -121,7 +124,7 @@ class Dashboard extends BaseController
     {
         $base = $this->base();
         $classRows = $this->loadClassRows();
-        $validationRows = $this->loadValidationRows($classRows, 50); // lebih banyak
+        $validationRows = $this->loadValidationRows($classRows, 50);
 
         $data = array_merge($base, [
             'activeMenu'     => 'validasi',
@@ -138,7 +141,7 @@ class Dashboard extends BaseController
     {
         $base = $this->base();
         $classRows = $this->loadClassRows();
-        $remedialRows = $this->loadRemedialRows($classRows, 50); // lebih banyak
+        $remedialRows = $this->loadRemedialRows($classRows, 50);
 
         $data = array_merge($base, [
             'activeMenu'   => 'remedial',
@@ -146,6 +149,327 @@ class Dashboard extends BaseController
         ]);
 
         return view('dosen/dashboard/remedial', $data);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════
+    //  POPUP METHODS
+    // ═══════════════════════════════════════════════════════════════════════
+
+    /**
+     * 5. Popup: Input Nilai per Mahasiswa
+     */
+    public function inputNilaiForm(int $classId, string $studentNim = ''): string
+    {
+        $db = $this->db;
+        if (empty($studentNim)) {
+            return '<div class="alert alert-danger">NIM mahasiswa tidak valid.</div>';
+        }
+
+        // Get class info
+        $class = $db->table('practicum_classes pc')
+            ->select('pc.*, mk.kode_mk as course_code, mk.nama_mk as course_name')
+            ->join('mata_kuliah mk', 'mk.id = pc.course_id', 'left')
+            ->where('pc.id', $classId)
+            ->get()
+            ->getRowArray();
+
+        if (!$class) {
+            return '<div class="alert alert-danger">Kelas tidak ditemukan.</div>';
+        }
+
+        // Get student info
+        $student = $db->table('users')
+            ->select('id, full_name, email')
+            ->where('id', $studentNim)
+            ->get()
+            ->getRowArray();
+
+        // Get assessment components
+        $components = $this->loadClassComponents($classId);
+
+        // Get existing scores
+        $existingScores = [];
+        $scoreRows = $db->table('score_entries')
+            ->select('component_id, subcomponent_id, score_value, notes')
+            ->where('practicum_class_id', $classId)
+            ->where('student_id', $studentNim)
+            ->get()
+            ->getResultArray();
+
+        foreach ($scoreRows as $sr) {
+            $key = $sr['subcomponent_id']
+                ? "sub_{$sr['subcomponent_id']}"
+                : "comp_{$sr['component_id']}";
+            $existingScores[$key] = [
+                'score' => $sr['score_value'],
+                'notes' => $sr['notes'],
+            ];
+        }
+
+        $data = [
+            'class'          => $class,
+            'student'        => $student,
+            'components'     => $components,
+            'existingScores' => $existingScores,
+        ];
+
+        return view('dosen/dashboard/popup_input_nilai', $data);
+    }
+
+    /**
+     * 6. Popup: Rekap Nilai Kelas
+     */
+    public function rekapNilai(int $classId): string
+    {
+        $db = $this->db;
+
+        // Get class info
+        $class = $db->table('practicum_classes pc')
+            ->select('pc.*, mk.kode_mk as course_code, mk.nama_mk as course_name')
+            ->join('mata_kuliah mk', 'mk.id = pc.course_id', 'left')
+            ->where('pc.id', $classId)
+            ->get()
+            ->getRowArray();
+
+        if (!$class) {
+            return '<div class="alert alert-danger">Kelas tidak ditemukan.</div>';
+        }
+
+        // Get components
+        $components = $this->loadClassComponents($classId);
+
+        // Get students with scores
+        $students = $this->loadClassStudents($classId);
+
+        // Build score matrix
+        // Build score matrix
+        foreach ($students as $key => $student) {
+            $studentScores = [];
+            $totalWeighted = 0;
+            $totalWeight = 0;
+
+            foreach ($components as $comp) {
+                $compId = $comp['id'] ?? 0;
+                $maxScore = isset($comp['max_score']) ? (float) $comp['max_score'] : 100;
+                $weight = isset($comp['weight']) ? (float) $comp['weight'] : 0;
+
+                $scoreEntry = $db->table('score_entries')
+                    ->select('score_value')
+                    ->where('practicum_class_id', $classId)
+                    ->where('student_id', $student['nim'])
+                    ->where('component_id', $compId)
+                    ->get()
+                    ->getRowArray();
+
+                $score = ($scoreEntry && isset($scoreEntry['score_value'])) ? (float) $scoreEntry['score_value'] : null;
+
+                $percentage = ($score !== null && $maxScore > 0) ? ($score / $maxScore) * 100 : null;
+
+                $studentScores[$compId] = [
+                    'score'      => $score,
+                    'max_score'  => $maxScore,
+                    'percentage' => $percentage,
+                ];
+
+                if ($score !== null && $maxScore > 0) {
+                    $totalWeighted += ($score / $maxScore) * $weight;
+                    $totalWeight += $weight;
+                }
+            }
+
+            // Calculate final score
+            $finalScore = ($totalWeight > 0) ? ($totalWeighted / $totalWeight) * 100 : null;
+
+            // Get grade
+            $grade = '-';
+            if ($finalScore !== null) {
+                $gradeRow = $db->table('grade_scales')
+                    ->select('grade_letter')
+                    ->where('min_score <=', $finalScore)
+                    ->where('max_score >=', $finalScore)
+                    ->where('is_active', 1)
+                    ->orderBy('min_score', 'DESC')
+                    ->get()
+                    ->getRow();
+                $grade = ($gradeRow && isset($gradeRow->grade_letter)) ? $gradeRow->grade_letter : 'E';
+            }
+
+            $students[$key]['scores'] = $studentScores;
+            $students[$key]['final_score'] = ($finalScore !== null) ? round($finalScore, 2) : '-';
+            $students[$key]['grade'] = $grade;
+        }
+
+        $data = [
+            'class'      => $class,
+            'components' => $components,
+            'students'   => $students,
+        ];
+
+        return view('dosen/dashboard/popup_rekap', $data);
+    }
+
+    /**
+     * 7. Popup: Detail Mahasiswa
+     */
+    public function detailMahasiswa(int $classId, string $studentNim = ''): string
+    {
+        $db = $this->db;
+        if (empty($studentNim)) {
+            return '<div class="alert alert-danger">NIM mahasiswa tidak valid.</div>';
+        }
+
+        // Get student info
+        $student = $db->table('users u')
+            ->select('u.*, s.study_program_id, s.class_year, s.status as student_status')
+            ->join('students s', 's.user_nim = u.id', 'left')
+            ->where('u.id', $studentNim)
+            ->get()
+            ->getRowArray();
+
+        // Get class enrollment info
+        $enrollment = $db->table('class_students')
+            ->where('practicum_class_id', $classId)
+            ->where('student_nim', $studentNim)
+            ->get()
+            ->getRowArray();
+
+        // Get class info
+        $class = $db->table('practicum_classes pc')
+            ->select('pc.*, mk.kode_mk, mk.nama_mk, mk.sks')
+            ->join('mata_kuliah mk', 'mk.id = pc.course_id', 'left')
+            ->where('pc.id', $classId)
+            ->get()
+            ->getRowArray();
+
+        // Get scores with components
+        $scores = $db->table('score_entries se')
+            ->select('se.*, ac.component_name, ac.component_type, ac.weight, ac.max_score')
+            ->join('assessment_components ac', 'ac.id = se.component_id', 'left')
+            ->where('se.practicum_class_id', $classId)
+            ->where('se.student_id', $studentNim)
+            ->get()
+            ->getResultArray();
+
+        // Get attendance stats
+        $attendanceStats = $db->table('attendance_records ar')
+            ->select('ast.name as status_name, ast.code as status_code, COUNT(*) as total')
+            ->join('attendance_sessions ase', 'ase.id = ar.attendance_session_id', 'inner')
+            ->join('attendance_statuses ast', 'ast.id = ar.attendance_status_id', 'left')
+            ->where('ase.practicum_class_id', $classId)
+            ->where('ar.student_id', $studentNim)
+            ->groupBy('ar.attendance_status_id')
+            ->get()
+            ->getResultArray();
+
+        $attendanceSummary = [
+            'hadir' => 0,
+            'izin' => 0,
+            'sakit' => 0,
+            'alfa' => 0,
+            'susulan' => 0,
+            'total_sessions' => 0
+        ];
+        foreach ($attendanceStats as $stat) {
+            $code = $stat['status_code'] ?? 'unknown';
+            $attendanceSummary[$code] = (int) $stat['total'];
+            $attendanceSummary['total_sessions'] += (int) $stat['total'];
+        }
+
+        // Get final score
+        $finalScore = $db->table('final_scores')
+            ->where('practicum_class_id', $classId)
+            ->where('student_id', $studentNim)
+            ->get()
+            ->getRowArray();
+
+        $data = [
+            'student'           => $student,
+            'enrollment'        => $enrollment,
+            'class'             => $class,
+            'scores'            => $scores,
+            'attendanceSummary' => $attendanceSummary,
+            'finalScore'        => $finalScore,
+        ];
+
+        return view('dosen/dashboard/popup_detail', $data);
+    }
+
+    /**
+     * 8. Simpan Nilai (AJAX)
+     */
+    public function simpanNilai()
+    {
+        if (!$this->request->isAJAX()) {
+            return $this->response->setJSON(['success' => false, 'message' => 'Invalid request']);
+        }
+
+        $classId = $this->request->getPost('practicum_class_id');
+        $studentId = $this->request->getPost('student_id');
+        $scores = $this->request->getPost('scores') ?? [];
+        $notes = $this->request->getPost('notes');
+
+        $db = $this->db;
+
+        $db->transStart();
+
+        try {
+            // Save component scores
+            if (!empty($scores['comp'])) {
+                foreach ($scores['comp'] as $compId => $scoreValue) {
+                    if ($scoreValue === '' || $scoreValue === null) continue;
+
+                    $comp = $db->table('assessment_components')
+                        ->where('id', $compId)
+                        ->get()
+                        ->getRowArray();
+
+                    $this->scoreModel->saveScore([
+                        'practicum_class_id'        => $classId,
+                        'student_id'      => $studentId,
+                        'component_id'    => $compId,
+                        'subcomponent_id' => null,
+                        'score_value'     => $scoreValue,
+                        'submitted_by'    => $this->userId,
+                        'notes'           => $notes,
+                    ]);
+                }
+            }
+
+            // Save subcomponent scores
+            if (!empty($scores['sub'])) {
+                foreach ($scores['sub'] as $subId => $scoreValue) {
+                    if ($scoreValue === '' || $scoreValue === null) continue;
+
+                    $sub = $db->table('assessment_subcomponents')
+                        ->where('id', $subId)
+                        ->get()
+                        ->getRowArray();
+
+                    $this->scoreModel->saveScore([
+                        'practicum_class_id' => $classId,
+                        'student_id'      => $studentId,
+                        'component_id'    => $sub['component_id'] ?? 0,
+                        'subcomponent_id' => $subId,
+                        'score_value'     => $scoreValue,
+                        'submitted_by'    => $this->userId,
+                        'notes'           => $notes,
+                    ]);
+                }
+            }
+
+            $db->transComplete();
+
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Nilai berhasil disimpan'
+            ]);
+        } catch (\Exception $e) {
+            $db->transRollback();
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Gagal menyimpan: ' . $e->getMessage()
+            ]);
+        }
     }
 
     // ═══════════════════════════════════════════════════════════════════════
@@ -163,8 +487,6 @@ class Dashboard extends BaseController
             return [];
         }
 
-        // Get practicum_classes yang diampu dosen ini
-        // Join lewat class_lecturers, matching lecturer_id (INT) dengan users.id (CHAR)
         $builder = $db->table('practicum_classes pc');
         $builder->select([
             'pc.id',
@@ -177,24 +499,18 @@ class Dashboard extends BaseController
             'pc.deadline_at',
         ]);
 
-        // Join mata_kuliah (BUKAN courses!)
         $builder->select('mk.kode_mk as course_code, mk.nama_mk as course_name, mk.sks as credits');
         $builder->join('mata_kuliah mk', 'mk.id = pc.course_id', 'left');
 
-        // Join academic_years
         $builder->select('ay.year_code as academic_year_label');
         $builder->join('academic_years ay', 'ay.id = pc.academic_year_id', 'left');
 
-        // Join semesters
         $builder->select('s.semester_name as semester_label');
         $builder->join('semesters s', 's.id = pc.semester_id', 'left');
 
-        // Join class_lecturers - match lecturer_id (INT) dengan users.id (CHAR)
         $builder->join('class_lecturers cl', 'cl.practicum_class_id = pc.id', 'inner');
         $builder->where('cl.lecturer_id', (int) $this->lecturerNid);
-        // Atau alternatif: $builder->where('cl.lecturer_id', (int) $this->lecturerNid);
 
-        $builder->where('pc.deleted_at', null);
         $builder->where('pc.status', 'aktif');
         $builder->orderBy('mk.nama_mk', 'ASC');
         $builder->groupBy('pc.id');
@@ -225,7 +541,7 @@ class Dashboard extends BaseController
                 'class_name'        => (string) ($row['class_name'] ?? $row['class_code'] ?? '-'),
                 'student_count'     => $studentCount,
                 'progress_nilai'    => $this->percentage($scoreStat['filled'] ?? 0, $scoreStat['expected'] ?? 0),
-                'progress_kehadiran' => 0, // TODO: implement attendance progress
+                'progress_kehadiran' => 0,
                 'average_score'     => $finalStat['average_score'] !== null ? round((float) $finalStat['average_score'], 1) : 0.0,
                 'status'            => $status,
                 'status_badge'      => $this->statusBadgeClass($status),
@@ -250,16 +566,13 @@ class Dashboard extends BaseController
     {
         $rows = $this->loadClassRows();
 
-        // Tambahkan detail tambahan
         foreach ($rows as &$row) {
             $classId = $row['id'];
 
-            // Get students in class
             $students = $this->loadClassStudents($classId);
             $row['students'] = $students;
             $row['student_count'] = count($students);
 
-            // Get components
             $row['components'] = $this->loadClassComponents($classId);
         }
 
@@ -306,11 +619,9 @@ class Dashboard extends BaseController
     {
         $db = $this->db;
 
-        // Get template_id from practicum_class
         $classRow = $db->table('practicum_classes')
             ->select('template_id')
             ->where('id', $classId)
-            ->where('deleted_at', null)
             ->get()
             ->getRow();
 
@@ -320,24 +631,51 @@ class Dashboard extends BaseController
         }
 
         $rows = $db->table('assessment_components')
-            ->select('id, component_code, component_name, component_type, weight, max_score, sort_order')
+            ->select('id, component_code, component_name, component_type, weight, max_score, sort_order, allow_subcomponents')
             ->where('template_id', $templateId)
-            ->where('deleted_at', null)
             ->where('is_active', 1)
             ->orderBy('sort_order', 'ASC')
             ->get()
             ->getResultArray();
 
-        return array_map(function (array $row): array {
-            return [
-                'id'              => (int) ($row['id'] ?? 0),
-                'component_code'  => (string) ($row['component_code'] ?? '-'),
-                'component_name'  => (string) ($row['component_name'] ?? '-'),
-                'component_type'  => (string) ($row['component_type'] ?? '-'),
-                'weight'          => (float) ($row['weight'] ?? 0),
-                'max_score'       => (float) ($row['max_score'] ?? 100),
+        $components = [];
+        foreach ($rows as $row) {
+            $compId = (int) ($row['id'] ?? 0);
+            $component = [
+                'id'                  => $compId,
+                'component_code'      => (string) ($row['component_code'] ?? '-'),
+                'component_name'      => (string) ($row['component_name'] ?? '-'),
+                'component_type'      => (string) ($row['component_type'] ?? '-'),
+                'weight'              => (float) ($row['weight'] ?? 0),
+                'max_score'           => (float) ($row['max_score'] ?? 100),
+                'allow_subcomponents' => (bool) ($row['allow_subcomponents'] ?? 0),
+                'subcomponents'       => [],
             ];
-        }, $rows);
+
+            if ($component['allow_subcomponents']) {
+                $subRows = $db->table('assessment_subcomponents')
+                    ->select('id, subcomponent_code, subcomponent_name, weight, max_score, sort_order')
+                    ->where('component_id', $compId)
+                    ->where('is_active', 1)
+                    ->orderBy('sort_order', 'ASC')
+                    ->get()
+                    ->getResultArray();
+
+                foreach ($subRows as $sub) {
+                    $component['subcomponents'][] = [
+                        'id'                 => (int) ($sub['id'] ?? 0),
+                        'subcomponent_code'  => (string) ($sub['subcomponent_code'] ?? '-'),
+                        'subcomponent_name'  => (string) ($sub['subcomponent_name'] ?? '-'),
+                        'weight'             => (float) ($sub['weight'] ?? 0),
+                        'max_score'          => (float) ($sub['max_score'] ?? 100),
+                    ];
+                }
+            }
+
+            $components[] = $component;
+        }
+
+        return $components;
     }
 
     /**
@@ -378,7 +716,6 @@ class Dashboard extends BaseController
             ->select('COUNT(*) as filled_count', false)
             ->select('COUNT(DISTINCT student_id) * COUNT(DISTINCT component_id) as expected_count', false)
             ->whereIn('practicum_class_id', $classIds)
-            ->where('deleted_at', null)
             ->groupBy('practicum_class_id')
             ->get()
             ->getResultArray();
@@ -410,7 +747,6 @@ class Dashboard extends BaseController
             ->select('COUNT(CASE WHEN final_score < 60 THEN 1 END) as low_count')
             ->select('MAX(validation_status) as validation_status')
             ->whereIn('practicum_class_id', $classIds)
-            ->where('deleted_at', null)
             ->groupBy('practicum_class_id')
             ->get()
             ->getResultArray();
@@ -436,7 +772,6 @@ class Dashboard extends BaseController
             return [];
         }
 
-        // Get class_students.id mapping first
         $csRows = $this->db->table('class_students')
             ->select('id, practicum_class_id')
             ->whereIn('practicum_class_id', $classIds)
@@ -452,7 +787,6 @@ class Dashboard extends BaseController
             ->select('practicum_class_id as class_id, COUNT(*) as total')
             ->whereIn('practicum_class_id', $classIds)
             ->whereIn('student_id', $csIds)
-            ->where('deleted_at', null)
             ->whereIn('status', ['eligible', 'terdaftar', 'dijadwalkan'])
             ->groupBy('practicum_class_id')
             ->get()
@@ -480,7 +814,6 @@ class Dashboard extends BaseController
             $classMap[$row['id']] = $row;
         }
 
-        // Load score entries yang perlu validasi
         $rows = $this->db->table('score_entries se')
             ->select([
                 'se.practicum_class_id as class_id',
@@ -489,12 +822,8 @@ class Dashboard extends BaseController
                 'se.score_value',
                 'se.submitted_by',
                 'se.submitted_at',
-                'se.status_id',
             ])
-            ->join('score_statuses ss', 'ss.id = se.status_id', 'left')
             ->whereIn('se.practicum_class_id', array_keys($classMap))
-            ->where('se.deleted_at', null)
-            ->whereIn('ss.code', ['submitted', 'reviewed'])
             ->orderBy('se.submitted_at', 'DESC')
             ->limit($limit)
             ->get()
@@ -506,15 +835,12 @@ class Dashboard extends BaseController
             $classInfo = $classMap[$classId] ?? null;
             if (!$classInfo) continue;
 
-            // Get component name
             $component = $this->db->table('assessment_components')
                 ->select('component_name')
                 ->where('id', (int) ($row['component_id'] ?? 0))
-                ->where('deleted_at', null)
                 ->get()
                 ->getRow();
 
-            // Get submitted by name
             $submitter = $this->db->table('users')
                 ->select('full_name')
                 ->where('id', (string) ($row['submitted_by'] ?? ''))
@@ -522,14 +848,14 @@ class Dashboard extends BaseController
                 ->getRow();
 
             $prepared[] = [
-                'course_name'   => $classInfo['course_name'],
-                'class_name'    => $classInfo['class_name'],
+                'course_name'    => $classInfo['course_name'],
+                'class_name'     => $classInfo['class_name'],
                 'component_name' => $component ? $component->component_name : 'Komponen #' . ($row['component_id'] ?? '-'),
-                'submitted_by'  => $submitter ? $submitter->full_name : 'Asisten',
-                'submitted_at'  => $this->formatDateTime((string) ($row['submitted_at'] ?? '')),
-                'status'        => 'Submitted',
-                'badge_class'   => 'warning',
-                'review_url'    => site_url('dosen/validasi'),
+                'submitted_by'   => $submitter ? $submitter->full_name : 'Asisten',
+                'submitted_at'   => $this->formatDateTime((string) ($row['submitted_at'] ?? '')),
+                'status'         => 'Submitted',
+                'badge_class'    => 'warning',
+                'review_url'     => site_url('dosen/validasi'),
             ];
         }
 
@@ -550,7 +876,6 @@ class Dashboard extends BaseController
             $classMap[$row['id']] = $row;
         }
 
-        // Get final scores with low scores
         $rows = $this->db->table('final_scores fs')
             ->select([
                 'fs.practicum_class_id as class_id',
@@ -559,7 +884,6 @@ class Dashboard extends BaseController
                 'fs.grade_letter',
             ])
             ->whereIn('fs.practicum_class_id', array_keys($classMap))
-            ->where('fs.deleted_at', null)
             ->groupStart()
             ->where('fs.final_score <', 60)
             ->orWhere('fs.final_score IS NULL')
@@ -574,7 +898,6 @@ class Dashboard extends BaseController
             $classInfo = $classMap[$classId] ?? null;
             if (!$classInfo) continue;
 
-            // Get student info via class_students -> users
             $student = $this->db->table('class_students cs')
                 ->select('u.full_name as student_name, cs.student_nim')
                 ->join('users u', 'u.id = cs.student_nim', 'left')
@@ -597,7 +920,7 @@ class Dashboard extends BaseController
                 'course_name'     => $classInfo['course_name'],
                 'class_name'      => $classInfo['class_name'],
                 'temporary_score' => $finalScore !== null ? number_format($finalScore, 1) : '-',
-                'attendance'      => 0, // TODO
+                'attendance'      => 0,
                 'risk_status'     => $riskStatus,
                 'badge_class'     => $this->riskBadgeClass($riskStatus),
                 'detail_url'      => site_url('dosen/kelas-saya'),
@@ -621,7 +944,6 @@ class Dashboard extends BaseController
             $classMap[$row['id']] = $row;
         }
 
-        // Get class_students.id mapping
         $csRows = $this->db->table('class_students')
             ->select('id, practicum_class_id')
             ->whereIn('practicum_class_id', array_keys($classMap))
@@ -649,7 +971,6 @@ class Dashboard extends BaseController
                 'rp.after_score',
             ])
             ->whereIn('rp.student_id', $csIds)
-            ->where('rp.deleted_at', null)
             ->whereIn('rp.status', ['eligible', 'terdaftar', 'dijadwalkan', 'sudah_dinilai'])
             ->orderBy('rp.created_at', 'DESC')
             ->limit($limit)
@@ -662,7 +983,6 @@ class Dashboard extends BaseController
             $classInfo = $classMap[$classId] ?? null;
             if (!$classInfo) continue;
 
-            // Get student info
             $student = $this->db->table('users')
                 ->select('full_name')
                 ->where('id', (string) ($row['student_id'] ?? ''))
@@ -677,7 +997,7 @@ class Dashboard extends BaseController
                 'course_name'  => $classInfo['course_name'],
                 'class_name'   => $classInfo['class_name'],
                 'score'        => $row['before_score'] !== null ? number_format((float) $row['before_score'], 1) : '-',
-                'grade'        => '-', // TODO: lookup grade
+                'grade'        => '-',
                 'reason'       => (string) ($row['reason'] ?? 'Memenuhi kriteria remedial'),
                 'status'       => $status,
                 'badge_class'  => $this->remedialBadgeClass($status),
@@ -700,7 +1020,6 @@ class Dashboard extends BaseController
 
         return $this->db->table('practicum_classes pc')
             ->join('class_lecturers cl', 'cl.practicum_class_id = pc.id', 'inner')
-            ->where('pc.deleted_at', null)
             ->where('pc.status', 'aktif')
             ->where('cl.lecturer_id', (int) $this->lecturerNid)
             ->countAllResults();
