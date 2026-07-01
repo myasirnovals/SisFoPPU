@@ -24,7 +24,21 @@ class ClassLecturerModel extends Model
      */
     public function getByClassId(int $classId): array
     {
-        return $this->where('practicum_class_id', $classId)->findAll();
+        $builder = $this->db->table('class_lecturers cl');
+        $builder->select([
+            'cl.id',
+            'cl.practicum_class_id',
+            'cl.lecturer_id',
+            'cl.role_type',
+            'cl.created_at',
+            'u.full_name as lecturer_name',
+            'u.id as user_nid',
+        ]);
+        // Join ke users karena lecturer_id (INT) = CAST(users.id AS UNSIGNED)
+        $builder->join('users u', 'CAST(u.id AS UNSIGNED) = cl.lecturer_id', 'left');
+        $builder->where('cl.practicum_class_id', $classId);
+
+        return $builder->get()->getResultArray();
     }
 
     /**

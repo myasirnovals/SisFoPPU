@@ -63,4 +63,37 @@ class LecturerModel extends Model
             ->where('deleted_at', null)
             ->countAllResults();
     }
+
+    /**
+     * Get lecturer ID (user_nid) by user ID
+     */
+    public function getLecturerIdByUserId(string $userId): ?string
+    {
+        $row = $this->where('user_nid', $userId)
+            ->where('deleted_at', null)
+            ->first();
+
+        return $row['user_nid'] ?? null;
+    }
+
+    /**
+     * Get lecturer profile with user info
+     */
+    public function getLecturerProfile(string $userNid): ?array
+    {
+        $builder = $this->db->table('lecturers l');
+        $builder->select([
+            'l.user_nid',
+            'l.study_program_id',
+            'l.status',
+            'u.full_name',
+            'u.email',
+            'u.phone',
+        ]);
+        $builder->join('users u', 'u.id = l.user_nid', 'inner');
+        $builder->where('l.user_nid', $userNid);
+        $builder->where('l.deleted_at', null);
+
+        return $builder->get()->getRowArray() ?: null;
+    }
 }

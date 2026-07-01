@@ -79,7 +79,10 @@ $routes->group('coordinator', ['filter' => ['auth:protected', 'role:koordinator'
 // ═══════════════════════════════════════════════════════════════════════════
 
 $routes->group('dosen', ['filter' => ['auth:protected', 'role:dosen,admin,koordinator']], static function ($routes) {
-    $routes->get('dashboard', 'Dosen\DashboardController::index');
+    $routes->get('dashboard', 'Dosen\Dashboard::index');
+    $routes->get('kelas-saya', 'Dosen\Dashboard::kelasSaya');
+    $routes->get('validasi', 'Dosen\Dashboard::validasi');
+    $routes->get('remedial', 'Dosen\Dashboard::remedial');
 });
 
 // ═══════════════════════════════════════════════════════════════════════════
