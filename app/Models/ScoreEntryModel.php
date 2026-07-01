@@ -10,8 +10,15 @@ class ScoreEntryModel extends Model
     protected $primaryKey = 'id';
     protected $returnType = 'array';
     protected $allowedFields = [
-        'class_id', 'student_id', 'component_id', 'score_value', 'submitted_by', 'submitted_at',
-        'notes', 'created_at', 'updated_at',
+        'practicum_class_id',
+        'student_id',
+        'component_id',
+        'score_value',
+        'submitted_by',
+        'submitted_at',
+        'notes',
+        'created_at',
+        'updated_at',
     ];
     protected $useTimestamps = true;
 }

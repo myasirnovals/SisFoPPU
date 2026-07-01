@@ -81,6 +81,13 @@ $routes->group('coordinator', ['filter' => ['auth:protected', 'role:koordinator'
 $routes->group('dosen', ['filter' => ['auth:protected', 'role:dosen,admin,koordinator']], static function ($routes) {
     $routes->get('dashboard', 'Dosen\Dashboard::index');
     $routes->get('kelas-saya', 'Dosen\Dashboard::kelasSaya');
+
+    // Popup routes — TANPA prefix 'dosen/' karena sudah di dalam group 'dosen'
+    $routes->get('input-nilai/(:num)/(:any)', 'Dosen\Dashboard::inputNilaiForm/$1/$2');
+    $routes->get('rekap-nilai/(:num)', 'Dosen\Dashboard::rekapNilai/$1');
+    $routes->get('detail-mahasiswa/(:num)/(:any)', 'Dosen\Dashboard::detailMahasiswa/$1/$2');
+    $routes->post('simpan-nilai', 'Dosen\Dashboard::simpanNilai');
+
     $routes->get('validasi', 'Dosen\Dashboard::validasi');
     $routes->get('remedial', 'Dosen\Dashboard::remedial');
 });
